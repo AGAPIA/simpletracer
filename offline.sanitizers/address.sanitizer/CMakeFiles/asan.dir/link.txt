@@ -1,0 +1,2 @@
+/usr/bin/ar qc libasan.a  CMakeFiles/asan.dir/AddressSanitizer.cpp.o
+/usr/bin/ranlib libasan.a

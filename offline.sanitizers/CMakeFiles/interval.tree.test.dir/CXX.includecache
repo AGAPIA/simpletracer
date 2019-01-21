@@ -1,0 +1,26 @@
+#IncludeRegexLine: ^[ 	]*#[ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/ciprian/testtools/simpletracer/offline.sanitizers/IntervalTree.cpp
+IntervalTree.h
+/home/ciprian/testtools/simpletracer/offline.sanitizers/IntervalTree.h
+
+/home/ciprian/testtools/simpletracer/offline.sanitizers/TestIntervalTree.cpp
+IntervalTree.h
+/home/ciprian/testtools/simpletracer/offline.sanitizers/IntervalTree.h
+
+offline.sanitizers/./include/IntervalTree.h
+stddef.h
+-
+stdio.h
+-
+assert.h
+-
+algorithm
+-
+

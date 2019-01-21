@@ -1,0 +1,2 @@
+/usr/bin/ar qc libtaintedindex.a  CMakeFiles/taintedindex.dir/TaintedIndex.cpp.o CMakeFiles/taintedindex.dir/TrackingExecutor.cpp.o
+/usr/bin/ranlib libtaintedindex.a
