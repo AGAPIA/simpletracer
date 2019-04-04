@@ -1,0 +1,14 @@
+#IncludeRegexLine: ^[ 	]*#[ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/sorina/testtools/river/benchmarking-payload/simplu_exemplu/simple-accumulator.c
+stdio.h
+-
+string.h
+-
+

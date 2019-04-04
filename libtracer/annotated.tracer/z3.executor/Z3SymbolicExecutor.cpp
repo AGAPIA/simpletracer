@@ -254,7 +254,7 @@ Z3SymbolicExecutor::Z3SymbolicExecutor(sym::SymbolicEnvironment *e, AbstractForm
 	byteSort = Z3_mk_bv_sort(context, 8);
 	bitSort = Z3_mk_bv_sort(context, 1);
 
-	sevenBitSort = Z3_mk_bv_sort(context, 7);
+	sevenBitSort = Z3_mk_bv_sort(context, 7); 
 
 	zero32 = Z3_mk_int(context, 0, dwordSort);
 	one32 = Z3_mk_int(context, 1, dwordSort);
@@ -307,6 +307,12 @@ void Z3SymbolicExecutor::SymbolicExecuteUnk(RiverInstruction *instruction, Symbo
 	fprintf(stderr, "Z3 execute unknown instruction %02x %02x \n",
 			instruction->modifiers & RIVER_MODIFIER_EXT ? 0x0F : 0x00,
 			instruction->opCode);
+	
+	if (instruction->opCode == 0x99) {
+		printf("%d", instruction->opCode);
+		return;
+	}
+
 	DEBUG_BREAK;
 }
 
@@ -1136,12 +1142,17 @@ void Z3SymbolicExecutor::Execute(RiverInstruction *instruction) {
 	}
 
 	if (isSymb) {
-		// This functionality must be moved into individual functions if the need arises
-		GetSymbolicValues(instruction, &ops, ops.av);
-
 		nodep::DWORD dwTable = (instruction->modifiers & RIVER_MODIFIER_EXT) ? 1 : 0;
-		fprintf(stderr, "<info> Execute instruction: 0x%08lX\n", instruction->instructionAddress);
-		(this->*executeFuncs[dwTable][instruction->opCode])(instruction, &ops);
+		Z3SymbolicExecutor::SymbolicExecute unkfunc =  &Z3SymbolicExecutor::SymbolicExecuteUnk;
+		if (executeFuncs[dwTable][instruction->opCode] != unkfunc)
+		{
+
+			// This functionality must be moved into individual functions if the need arises
+			GetSymbolicValues(instruction, &ops, ops.av);
+
+			fprintf(stderr, "<info> Execute instruction: 0x%08lX\n", instruction->instructionAddress);
+			(this->*executeFuncs[dwTable][instruction->opCode])(instruction, &ops);
+		}
 	} else {
 		fprintf(stderr, "<info> Instruction is not symbolic: 0x%08lX\n", instruction->instructionAddress);
 		// unset all modified operands
