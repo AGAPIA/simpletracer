@@ -15,7 +15,7 @@
 *.pch
 
 # Compiled Dynamic libraries
-#*.so
+*.so
 *.dylib
 *.dll
 
@@ -26,8 +26,8 @@
 # Compiled Static libraries
 *.lai
 *.la
-#*.a
-#*.lib
+*.a
+*.lib
 
 # Executables
 *.exe
@@ -48,7 +48,7 @@ trace.simple.out*
 execution.log*
 input*
 in
-#.z3-trace
+.z3-trace
 
 #output
 *.bin
