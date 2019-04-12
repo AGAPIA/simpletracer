@@ -53,3 +53,17 @@ in
 #output
 *.bin
 
+#CMake stuff
+CMakeLists.txt.user
+CMakeCache.txt
+CMakeFiles
+CMakeScripts
+cmake_install.cmake
+install_manifest.txt
+
+#logs
+execution.log
+trace.simple.out
+Z3.log
+
+
