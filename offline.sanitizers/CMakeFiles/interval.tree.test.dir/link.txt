@@ -1,1 +1,0 @@
-/usr/bin/c++    -g -m32 -std=c++11 -D__cdecl="" -D__stdcall=""   CMakeFiles/interval.tree.test.dir/IntervalTree.cpp.o CMakeFiles/interval.tree.test.dir/TestIntervalTree.cpp.o  -o interval.tree.test  -L/home/ciprian/testtools/river/z3/bin  -L/home/ciprian/testtools/river/z3/lib -rdynamic 

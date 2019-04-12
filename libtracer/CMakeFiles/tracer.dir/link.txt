@@ -1,2 +1,0 @@
-/usr/bin/ar qc libtracer.a  CMakeFiles/tracer.dir/utils.cpp.o CMakeFiles/tracer.dir/basic.observer.cpp.o CMakeFiles/tracer.dir/simple.tracer/simple.tracer.cpp.o CMakeFiles/tracer.dir/annotated.tracer/annotated.tracer.cpp.o
-/usr/bin/ranlib libtracer.a
