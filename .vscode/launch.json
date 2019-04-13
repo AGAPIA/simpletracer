@@ -9,11 +9,11 @@
             "type": "cppdbg",
             "request": "launch",
             "program": "${workspaceRoot}/river.tracer/river.tracer",
-            "args": [],
+            "args": ["-p", "libfmi.so", "--annotated", "--z3", "<", "~/testtools/river/benchmarking-payload/fmi/sampleinput.txt"],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",
             "environment": [],
-            "externalConsole": true,
+            "externalConsole": false,
             "MIMode": "gdb",
             "setupCommands": [
                 {

@@ -8,20 +8,24 @@
             "args": [
                 "CMakeLists.txt"
             ], 
-            "group": {
-                "kind": "build",
-                "isDefault": true
-            }
+            "group": "build",
         }, 
         {
-            "label": "make",
+            "label": "build_light",
             "type": "shell",
-            "command": "make",
+            "command": "~/testtools/river/vsbuild_light.sh",
             "args": [], 
             "group": {
                 "kind": "build",
                 "isDefault": true
             }
+        },
+        {
+            "label": "build_full",
+            "type": "shell",
+            "command": "~/testtools/river/vsbuild_full.sh",
+            "args": [], 
+            "group": "build"
         }
     ]
 }

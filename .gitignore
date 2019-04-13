@@ -65,5 +65,5 @@ install_manifest.txt
 execution.log
 trace.simple.out
 Z3.log
-
+ipch
 
