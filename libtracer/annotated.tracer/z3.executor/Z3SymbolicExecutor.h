@@ -25,7 +25,6 @@ private:
 	stk::LargeStack *ls;
 
 	AbstractFormat *aFormat;
-	unsigned benchmarks;
 
 	struct SymbolicOperands {
 		nodep::DWORD av;
@@ -52,7 +51,7 @@ private:
 			struct SymbolicOperands *ops);
 	void PrintSetOperands(unsigned idx);
 	void PrintAST(Z3_ast ast);
-	const char *AstToBenchmarkString(Z3_ast ast, const char *const_name);
+	const char *AstToBenchmarkString(Z3_ast ast, RiverInstruction* instruction, const char *const_name);
 
 	void SymbolicExecuteUnk(RiverInstruction *instruction, SymbolicOperands *ops);
 	void SymbolicExecuteNop(RiverInstruction *instruction, SymbolicOperands *ops);
