@@ -6,6 +6,8 @@
 
 #include "utils.h"
 
+#include <string.h> 
+
 #define PRINT_DEBUG_SYMBOLIC
 //#define PRINT_AST
 
@@ -16,6 +18,9 @@
 #endif
 
 #define MAX_BENCHMARK_NAME 256
+
+// static members
+vector<TestCase> sym::SymbolicExecutor::list_TestCase;
 
 const unsigned char Z3SymbolicExecutor::flagList[] = {
 	RIVER_SPEC_FLAG_CF,
@@ -223,7 +228,6 @@ void *Z3SymbolicExecutor::ExecuteResolveAddress(void *base, void *index,
 const unsigned int Z3SymbolicExecutor::Z3SymbolicCpuFlag::lazyMarker = 0xDEADBEEF;
 
 /*====================================================================================================*/
-
 Z3SymbolicExecutor::Z3SymbolicExecutor(sym::SymbolicEnvironment *e, AbstractFormat *aFormat) :
 		sym::SymbolicExecutor(e), aFormat(aFormat)
 {
@@ -373,6 +377,7 @@ const char *Z3SymbolicExecutor::AstToBenchmarkString(Z3_ast ast, RiverInstructio
 
 	assertion = Z3_simplify(context, assertion);
 
+
 	const char* result = Z3_benchmark_to_smtlib_string(context,
 			name,
 			logic,
@@ -381,15 +386,238 @@ const char *Z3SymbolicExecutor::AstToBenchmarkString(Z3_ast ast, RiverInstructio
 			1,
 			&assertion,
 			formula);
+	const char* z3_code_to_send_in_pipe = Z3_benchmark_to_smtlib_string(context,
+			"",
+			"",
+			"sat",
+			"",
+			1,
+			&assertion,
+			formula);
+//	if(aFormat->testCase.Z3_code != nullptr) {
+		aFormat->setBasicZ3_astStringcode_to_TestCase(z3_code_to_send_in_pipe);
+		this->list_TestCase.push_back(aFormat->testCase);
+//	}
+/*
+	for(auto i = this->list_TestCase.begin(); i != this->list_TestCase.end(); ++i) {
+		printf("Afisam testele \n");
+		printf("%s \n", i->Z3_code);
+	}
+*/
 
+
+/*			
+// DE AICI .....................................	
+	const char *result2 = "(declare-fun jump_symbol () (_ BitVec 1)) (declare-fun |s[0]| () (_ BitVec 8)) (assert (= (ite (= |s[0]| (_ bv65 8)) (_ bv1 1) (_ bv0 1)) jump_symbol))";
+
+	printf("Formula: \n");
+	printf("%s\n", Z3_ast_to_string(context, formula));
+	printf("Afisam modelul : \n");
+
+
+	//const char *result2 = "(declare-fun jump_symbol () (_ BitVec 1)) (e () (_ BitVec 8)) (assert (= (ite (= |s[0]| (_ bv65 8)) (_ bv1 1) (_ bv0 1)) jump_symbol))";
+
+	//Z3_solver_push (context,  solver);
+	 Z3_ast fs = Z3_parse_smtlib2_string(context, result2, 0, 0, 0, 0, 0, 0);
+	 Z3_solver_assert(context, solver, fs);
+	 int result_solver = Z3_solver_check ((Z3_context) context, (Z3_solver) solver);
+	 printf("Scopes : %d\n", Z3_solver_get_num_scopes((Z3_context) context, (Z3_solver) solver));
+	 //printf("%s \n", Z3_ast_to_string(context, fs));
+
+	const char* result_ast_string = Z3_benchmark_to_smtlib_string(context,
+			"",
+			"",
+			"sat",
+			"",
+			1,
+			&fs,
+			formula);
+
+	printf("%s \n\n", result_ast_string);
+	Z3_model model = Z3_solver_get_model ((Z3_context) context,  (Z3_solver) solver);
+	Z3_lbool res = Z3_solver_check(context, solver);;
+
+	if (res==Z3_L_TRUE) {
+        printf("sat! \n");
+		
+		//unsigned numberOfFuncs = Z3_model_get_num_funcs(context, model);
+		unsigned n = Z3_model_get_num_consts(context, model);
+		for(unsigned i = n-1; i >= 0; i--) {
+			//unsigned Z3_api rezultat = Z3_model_get_num_funcs_decl(context, model, i);
+			Z3_func_decl fd = Z3_model_get_const_decl(context, model, i);
+
+			if (Z3_model_has_interp(context, model, fd))
+			{
+				Z3_ast s = Z3_model_get_const_interp(context, model, fd);
+				printf("%s \n", Z3_ast_to_string(context, s));
+			}
+				
+  			//Z3_ast litle_assert =  Z3_model_get_func_interp(context, model, fd);
+			//printf("%s \n ",Z3_func_decl_to_string (context, fd));
+				
+  			//Z3_ast litle_assert =  Z3_model_get_func_interp(context, model, fd);
+			//printf("%s \n ",Z3_func_decl_to_string (context, fd));
+
+		}
+		
+		//Z3_string string_model = Z3_model_to_string ((Z3_context) context,model);
+		//printf(m);
+		//printf("%s \n", Z3_model_to_string(context,m));
+		
+
+
+    }else if (res==Z3_L_FALSE) {
+        printf("unsat! \n");
+    } 
+    else
+    {
+        printf("unknown! \n");
+    }
+	
+
+	 //Z3_model m = Z3_solver_get_model(context, solver);
+	 //Z3_model_to_string(context, m);
+	//printf("Sat Result : %d\n", result_solver);
+	//printf("Model : %s\n", Z3_model_to_string ((Z3_context) context,  Z3_solver_get_model ((Z3_context) context,  (Z3_solver) solver)));
+
+// PANA AICI ................................................................
+*/	 
+/* Varianta veche
+	Z3_solver_reset(context, solver);
+	Z3_del_context(context);
+	Z3_del_config(config);
+	Z3_global_param_reset_all();
+
+
+	config = Z3_mk_config();
+   	context = Z3_mk_context(config);
+	
+
+    Z3_ast fs = Z3_parse_smtlib2_string(context, result2, 0, 0, 0, 0, 0, 0);
+    Z3_inc_ref(context, fs);
+
+
+
+    Z3_solver_inc_ref(context, solver);
+    Z3_solver_assert(context, solver, fs);
+	
+    Z3_solver_check(context, solver);
+    Z3_model m = Z3_solver_get_model(context, solver);
+    Z3_model_inc_ref(context, m);
+	printf("%s \n", Z3_model_to_string(context, m));
+
+
+    // work with model
+
+    // Z3_solver_dec_ref(ctx, solver2);
+    // Z3_model_dec_ref(ctx, m);
+    // Z3_dec_ref(ctx, fs);
+    // Z3_del_config(cfg);
+
+*/
+
+
+
+
+   // Z3_solver_inc_ref(ctx, solver2);
+
+/*
+    Z3_ast fs = Z3_parse_smtlib2_string(context, result2, 0, 0, 0, 0, 0, 0);
+    Z3_inc_ref(context, fs);
+    Z3_solver_assert((Z3_context) context, (Z3_solver)solver, fs);
+    Z3_solver_check(context, solver);
+    Z3_model m = Z3_solver_get_model(context, solver);
+    Z3_model_inc_ref(context, m);
+    Z3_solver_check(context, solver);
+*/
+//	printf("%s \n", Z3_model_to_string(context, m));
+
+    // work with model
+
+/*
+    Z3_solver_dec_ref(context, solver);
+    Z3_model_dec_ref(context, m);
+    Z3_dec_ref(context, fs);
+    Z3_del_config(config);
+	*/
+/*
+	printf("Afisam modelul : \n");
+	Z3_ast fs = Z3_parse_smtlib2_string((Z3_context) context, result2, 0, 0, 0, 0, 0, 0);
+	Z3_inc_ref(context, fs);
+	Z3_solver_inc_ref(context, solver);
+	Z3_solver_assert(context, solver, fs);
+
+	Z3_model m = 0;
+	Z3_lbool res=Z3_check_and_get_model(context,&m);
+	if(res == Z3_L_TRUE) {
+		printf("%s \n", Z3_model_to_string((Z3_context) context, m));
+	}
+*/
+/*
+	printf("Afisam modelul : \n");
+	Z3_model m = 0;
+	//Z3_solver s = Z3_mk_solver(context);
+	Z3_solver_assert(context, solver, assertion);
+	if(Z3_solver_check(context, solver) == Z3_L_TRUE) {
+		m = Z3_solver_get_model(context, solver);
+		Z3_string  afisare = Z3_model_to_string(context, m);
+		//printf("%s\n", Z3_model_to_string(context, m));
+	}
+*/
 	/*
-	printf("%s\n", result);
+	Z3_model m=0;
+	Z3_lbool res=Z3_check_and_get_model(context,&m);
+	
+	if (res==Z3_L_TRUE)
+    {
+        printf("sat! \n");
+		//printf(m);
+		printf("%s \n", Z3_model_to_string(context,m));
+    }else if (res==Z3_L_FALSE)
+    {
+        printf("unsat! \n");
+    } 
+    else
+    {
+        printf("unknown! \n");
+    }
+	*/
+
+	//printf("Suntem in ASTBenchmarkString si acum afisam : \n");
+	//printf("%s\n", result);
+	/*
 	printf("Formula: \n");
 	printf("%s\n", Z3_ast_to_string(context, formula));
 	printf("assertion: \n");
 	printf("%s\n", Z3_ast_to_string(context, ast));
 	*/
+	
 	return result;
+}
+
+
+void afisare() {
+	const char *result2 = "(declare-fun jump_symbol () (_ BitVec 1)) (declare-fun |s[0]| () (_ BitVec 8)) (assert (= (ite (= |s[0]| (_ bv65 8)) (_ bv1 1) (_ bv0 1)) jump_symbol))";
+	 Z3_config cfg = Z3_mk_config();
+    Z3_context ctx = Z3_mk_context(cfg);
+    Z3_ast fs = Z3_parse_smtlib2_string(ctx, result2, 0, 0, 0, 0, 0, 0);
+    Z3_inc_ref(ctx, fs);
+    Z3_solver solver2 = Z3_mk_solver(ctx);
+    Z3_solver_inc_ref(ctx, solver2);
+    Z3_solver_assert(ctx, solver2, fs);
+    Z3_solver_check(ctx, solver2);
+    Z3_model m = Z3_solver_get_model(ctx, solver2);
+	printf("%s \n", Z3_model_to_string(ctx, m));
+    Z3_model_inc_ref(ctx, m);
+    Z3_solver_check(ctx, solver2);
+
+
+    // work with model
+
+    Z3_solver_dec_ref(ctx, solver2);
+    Z3_model_dec_ref(ctx, m);
+    Z3_dec_ref(ctx, fs);
+    Z3_del_config(cfg);
 }
 
 template <Z3SymbolicExecutor::BVFunc func> void Z3SymbolicExecutor::SymbolicJumpCC(RiverInstruction *instruction, SymbolicOperands *ops) {
@@ -406,12 +634,15 @@ template <Z3SymbolicExecutor::BVFunc func> void Z3SymbolicExecutor::SymbolicJump
 	}
 	sf.symbolicCond = (unsigned int)cond;
 
+	const char *result = AstToBenchmarkString((Z3_ast) sf.symbolicCond, instruction, "jump_symbol");
 	SymbolicAst sast = {
-		.address = AstToBenchmarkString((Z3_ast) sf.symbolicCond, instruction, "jump_symbol"),
+		.address = result,
 	};
 	sast.size = strlen(sast.address);
 
+	
 	aFormat->WriteZ3SymbolicJumpCC(0, sf, sast);
+	
 }
 
 template <Z3SymbolicExecutor::BVFunc func> void Z3SymbolicExecutor::SymbolicSetCC(RiverInstruction *instruction, SymbolicOperands *ops) {
@@ -1180,6 +1411,7 @@ void Z3SymbolicExecutor::Execute(RiverInstruction *instruction) {
 			}
 		}
 	}
+
 }
 
 #define Z3FLAG(f) &Z3SymbolicExecutor::Flag<(f)>

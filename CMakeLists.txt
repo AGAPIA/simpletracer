@@ -9,6 +9,7 @@ project (SIMPLE_TRACER)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
 include_directories($ENV{RIVER_SDK_DIR}/include)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/river.format/include)
+include_directories(~/testtools/river/z3/include)
 
 # build targets
 add_subdirectory (river.format/logger)

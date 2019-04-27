@@ -8,6 +8,7 @@
 
 #include "VariableTracker.h"
 #include "AbstractLog.h"
+#include <vector>
 
 #define OPERAND_BITMASK(idx) (0x00010000 << (idx))
 
@@ -19,6 +20,10 @@ struct SymbolicOperandsLazyFlags {
 };
 
 class Z3SymbolicExecutor : public sym::SymbolicExecutor {
+public:
+	//static vector<TestCase> list_TestCase;
+	//int writeOnPipe( int fileDescriptor, char*buf);
+
 private:
 	stk::DWORD saveTop;
 	stk::DWORD saveStack[0x10000];
@@ -173,6 +178,7 @@ public:
 	virtual void ComposeScaleAndIndex(nodep::BYTE &scale, struct OperandInfo &indexOp);
 	virtual void AddOperands(struct OperandInfo &left, struct OperandInfo &right, unsigned displacement, struct OperandInfo &result);
 };
+
 
 class Z3FlagZF : public Z3SymbolicExecutor::Z3SymbolicCpuFlag {
 private :

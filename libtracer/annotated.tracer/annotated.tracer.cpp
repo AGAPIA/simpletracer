@@ -13,6 +13,17 @@
 
 #include "utils.h" //common handlers
 
+//for PIPE
+#include <stdio.h> 
+#include <stdlib.h>
+#include <string.h> 
+#include <fcntl.h> 
+#include <sys/stat.h> 
+#include <sys/types.h> 
+#include <unistd.h>
+
+//....
+
 #ifdef _WIN32
 #include <Windows.h>
 #define GET_LIB_HANDLER2(libname) LoadLibraryA((libname))
@@ -114,6 +125,7 @@ unsigned int CustomObserver::ExecutionControl(void *ctx, void *address) {
 			bbInfo.branchInstruction, regs.esp, bbInfo.nInstructions,
 			nextSize, bbpNext };
 	aFormat->WriteBasicBlock(bbm);
+	aFormat->setBasicBlockMeta_to_TestCase(bbm);
 
 	return EXECUTION_ADVANCE;
 }
@@ -126,12 +138,95 @@ unsigned int CustomObserver::ExecutionEnd(void *ctx) {
 			std::cout << "Using " << header.fName << " as input file." << std::endl;
 
 			aFormat->WriteTestName(header.fName);
+			printf("AM AJUNS AICI 1 \n");
 			return EXECUTION_RESTART;
 		}
-
+			printf("AM AJUNS AICI 2 \n");
 		return EXECUTION_TERMINATE;
 	} else {
-		return EXECUTION_TERMINATE;
+			printf("AM AJUSN AICI 3 \n");
+
+
+    int num, fileDescriptor;
+	#define  myfifo  "/tmp/fifochannel"  // FIFO file path 
+	mode_t fifo_mode = S_IRUSR | S_IWUSR;
+
+// first we must check if fifo exists -> if yes we remove it
+	struct stat stats;
+    if ( stat( myfifo, &stats ) < 0 )
+    {
+        if ( errno != ENOENT )          // ENOENT is ok, since we intend to delete the file anyways
+        {
+            perror( "stat failed" );    // any other error is a problem
+            return( -1 );
+        }
+    }
+    else                                // stat succeeded, so the file exists
+    {
+        if ( unlink( myfifo ) < 0 )   // attempt to delete the file
+        {
+            perror( "unlink failed" );  // the most likely error is EBUSY, indicating that some other process is using the file
+        }else {
+			printf("fifo file unlinked \n");
+		}
+    }
+
+    if ( mkfifo( myfifo, fifo_mode ) < 0 ) // attempt to create a brand new FIFO {
+        perror( "mkfifo failed" );
+
+	//sending the list of testCases through pipe
+	if ((fileDescriptor = open(myfifo, O_WRONLY)) < 0)
+           perror("child - open");
+	 printf("child - got a reader \n");
+
+	int count = 0;
+	 for (auto i = executor->list_TestCase.begin(); i != executor->list_TestCase.end(); i++) {
+	// serialize your testcase
+		struct TestCaseBase {
+			unsigned int offset;
+			char modName[MAX_PATH];
+		};
+		struct TestCase2 {
+			struct TestCaseBase bbp;
+			unsigned int cost;
+			unsigned int jumpType;
+			unsigned int jumpInstruction;
+			unsigned int esp;
+			unsigned int nInstructions;
+			unsigned int bbpNextSize;
+			struct TestCaseBase nextBasicBlockPointer;
+			char Z3_code[10000];
+		};
+
+		TestCase2 testcase2;
+		testcase2.bbp.offset = i->bbp.offset;
+		strcpy(testcase2.bbp.modName, i->bbp.modName);
+		testcase2.cost = i->cost;
+		testcase2.jumpType = i->jumpType;
+		testcase2.jumpInstruction = i->jumpInstruction;
+		testcase2.esp = i->esp;
+		testcase2.nInstructions = i->nInstructions;
+		testcase2.bbpNextSize = i->bbpNextSize;
+
+		testcase2.nextBasicBlockPointer.offset = i->nextBasicBlockPointer.offset;
+		strcpy(testcase2.nextBasicBlockPointer.modName, i->nextBasicBlockPointer.modName);
+
+		char *z3_code = i->Z3_code;
+		strcpy(testcase2.Z3_code, z3_code);
+
+	// send serialized testcase
+	if ((num = write(fileDescriptor, &testcase2, sizeof(TestCase2))) < 0)
+					perror("child - write");
+		else {
+					printf("child - wrote %d bytes\n", num);
+					printf("AM SCRIS IN TOTAL PE PIPEEEEEEEEE = %d \n\n", count);
+			}
+	}
+
+	 printf("child process is closing fifo \n");
+     close(fileDescriptor);
+	
+	return EXECUTION_TERMINATE;
 	}
 }
 
@@ -285,7 +380,6 @@ int AnnotatedTracer::Run(ez::ezOptionParser &opt) {
 
 	DeleteExecutionController(ctrl);
 	ctrl = NULL;
-
 	return 0;
 }
 
