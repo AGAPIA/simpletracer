@@ -1,0 +1,4 @@
+Links:
+https://github.com/LambdaSchool/CS-Wiki/wiki/C-and-Cpp-Debugging-in-VS-Code
+https://www.youtube.com/watch?v=_6RsFuaEsdk
+https://www.40tude.fr/blog/compile-cpp-code-with-vscode-cmake-nmake/

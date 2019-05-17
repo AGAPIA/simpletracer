@@ -395,6 +395,7 @@ const char *Z3SymbolicExecutor::AstToBenchmarkString(Z3_ast ast, RiverInstructio
 			&assertion,
 			formula);
 //	if(aFormat->testCase.Z3_code != nullptr) {
+	printf("%s \n\n", z3_code_to_send_in_pipe);
 		aFormat->setBasicZ3_astStringcode_to_TestCase(z3_code_to_send_in_pipe);
 		this->list_TestCase.push_back(aFormat->testCase);
 //	}

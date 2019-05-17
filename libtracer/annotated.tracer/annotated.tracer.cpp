@@ -171,6 +171,7 @@ unsigned int CustomObserver::ExecutionEnd(void *ctx) {
 		}
     }
 
+
     if ( mkfifo( myfifo, fifo_mode ) < 0 ) // attempt to create a brand new FIFO {
         perror( "mkfifo failed" );
 
@@ -178,6 +179,7 @@ unsigned int CustomObserver::ExecutionEnd(void *ctx) {
 	if ((fileDescriptor = open(myfifo, O_WRONLY)) < 0)
            perror("child - open");
 	 printf("child - got a reader \n");
+	 
 
 	int count = 0;
 	 for (auto i = executor->list_TestCase.begin(); i != executor->list_TestCase.end(); i++) {
@@ -213,11 +215,11 @@ unsigned int CustomObserver::ExecutionEnd(void *ctx) {
 
 		char *z3_code = i->Z3_code;
 		strcpy(testcase2.Z3_code, z3_code);
-
 	// send serialized testcase
 	if ((num = write(fileDescriptor, &testcase2, sizeof(TestCase2))) < 0)
 					perror("child - write");
 		else {
+					count++;
 					printf("child - wrote %d bytes\n", num);
 					printf("AM SCRIS IN TOTAL PE PIPEEEEEEEEE = %d \n\n", count);
 			}
@@ -225,7 +227,7 @@ unsigned int CustomObserver::ExecutionEnd(void *ctx) {
 
 	 printf("child process is closing fifo \n");
      close(fileDescriptor);
-	
+	 
 	return EXECUTION_TERMINATE;
 	}
 }
