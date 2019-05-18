@@ -12,7 +12,7 @@ class vertex{
 		list<vertex*> neighbors;
 		bool visited; 
 		vertex(string x) { data = x; }
-		std::vector<TestCase> vertexTestCaseList;
+		std::vector<TestCase> testCaseList;
 };
 class TestGraph {
 public:
@@ -31,6 +31,7 @@ public:
 
 
 	vertex *  addVertex (string x);
+	void addVertexTestCases(std::string vertex_string, std::vector<TestCase> vertexTestCaseList);
 
 	//add directed edge going from x to y
 	void addDirectedEdge(string x, string y);

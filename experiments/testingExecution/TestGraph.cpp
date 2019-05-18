@@ -2,14 +2,21 @@
 
 vertex * TestGraph::addVertex (string x) {
     // first make sure that the string vertex is unique
-    for(vertex * v : vertexList) {
-			if (v->data == x) {
-				return nullptr;
-		    }
-    }
+	if(findVertex(x) != NULL) return NULL;
+
+	// if not, then add a new vertex in the vertexList
     vertex *newVertex = new vertex(x);
 	vertexList.push_back(newVertex);
     return newVertex;
+}
+
+void TestGraph::addVertexTestCases(std::string vertex_string, std::vector<TestCase> vertexTestCaseList) {
+	vertex *vertex = findVertex(vertex_string);
+	if(vertex == NULL) {
+		cout << "vertex = " << vertex_string << " don't exists" << endl;
+	}else {
+		vertex->testCaseList = vertexTestCaseList;
+	}
 }
 
 
@@ -19,12 +26,13 @@ void TestGraph::addDirectedEdge(string x, string y) {
 	vertex * xVert = findVertex(x);
 	vertex * yVert = findVertex(y);
 
+	yVert->predecesor = xVert;
 	xVert->neighbors.push_back(yVert);
 }
 
 void TestGraph::addEdge(string x, string y) {
 	addDirectedEdge(x, y);
-	addDirectedEdge(y, x);
+//	addDirectedEdge(y, x);
 }
 
 //display all vertices and who they connect to

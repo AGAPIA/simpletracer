@@ -1,5 +1,4 @@
 #include "Z3Interpretation.h"
-#include "SimpleTracerComunicator.h"
 #include <set> 
 #include <list> 
 #include "TestGraph.h"
@@ -37,6 +36,9 @@ std::vector<TestCase> callSimpleTracer(const char *testInput) {
 	//while((wpid = wait(&status)) > 0);// wait for child process to finish
 }
 
+
+
+
 std::vector <string> getall(string k,int req){
     if(k.length()==req) return {k};
     std::vector <string> C;
@@ -53,12 +55,12 @@ std::vector <string> getall(string k,int req){
 }
 
 std::vector <string> getAll_TestCases_Combinations(const char *rootInput, std::vector<TestCase> initialTestCases) {
+
+	if(initialTestCases.size() == 0) {
+			return {};
+	}
 	Z3Interpretation z3Interpretor;
 	std::vector <string> newListInputs;
-
-	for(TestCase i : initialTestCases) { 
-			cout << i.Z3_code <<endl;
-	}
 
 	// get some combinations of {0,1}
     std::vector <string> s = getall("",initialTestCases.size()); // s = all the combination of {0,1}, {00000, 000010...}
@@ -69,9 +71,9 @@ std::vector <string> getAll_TestCases_Combinations(const char *rootInput, std::v
 		string newInput(rootInput);
 
 		int pozition = 0;
-
+   
 		std::map<std::string, int> myMap;
-        for (char const &c: *i) { // for each character in every string combination
+      for (char const &c: *i) { // for each character in every string combination
 			if(c == '0') { // make jump_symbol = 0
 				std::string new_z3_code(initialTestCases.at(pozition).Z3_code);
 				z3Interpretor.setJumpSymbol_zero(new_z3_code);
@@ -116,7 +118,40 @@ std::vector <string> getAll_TestCases_Combinations(const char *rootInput, std::v
 }
 
 
+std::vector<TestCase> find_TestCase_differences_with_the_parent(vertex *child) {
+		vertex *parent = child->predecesor;
+		if(parent == NULL) {
+			return child->testCaseList;
+		}
 
+		std::vector<TestCase> differences;
+
+
+		for(int i = 0; i < child->testCaseList.size(); i++) {
+			bool found = false;
+			for(int j = 0; j < parent->testCaseList.size(); j++) {
+					char *child_z3_code = child->testCaseList.at(i).Z3_code;
+					char *parent_z3_code = parent->testCaseList.at(j).Z3_code;
+
+					int compare = strcmp(child_z3_code, parent_z3_code);
+
+					printf("NOW WE COMPARE parent with child : \n");
+					printf("parent_z3_code \n %s \n", parent_z3_code);
+					printf("child z3_code : \n %s \n", child_z3_code);
+
+					if(compare == 0) {
+						found = true;
+						continue;
+					}
+				}
+				if(found == false) {
+					differences.push_back(child->testCaseList.at(i));
+				}
+		}
+
+		return differences;
+
+}
 
 TestGraph* BF(string input) {
 	TestGraph *graph = new TestGraph();
@@ -129,7 +164,19 @@ TestGraph* BF(string input) {
 	while(!Q.empty()) {
 		vertex *x = Q.front();
 		std::vector<TestCase> newTestCases = callSimpleTracer(x->data.c_str());
-		std::vector <string> combinations = getAll_TestCases_Combinations(x->data.c_str(), newTestCases);
+		graph->addVertexTestCases(x->data, newTestCases);
+		std::vector<TestCase> differentTestCases = find_TestCase_differences_with_the_parent(x);
+		cout << "DIFERENCES WITH THE PARENT " <<endl;
+		for(TestCase i : differentTestCases) {
+					printf("Z3_Code_Test : %s \n", i.Z3_code);
+		}
+
+		std::vector <string> combinations = getAll_TestCases_Combinations(x->data.c_str(), differentTestCases);
+
+	 cout << "combinations with the string : " << x->data.c_str() << endl;
+		for(string i : combinations) {
+			cout << i << " ";
+		} cout<<endl;
 
 		for(string it : combinations) {
 			vertex *child = graph->addVertex(it);
