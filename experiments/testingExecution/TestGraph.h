@@ -5,45 +5,42 @@
 #include "SimpleTracerComunicator.h"
 using namespace std;
 
-class vertex{
+class Vertex{
 	public:
 		string data;
-		vertex *predecesor;
-		list<vertex*> neighbors;
+		Vertex *predecesor;
+		list<Vertex*> neighbors;
 		bool visited; 
-		vertex(string x) { data = x; }
+		Vertex(string x) { data = x; }
 		std::vector<TestCase> testCaseList;
 };
+
+
+/*Class TestGraph, is a simple graph, where every node is a Vertex Class Object.*/
 class TestGraph {
 public:
-	list<vertex*> vertexList;
+	list<Vertex*> VertexList;
 	
 
-	//locate vertex containg value x
-	vertex * findVertex(string x) {
-		for(vertex * v : vertexList) {
-			if (v->data == x)
-				return v;
-		}
-		return NULL;
-	}
+	//locate Vertex containg value x
+	Vertex * FindVertex(string vertexData);
 
 
-
-	vertex *  addVertex (string x);
-	void addVertexTestCases(std::string vertex_string, std::vector<TestCase> vertexTestCaseList);
+	Vertex *  AddVertex (string x);
+	void AddVertexTestCases(std::string vertexData, std::vector<TestCase> vertexTestCaseList);
 
 	//add directed edge going from x to y
-	void addDirectedEdge(string x, string y);
+	void AddDirectedEdge(string parent, string child);
 
-	void addEdge(string x, string y);
+	void AddEdge(string parent, string child);
 
 	//display all vertices and who they connect to
-	void testDisplay();
+	void TestDisplay();
 
-	std::list<string> breadthFirstSearch(string start_node);
+	// traverse the graph with a BreathFirst Algoritm
+	std::list<string> BreadthFirstSearch(string rootNode);
 
 private:
 
-	std::list<std::string> BF(vertex *s);
+	std::list<std::string> BreadthFirst(Vertex *s);
 };

@@ -138,14 +138,10 @@ unsigned int CustomObserver::ExecutionEnd(void *ctx) {
 			std::cout << "Using " << header.fName << " as input file." << std::endl;
 
 			aFormat->WriteTestName(header.fName);
-			printf("AM AJUNS AICI 1 \n");
 			return EXECUTION_RESTART;
 		}
-			printf("AM AJUNS AICI 2 \n");
 		return EXECUTION_TERMINATE;
 	} else {
-			printf("AM AJUSN AICI 3 \n");
-
 
     int num, fileDescriptor;
 	#define  myfifo  "/tmp/fifochannel"  // FIFO file path 

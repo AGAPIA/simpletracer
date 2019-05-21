@@ -45,6 +45,7 @@
         "numeric": "cpp",
         "bitset": "cpp",
         "complex": "cpp",
-        "list": "cpp"
+        "list": "cpp",
+        "memory": "cpp"
     }
 }
