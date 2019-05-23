@@ -2,7 +2,8 @@
 #include <list>
 #include <queue>
 #include <iostream>
-#include "SimpleTracerComunicator.h"
+#include "FileHandling.h"
+#include "TestCase.h"
 using namespace std;
 
 class Vertex{

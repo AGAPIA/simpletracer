@@ -2,6 +2,11 @@
 
 
 
+#define myFifo "/tmp/fifochannel"// FIFO file path 
+
+
+
+
 /* ConcolicExecutor Class is used to call simpleTracer app, and generate a graph with
 all the TestCases need to get full coverage */
 class ConcolicExecutor {
@@ -37,4 +42,12 @@ class ConcolicExecutor {
         // this method will take a vertex as input, then will return the differences between
         // the TestCases inside this vertex, and he's parent inside the TestGraph
         std::vector<TestCase> FindDiferencesWithParent(Vertex *child);
+
+
+        // with this function we read from the pipe where the dat is send between this process and simpleTracer call
+        std::vector<TestCase> readPipe();
+
+
+        // this method will print out a full description of a testCase
+        void testCase_to_String(TestCase &testCase);
 };

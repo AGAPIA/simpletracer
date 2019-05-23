@@ -14,7 +14,32 @@ void ConcolicExecutor::SignalHandler(int sig) {
 }
 
 
+std::vector<TestCase> ConcolicExecutor::readPipe() {
+	std::vector<TestCase> list;
+	int num, fileDescriptor;
+	printf("parent - waiting for writers...\n");
+		if ((fileDescriptor = open(myFifo, O_RDONLY)) < 0)
+			perror("parent - open");
+		// reading the struct
+		int count = 0;
+		do {
+				TestCase x;
+				if ((num = read(fileDescriptor, &x, sizeof(TestCase))) < 0) {
 
+					perror("parent - read");
+				}else {
+					list.push_back(x);
+					list.at(count).Z3_code[0] = ' '; // eliminate ';' character
+					count++;
+				}
+		} while (num > 0);
+
+		// PROBLEM: se pare ca mai citeste ultimul element din pipe inca o data
+		list.pop_back();
+		close(fileDescriptor);
+
+		return list;
+}
 
 std::vector<TestCase> ConcolicExecutor::CallSimpleTracer(pid_t child_pid, const char *testInput) {
 
@@ -29,15 +54,17 @@ std::vector<TestCase> ConcolicExecutor::CallSimpleTracer(pid_t child_pid, const 
 
 	printf("now we call SimpleTracer with the Input : %s \n", testInput);
     std::vector<TestCase> list;
-	SimpleTracerComunicator communicator;
+	FileHandling communicator;
 	communicator.writeInputData(testInput);
 	kill(child_pid,SIGUSR1);// send signal to child process
-	list = communicator.readPipe();
+	list = this->readPipe();
 
 
 	for(TestCase i : list) {
-		printf("Z3_Code_Test : %s \n", i.Z3_code);
+		//printf("Z3_Code_Test : %s \n", i.Z3_code);
+		testCase_to_String(i);
 	}
+	
 
 	return list;
 }
@@ -109,6 +136,7 @@ std::vector <string> ConcolicExecutor::GenerateTestCases(const char *rootInput, 
 				for(map<string,int>::const_iterator it = myMap.begin(); it != myMap.end(); ++it) {
 					string operatorTest = (*it).first;
 					if(operatorTest.at(0) == 's') { // select only the buffer element s[bufPozition]
+						if((*it).second == 0) continue; // means that the value is null so we keep original value
 						int bufPozition = (int) operatorTest.at(2) - 48;
 						newInput[bufPozition] = (*it).second; // modify the copy of InputString, sot that newInput[poz] = value of s[i]
 					}
@@ -126,8 +154,10 @@ std::vector <string> ConcolicExecutor::GenerateTestCases(const char *rootInput, 
 				// get the new Inputs from this model
 				for(map<string,int>::const_iterator it = myMap.begin(); it != myMap.end(); ++it) {
 					string operatorTest = (*it).first;
-					if(operatorTest.at(0) == 's') {
+					if(operatorTest.at(0) == 's') {// select only the buffer element s[bufPozition]
+						if((*it).second == 0) continue;// means that the value is null so we keep original value
 						int bufPozition = (int) operatorTest.at(2) - 48;//select only the buffer element s[bufPozition]
+						
 						newInput[bufPozition] = (*it).second;
 					}
 				}	
@@ -265,3 +295,20 @@ TestGraph* ConcolicExecutor::GenerateExecutionTree(string start_input) {
 
 	return graph;
 }
+
+
+
+void ConcolicExecutor::testCase_to_String(TestCase &testCase) {
+	unsigned int cost;
+			unsigned int jumpType;
+			unsigned int jumpInstruction;
+			unsigned int esp;
+			unsigned int nInstructions;
+			unsigned int bbpNextSize;
+	printf("bbp -> [offset = {%#08x}  , modName = {%s}] cost ->[%d] , jumpType -> [%d] , jumpInstruction -> [%d], esp -> [%#08x] , nInstructions -> [%#08x], bbpNextSize -> [%#08x], nextBasicBlockPointer -> [offset = {%#08x}  , modname = {%s}], z3_code -> \n %s \n",testCase.bbp.offset, testCase.bbp.modName,
+	testCase.cost, testCase.jumpType, testCase.jumpInstruction,
+	testCase.esp, testCase.nInstructions, testCase.bbpNextSize,
+	testCase.nextBasicBlockPointer.offset,testCase.nextBasicBlockPointer.modName,
+	testCase.Z3_code);
+
+}	

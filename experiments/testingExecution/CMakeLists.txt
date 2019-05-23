@@ -11,7 +11,7 @@ IF(NOT Z3_LIB)
 	MESSAGE(SEND_ERROR "Cannot find library libz3.so")
 ENDIF(NOT Z3_LIB)
 
-set(SOURCE_FILES main.cpp Z3Interpretation.cpp SimpleTracerComunicator.cpp TestGraph.cpp ConcolicExecutor.cpp) 
+set(SOURCE_FILES main.cpp Z3Interpretation.cpp FileHandling.cpp TestGraph.cpp ConcolicExecutor.cpp) 
 
 
 #find_package(z3 REQUIRED)

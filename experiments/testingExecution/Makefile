@@ -194,32 +194,32 @@ ConcolicExecutor.cpp.s:
 	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/ConcolicExecutor.cpp.s
 .PHONY : ConcolicExecutor.cpp.s
 
-SimpleTracerComunicator.o: SimpleTracerComunicator.cpp.o
+FileHandling.o: FileHandling.cpp.o
 
-.PHONY : SimpleTracerComunicator.o
+.PHONY : FileHandling.o
 
 # target to build an object file
-SimpleTracerComunicator.cpp.o:
-	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/SimpleTracerComunicator.cpp.o
-.PHONY : SimpleTracerComunicator.cpp.o
+FileHandling.cpp.o:
+	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/FileHandling.cpp.o
+.PHONY : FileHandling.cpp.o
 
-SimpleTracerComunicator.i: SimpleTracerComunicator.cpp.i
+FileHandling.i: FileHandling.cpp.i
 
-.PHONY : SimpleTracerComunicator.i
+.PHONY : FileHandling.i
 
 # target to preprocess a source file
-SimpleTracerComunicator.cpp.i:
-	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/SimpleTracerComunicator.cpp.i
-.PHONY : SimpleTracerComunicator.cpp.i
+FileHandling.cpp.i:
+	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/FileHandling.cpp.i
+.PHONY : FileHandling.cpp.i
 
-SimpleTracerComunicator.s: SimpleTracerComunicator.cpp.s
+FileHandling.s: FileHandling.cpp.s
 
-.PHONY : SimpleTracerComunicator.s
+.PHONY : FileHandling.s
 
 # target to generate assembly for a file
-SimpleTracerComunicator.cpp.s:
-	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/SimpleTracerComunicator.cpp.s
-.PHONY : SimpleTracerComunicator.cpp.s
+FileHandling.cpp.s:
+	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/FileHandling.cpp.s
+.PHONY : FileHandling.cpp.s
 
 TestGraph.o: TestGraph.cpp.o
 
@@ -318,9 +318,9 @@ help:
 	@echo "... ConcolicExecutor.o"
 	@echo "... ConcolicExecutor.i"
 	@echo "... ConcolicExecutor.s"
-	@echo "... SimpleTracerComunicator.o"
-	@echo "... SimpleTracerComunicator.i"
-	@echo "... SimpleTracerComunicator.s"
+	@echo "... FileHandling.o"
+	@echo "... FileHandling.i"
+	@echo "... FileHandling.s"
 	@echo "... TestGraph.o"
 	@echo "... TestGraph.i"
 	@echo "... TestGraph.s"
