@@ -193,6 +193,7 @@ unsigned int CustomObserver::ExecutionEnd(void *ctx) {
 			unsigned int nInstructions;
 			unsigned int bbpNextSize;
 			struct TestCaseBase nextBasicBlockPointer;
+			unsigned long instructionAddress;
 			char Z3_code[10000];
 		};
 
@@ -208,7 +209,7 @@ unsigned int CustomObserver::ExecutionEnd(void *ctx) {
 
 		testcase2.nextBasicBlockPointer.offset = i->nextBasicBlockPointer.offset;
 		strcpy(testcase2.nextBasicBlockPointer.modName, i->nextBasicBlockPointer.modName);
-
+		testcase2.instructionAddress = i->instructionAddress;
 		char *z3_code = i->Z3_code;
 		strcpy(testcase2.Z3_code, z3_code);
 	// send serialized testcase

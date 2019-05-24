@@ -47,6 +47,8 @@ class ConcolicExecutor {
         // with this function we read from the pipe where the dat is send between this process and simpleTracer call
         std::vector<TestCase> readPipe();
 
+        std::vector<TestCasePair> GetOnlyLoopTestCases(std::vector<TestCase> testCases);
+
 
         // this method will print out a full description of a testCase
         void testCase_to_String(TestCase &testCase);

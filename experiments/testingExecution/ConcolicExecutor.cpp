@@ -216,6 +216,19 @@ std::vector<TestCase> ConcolicExecutor::FindDiferencesWithParent(Vertex *child) 
 
 }
 
+
+
+std::vector<TestCasePair> ConcolicExecutor::GetOnlyLoopTestCases(std::vector<TestCase> testCases) {
+	/*
+	This method will extract all the  TestCases pair that makes a loop
+	*/
+
+	std::vector<TestCasePair> listTestCasePair;
+	// TO DO: de facut aceasta metoda
+	return listTestCasePair;
+	
+}
+
 /*
 This method is the root of this application. It will generate the Graph in a Bf way
 
@@ -305,10 +318,11 @@ void ConcolicExecutor::testCase_to_String(TestCase &testCase) {
 			unsigned int esp;
 			unsigned int nInstructions;
 			unsigned int bbpNextSize;
-	printf("bbp -> [offset = {%#08x}  , modName = {%s}] cost ->[%d] , jumpType -> [%d] , jumpInstruction -> [%d], esp -> [%#08x] , nInstructions -> [%#08x], bbpNextSize -> [%#08x], nextBasicBlockPointer -> [offset = {%#08x}  , modname = {%s}], z3_code -> \n %s \n",testCase.bbp.offset, testCase.bbp.modName,
+	printf("bbp -> [offset = {%#08x}  , modName = {%s}] cost ->[%d] , jumpType -> [%d] , jumpInstruction -> [%d], esp -> [%#08x] , nInstructions -> [%#08x], bbpNextSize -> [%#08x], nextBasicBlockPointer -> [offset = {%#08x}  , modname = {%s}], \n test - %08lx \n z3_code -> \n %s \n",testCase.bbp.offset, testCase.bbp.modName,
 	testCase.cost, testCase.jumpType, testCase.jumpInstruction,
 	testCase.esp, testCase.nInstructions, testCase.bbpNextSize,
 	testCase.nextBasicBlockPointer.offset,testCase.nextBasicBlockPointer.modName,
+	testCase.instructionAddress,
 	testCase.Z3_code);
 
 }	

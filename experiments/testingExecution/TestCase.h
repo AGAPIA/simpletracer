@@ -15,6 +15,11 @@ struct TestCase {
 			unsigned int nInstructions;
 			unsigned int bbpNextSize;
 			struct TestCaseBase nextBasicBlockPointer;
+			unsigned long instructionAddress;
 			char Z3_code[MAX_Z3_CODE];
-	};
+};
+
+struct TestCasePair {
+	std::vector<TestCase> testCasePair;
+};
 
