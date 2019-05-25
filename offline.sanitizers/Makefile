@@ -48,10 +48,10 @@ RM = /usr/bin/cmake -E remove -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/ciprian/testtools/simpletracer
+CMAKE_SOURCE_DIR = /home/boc/testtools/simpletracer
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/ciprian/testtools/simpletracer
+CMAKE_BINARY_DIR = /home/boc/testtools/simpletracer
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -124,14 +124,14 @@ install/strip/fast: install/strip
 
 # The main all target
 all: cmake_check_build_system
-	cd /home/ciprian/testtools/simpletracer && $(CMAKE_COMMAND) -E cmake_progress_start /home/ciprian/testtools/simpletracer/CMakeFiles /home/ciprian/testtools/simpletracer/offline.sanitizers/CMakeFiles/progress.marks
-	cd /home/ciprian/testtools/simpletracer && $(MAKE) -f CMakeFiles/Makefile2 offline.sanitizers/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/ciprian/testtools/simpletracer/CMakeFiles 0
+	cd /home/boc/testtools/simpletracer && $(CMAKE_COMMAND) -E cmake_progress_start /home/boc/testtools/simpletracer/CMakeFiles /home/boc/testtools/simpletracer/offline.sanitizers/CMakeFiles/progress.marks
+	cd /home/boc/testtools/simpletracer && $(MAKE) -f CMakeFiles/Makefile2 offline.sanitizers/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/boc/testtools/simpletracer/CMakeFiles 0
 .PHONY : all
 
 # The main clean target
 clean:
-	cd /home/ciprian/testtools/simpletracer && $(MAKE) -f CMakeFiles/Makefile2 offline.sanitizers/clean
+	cd /home/boc/testtools/simpletracer && $(MAKE) -f CMakeFiles/Makefile2 offline.sanitizers/clean
 .PHONY : clean
 
 # The main clean target
@@ -141,22 +141,22 @@ clean/fast: clean
 
 # Prepare targets for installation.
 preinstall: all
-	cd /home/ciprian/testtools/simpletracer && $(MAKE) -f CMakeFiles/Makefile2 offline.sanitizers/preinstall
+	cd /home/boc/testtools/simpletracer && $(MAKE) -f CMakeFiles/Makefile2 offline.sanitizers/preinstall
 .PHONY : preinstall
 
 # Prepare targets for installation.
 preinstall/fast:
-	cd /home/ciprian/testtools/simpletracer && $(MAKE) -f CMakeFiles/Makefile2 offline.sanitizers/preinstall
+	cd /home/boc/testtools/simpletracer && $(MAKE) -f CMakeFiles/Makefile2 offline.sanitizers/preinstall
 .PHONY : preinstall/fast
 
 # clear depends
 depend:
-	cd /home/ciprian/testtools/simpletracer && $(CMAKE_COMMAND) -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 1
+	cd /home/boc/testtools/simpletracer && $(CMAKE_COMMAND) -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 1
 .PHONY : depend
 
 # Convenience name for target.
 offline.sanitizers/CMakeFiles/river.sanitizer.dir/rule:
-	cd /home/ciprian/testtools/simpletracer && $(MAKE) -f CMakeFiles/Makefile2 offline.sanitizers/CMakeFiles/river.sanitizer.dir/rule
+	cd /home/boc/testtools/simpletracer && $(MAKE) -f CMakeFiles/Makefile2 offline.sanitizers/CMakeFiles/river.sanitizer.dir/rule
 .PHONY : offline.sanitizers/CMakeFiles/river.sanitizer.dir/rule
 
 # Convenience name for target.
@@ -166,12 +166,12 @@ river.sanitizer: offline.sanitizers/CMakeFiles/river.sanitizer.dir/rule
 
 # fast build rule for target.
 river.sanitizer/fast:
-	cd /home/ciprian/testtools/simpletracer && $(MAKE) -f offline.sanitizers/CMakeFiles/river.sanitizer.dir/build.make offline.sanitizers/CMakeFiles/river.sanitizer.dir/build
+	cd /home/boc/testtools/simpletracer && $(MAKE) -f offline.sanitizers/CMakeFiles/river.sanitizer.dir/build.make offline.sanitizers/CMakeFiles/river.sanitizer.dir/build
 .PHONY : river.sanitizer/fast
 
 # Convenience name for target.
 offline.sanitizers/CMakeFiles/z3.handler.test.dir/rule:
-	cd /home/ciprian/testtools/simpletracer && $(MAKE) -f CMakeFiles/Makefile2 offline.sanitizers/CMakeFiles/z3.handler.test.dir/rule
+	cd /home/boc/testtools/simpletracer && $(MAKE) -f CMakeFiles/Makefile2 offline.sanitizers/CMakeFiles/z3.handler.test.dir/rule
 .PHONY : offline.sanitizers/CMakeFiles/z3.handler.test.dir/rule
 
 # Convenience name for target.
@@ -181,12 +181,12 @@ z3.handler.test: offline.sanitizers/CMakeFiles/z3.handler.test.dir/rule
 
 # fast build rule for target.
 z3.handler.test/fast:
-	cd /home/ciprian/testtools/simpletracer && $(MAKE) -f offline.sanitizers/CMakeFiles/z3.handler.test.dir/build.make offline.sanitizers/CMakeFiles/z3.handler.test.dir/build
+	cd /home/boc/testtools/simpletracer && $(MAKE) -f offline.sanitizers/CMakeFiles/z3.handler.test.dir/build.make offline.sanitizers/CMakeFiles/z3.handler.test.dir/build
 .PHONY : z3.handler.test/fast
 
 # Convenience name for target.
 offline.sanitizers/CMakeFiles/interval.tree.test.dir/rule:
-	cd /home/ciprian/testtools/simpletracer && $(MAKE) -f CMakeFiles/Makefile2 offline.sanitizers/CMakeFiles/interval.tree.test.dir/rule
+	cd /home/boc/testtools/simpletracer && $(MAKE) -f CMakeFiles/Makefile2 offline.sanitizers/CMakeFiles/interval.tree.test.dir/rule
 .PHONY : offline.sanitizers/CMakeFiles/interval.tree.test.dir/rule
 
 # Convenience name for target.
@@ -196,7 +196,7 @@ interval.tree.test: offline.sanitizers/CMakeFiles/interval.tree.test.dir/rule
 
 # fast build rule for target.
 interval.tree.test/fast:
-	cd /home/ciprian/testtools/simpletracer && $(MAKE) -f offline.sanitizers/CMakeFiles/interval.tree.test.dir/build.make offline.sanitizers/CMakeFiles/interval.tree.test.dir/build
+	cd /home/boc/testtools/simpletracer && $(MAKE) -f offline.sanitizers/CMakeFiles/interval.tree.test.dir/build.make offline.sanitizers/CMakeFiles/interval.tree.test.dir/build
 .PHONY : interval.tree.test/fast
 
 CallStack.o: CallStack.cpp.o
@@ -205,7 +205,7 @@ CallStack.o: CallStack.cpp.o
 
 # target to build an object file
 CallStack.cpp.o:
-	cd /home/ciprian/testtools/simpletracer && $(MAKE) -f offline.sanitizers/CMakeFiles/river.sanitizer.dir/build.make offline.sanitizers/CMakeFiles/river.sanitizer.dir/CallStack.cpp.o
+	cd /home/boc/testtools/simpletracer && $(MAKE) -f offline.sanitizers/CMakeFiles/river.sanitizer.dir/build.make offline.sanitizers/CMakeFiles/river.sanitizer.dir/CallStack.cpp.o
 .PHONY : CallStack.cpp.o
 
 CallStack.i: CallStack.cpp.i
@@ -214,7 +214,7 @@ CallStack.i: CallStack.cpp.i
 
 # target to preprocess a source file
 CallStack.cpp.i:
-	cd /home/ciprian/testtools/simpletracer && $(MAKE) -f offline.sanitizers/CMakeFiles/river.sanitizer.dir/build.make offline.sanitizers/CMakeFiles/river.sanitizer.dir/CallStack.cpp.i
+	cd /home/boc/testtools/simpletracer && $(MAKE) -f offline.sanitizers/CMakeFiles/river.sanitizer.dir/build.make offline.sanitizers/CMakeFiles/river.sanitizer.dir/CallStack.cpp.i
 .PHONY : CallStack.cpp.i
 
 CallStack.s: CallStack.cpp.s
@@ -223,7 +223,7 @@ CallStack.s: CallStack.cpp.s
 
 # target to generate assembly for a file
 CallStack.cpp.s:
-	cd /home/ciprian/testtools/simpletracer && $(MAKE) -f offline.sanitizers/CMakeFiles/river.sanitizer.dir/build.make offline.sanitizers/CMakeFiles/river.sanitizer.dir/CallStack.cpp.s
+	cd /home/boc/testtools/simpletracer && $(MAKE) -f offline.sanitizers/CMakeFiles/river.sanitizer.dir/build.make offline.sanitizers/CMakeFiles/river.sanitizer.dir/CallStack.cpp.s
 .PHONY : CallStack.cpp.s
 
 IntervalTree.o: IntervalTree.cpp.o
@@ -232,7 +232,7 @@ IntervalTree.o: IntervalTree.cpp.o
 
 # target to build an object file
 IntervalTree.cpp.o:
-	cd /home/ciprian/testtools/simpletracer && $(MAKE) -f offline.sanitizers/CMakeFiles/interval.tree.test.dir/build.make offline.sanitizers/CMakeFiles/interval.tree.test.dir/IntervalTree.cpp.o
+	cd /home/boc/testtools/simpletracer && $(MAKE) -f offline.sanitizers/CMakeFiles/interval.tree.test.dir/build.make offline.sanitizers/CMakeFiles/interval.tree.test.dir/IntervalTree.cpp.o
 .PHONY : IntervalTree.cpp.o
 
 IntervalTree.i: IntervalTree.cpp.i
@@ -241,7 +241,7 @@ IntervalTree.i: IntervalTree.cpp.i
 
 # target to preprocess a source file
 IntervalTree.cpp.i:
-	cd /home/ciprian/testtools/simpletracer && $(MAKE) -f offline.sanitizers/CMakeFiles/interval.tree.test.dir/build.make offline.sanitizers/CMakeFiles/interval.tree.test.dir/IntervalTree.cpp.i
+	cd /home/boc/testtools/simpletracer && $(MAKE) -f offline.sanitizers/CMakeFiles/interval.tree.test.dir/build.make offline.sanitizers/CMakeFiles/interval.tree.test.dir/IntervalTree.cpp.i
 .PHONY : IntervalTree.cpp.i
 
 IntervalTree.s: IntervalTree.cpp.s
@@ -250,7 +250,7 @@ IntervalTree.s: IntervalTree.cpp.s
 
 # target to generate assembly for a file
 IntervalTree.cpp.s:
-	cd /home/ciprian/testtools/simpletracer && $(MAKE) -f offline.sanitizers/CMakeFiles/interval.tree.test.dir/build.make offline.sanitizers/CMakeFiles/interval.tree.test.dir/IntervalTree.cpp.s
+	cd /home/boc/testtools/simpletracer && $(MAKE) -f offline.sanitizers/CMakeFiles/interval.tree.test.dir/build.make offline.sanitizers/CMakeFiles/interval.tree.test.dir/IntervalTree.cpp.s
 .PHONY : IntervalTree.cpp.s
 
 SanitizerMain.o: SanitizerMain.cpp.o
@@ -259,7 +259,7 @@ SanitizerMain.o: SanitizerMain.cpp.o
 
 # target to build an object file
 SanitizerMain.cpp.o:
-	cd /home/ciprian/testtools/simpletracer && $(MAKE) -f offline.sanitizers/CMakeFiles/river.sanitizer.dir/build.make offline.sanitizers/CMakeFiles/river.sanitizer.dir/SanitizerMain.cpp.o
+	cd /home/boc/testtools/simpletracer && $(MAKE) -f offline.sanitizers/CMakeFiles/river.sanitizer.dir/build.make offline.sanitizers/CMakeFiles/river.sanitizer.dir/SanitizerMain.cpp.o
 .PHONY : SanitizerMain.cpp.o
 
 SanitizerMain.i: SanitizerMain.cpp.i
@@ -268,7 +268,7 @@ SanitizerMain.i: SanitizerMain.cpp.i
 
 # target to preprocess a source file
 SanitizerMain.cpp.i:
-	cd /home/ciprian/testtools/simpletracer && $(MAKE) -f offline.sanitizers/CMakeFiles/river.sanitizer.dir/build.make offline.sanitizers/CMakeFiles/river.sanitizer.dir/SanitizerMain.cpp.i
+	cd /home/boc/testtools/simpletracer && $(MAKE) -f offline.sanitizers/CMakeFiles/river.sanitizer.dir/build.make offline.sanitizers/CMakeFiles/river.sanitizer.dir/SanitizerMain.cpp.i
 .PHONY : SanitizerMain.cpp.i
 
 SanitizerMain.s: SanitizerMain.cpp.s
@@ -277,7 +277,7 @@ SanitizerMain.s: SanitizerMain.cpp.s
 
 # target to generate assembly for a file
 SanitizerMain.cpp.s:
-	cd /home/ciprian/testtools/simpletracer && $(MAKE) -f offline.sanitizers/CMakeFiles/river.sanitizer.dir/build.make offline.sanitizers/CMakeFiles/river.sanitizer.dir/SanitizerMain.cpp.s
+	cd /home/boc/testtools/simpletracer && $(MAKE) -f offline.sanitizers/CMakeFiles/river.sanitizer.dir/build.make offline.sanitizers/CMakeFiles/river.sanitizer.dir/SanitizerMain.cpp.s
 .PHONY : SanitizerMain.cpp.s
 
 TestIntervalTree.o: TestIntervalTree.cpp.o
@@ -286,7 +286,7 @@ TestIntervalTree.o: TestIntervalTree.cpp.o
 
 # target to build an object file
 TestIntervalTree.cpp.o:
-	cd /home/ciprian/testtools/simpletracer && $(MAKE) -f offline.sanitizers/CMakeFiles/interval.tree.test.dir/build.make offline.sanitizers/CMakeFiles/interval.tree.test.dir/TestIntervalTree.cpp.o
+	cd /home/boc/testtools/simpletracer && $(MAKE) -f offline.sanitizers/CMakeFiles/interval.tree.test.dir/build.make offline.sanitizers/CMakeFiles/interval.tree.test.dir/TestIntervalTree.cpp.o
 .PHONY : TestIntervalTree.cpp.o
 
 TestIntervalTree.i: TestIntervalTree.cpp.i
@@ -295,7 +295,7 @@ TestIntervalTree.i: TestIntervalTree.cpp.i
 
 # target to preprocess a source file
 TestIntervalTree.cpp.i:
-	cd /home/ciprian/testtools/simpletracer && $(MAKE) -f offline.sanitizers/CMakeFiles/interval.tree.test.dir/build.make offline.sanitizers/CMakeFiles/interval.tree.test.dir/TestIntervalTree.cpp.i
+	cd /home/boc/testtools/simpletracer && $(MAKE) -f offline.sanitizers/CMakeFiles/interval.tree.test.dir/build.make offline.sanitizers/CMakeFiles/interval.tree.test.dir/TestIntervalTree.cpp.i
 .PHONY : TestIntervalTree.cpp.i
 
 TestIntervalTree.s: TestIntervalTree.cpp.s
@@ -304,7 +304,7 @@ TestIntervalTree.s: TestIntervalTree.cpp.s
 
 # target to generate assembly for a file
 TestIntervalTree.cpp.s:
-	cd /home/ciprian/testtools/simpletracer && $(MAKE) -f offline.sanitizers/CMakeFiles/interval.tree.test.dir/build.make offline.sanitizers/CMakeFiles/interval.tree.test.dir/TestIntervalTree.cpp.s
+	cd /home/boc/testtools/simpletracer && $(MAKE) -f offline.sanitizers/CMakeFiles/interval.tree.test.dir/build.make offline.sanitizers/CMakeFiles/interval.tree.test.dir/TestIntervalTree.cpp.s
 .PHONY : TestIntervalTree.cpp.s
 
 TestZ3Handler.o: TestZ3Handler.cpp.o
@@ -313,7 +313,7 @@ TestZ3Handler.o: TestZ3Handler.cpp.o
 
 # target to build an object file
 TestZ3Handler.cpp.o:
-	cd /home/ciprian/testtools/simpletracer && $(MAKE) -f offline.sanitizers/CMakeFiles/z3.handler.test.dir/build.make offline.sanitizers/CMakeFiles/z3.handler.test.dir/TestZ3Handler.cpp.o
+	cd /home/boc/testtools/simpletracer && $(MAKE) -f offline.sanitizers/CMakeFiles/z3.handler.test.dir/build.make offline.sanitizers/CMakeFiles/z3.handler.test.dir/TestZ3Handler.cpp.o
 .PHONY : TestZ3Handler.cpp.o
 
 TestZ3Handler.i: TestZ3Handler.cpp.i
@@ -322,7 +322,7 @@ TestZ3Handler.i: TestZ3Handler.cpp.i
 
 # target to preprocess a source file
 TestZ3Handler.cpp.i:
-	cd /home/ciprian/testtools/simpletracer && $(MAKE) -f offline.sanitizers/CMakeFiles/z3.handler.test.dir/build.make offline.sanitizers/CMakeFiles/z3.handler.test.dir/TestZ3Handler.cpp.i
+	cd /home/boc/testtools/simpletracer && $(MAKE) -f offline.sanitizers/CMakeFiles/z3.handler.test.dir/build.make offline.sanitizers/CMakeFiles/z3.handler.test.dir/TestZ3Handler.cpp.i
 .PHONY : TestZ3Handler.cpp.i
 
 TestZ3Handler.s: TestZ3Handler.cpp.s
@@ -331,7 +331,7 @@ TestZ3Handler.s: TestZ3Handler.cpp.s
 
 # target to generate assembly for a file
 TestZ3Handler.cpp.s:
-	cd /home/ciprian/testtools/simpletracer && $(MAKE) -f offline.sanitizers/CMakeFiles/z3.handler.test.dir/build.make offline.sanitizers/CMakeFiles/z3.handler.test.dir/TestZ3Handler.cpp.s
+	cd /home/boc/testtools/simpletracer && $(MAKE) -f offline.sanitizers/CMakeFiles/z3.handler.test.dir/build.make offline.sanitizers/CMakeFiles/z3.handler.test.dir/TestZ3Handler.cpp.s
 .PHONY : TestZ3Handler.cpp.s
 
 TraceParser.o: TraceParser.cpp.o
@@ -340,7 +340,7 @@ TraceParser.o: TraceParser.cpp.o
 
 # target to build an object file
 TraceParser.cpp.o:
-	cd /home/ciprian/testtools/simpletracer && $(MAKE) -f offline.sanitizers/CMakeFiles/river.sanitizer.dir/build.make offline.sanitizers/CMakeFiles/river.sanitizer.dir/TraceParser.cpp.o
+	cd /home/boc/testtools/simpletracer && $(MAKE) -f offline.sanitizers/CMakeFiles/river.sanitizer.dir/build.make offline.sanitizers/CMakeFiles/river.sanitizer.dir/TraceParser.cpp.o
 .PHONY : TraceParser.cpp.o
 
 TraceParser.i: TraceParser.cpp.i
@@ -349,7 +349,7 @@ TraceParser.i: TraceParser.cpp.i
 
 # target to preprocess a source file
 TraceParser.cpp.i:
-	cd /home/ciprian/testtools/simpletracer && $(MAKE) -f offline.sanitizers/CMakeFiles/river.sanitizer.dir/build.make offline.sanitizers/CMakeFiles/river.sanitizer.dir/TraceParser.cpp.i
+	cd /home/boc/testtools/simpletracer && $(MAKE) -f offline.sanitizers/CMakeFiles/river.sanitizer.dir/build.make offline.sanitizers/CMakeFiles/river.sanitizer.dir/TraceParser.cpp.i
 .PHONY : TraceParser.cpp.i
 
 TraceParser.s: TraceParser.cpp.s
@@ -358,7 +358,7 @@ TraceParser.s: TraceParser.cpp.s
 
 # target to generate assembly for a file
 TraceParser.cpp.s:
-	cd /home/ciprian/testtools/simpletracer && $(MAKE) -f offline.sanitizers/CMakeFiles/river.sanitizer.dir/build.make offline.sanitizers/CMakeFiles/river.sanitizer.dir/TraceParser.cpp.s
+	cd /home/boc/testtools/simpletracer && $(MAKE) -f offline.sanitizers/CMakeFiles/river.sanitizer.dir/build.make offline.sanitizers/CMakeFiles/river.sanitizer.dir/TraceParser.cpp.s
 .PHONY : TraceParser.cpp.s
 
 Z3Handler.o: Z3Handler.cpp.o
@@ -367,8 +367,8 @@ Z3Handler.o: Z3Handler.cpp.o
 
 # target to build an object file
 Z3Handler.cpp.o:
-	cd /home/ciprian/testtools/simpletracer && $(MAKE) -f offline.sanitizers/CMakeFiles/river.sanitizer.dir/build.make offline.sanitizers/CMakeFiles/river.sanitizer.dir/Z3Handler.cpp.o
-	cd /home/ciprian/testtools/simpletracer && $(MAKE) -f offline.sanitizers/CMakeFiles/z3.handler.test.dir/build.make offline.sanitizers/CMakeFiles/z3.handler.test.dir/Z3Handler.cpp.o
+	cd /home/boc/testtools/simpletracer && $(MAKE) -f offline.sanitizers/CMakeFiles/river.sanitizer.dir/build.make offline.sanitizers/CMakeFiles/river.sanitizer.dir/Z3Handler.cpp.o
+	cd /home/boc/testtools/simpletracer && $(MAKE) -f offline.sanitizers/CMakeFiles/z3.handler.test.dir/build.make offline.sanitizers/CMakeFiles/z3.handler.test.dir/Z3Handler.cpp.o
 .PHONY : Z3Handler.cpp.o
 
 Z3Handler.i: Z3Handler.cpp.i
@@ -377,8 +377,8 @@ Z3Handler.i: Z3Handler.cpp.i
 
 # target to preprocess a source file
 Z3Handler.cpp.i:
-	cd /home/ciprian/testtools/simpletracer && $(MAKE) -f offline.sanitizers/CMakeFiles/river.sanitizer.dir/build.make offline.sanitizers/CMakeFiles/river.sanitizer.dir/Z3Handler.cpp.i
-	cd /home/ciprian/testtools/simpletracer && $(MAKE) -f offline.sanitizers/CMakeFiles/z3.handler.test.dir/build.make offline.sanitizers/CMakeFiles/z3.handler.test.dir/Z3Handler.cpp.i
+	cd /home/boc/testtools/simpletracer && $(MAKE) -f offline.sanitizers/CMakeFiles/river.sanitizer.dir/build.make offline.sanitizers/CMakeFiles/river.sanitizer.dir/Z3Handler.cpp.i
+	cd /home/boc/testtools/simpletracer && $(MAKE) -f offline.sanitizers/CMakeFiles/z3.handler.test.dir/build.make offline.sanitizers/CMakeFiles/z3.handler.test.dir/Z3Handler.cpp.i
 .PHONY : Z3Handler.cpp.i
 
 Z3Handler.s: Z3Handler.cpp.s
@@ -387,8 +387,8 @@ Z3Handler.s: Z3Handler.cpp.s
 
 # target to generate assembly for a file
 Z3Handler.cpp.s:
-	cd /home/ciprian/testtools/simpletracer && $(MAKE) -f offline.sanitizers/CMakeFiles/river.sanitizer.dir/build.make offline.sanitizers/CMakeFiles/river.sanitizer.dir/Z3Handler.cpp.s
-	cd /home/ciprian/testtools/simpletracer && $(MAKE) -f offline.sanitizers/CMakeFiles/z3.handler.test.dir/build.make offline.sanitizers/CMakeFiles/z3.handler.test.dir/Z3Handler.cpp.s
+	cd /home/boc/testtools/simpletracer && $(MAKE) -f offline.sanitizers/CMakeFiles/river.sanitizer.dir/build.make offline.sanitizers/CMakeFiles/river.sanitizer.dir/Z3Handler.cpp.s
+	cd /home/boc/testtools/simpletracer && $(MAKE) -f offline.sanitizers/CMakeFiles/z3.handler.test.dir/build.make offline.sanitizers/CMakeFiles/z3.handler.test.dir/Z3Handler.cpp.s
 .PHONY : Z3Handler.cpp.s
 
 crc32.o: crc32.cpp.o
@@ -397,7 +397,7 @@ crc32.o: crc32.cpp.o
 
 # target to build an object file
 crc32.cpp.o:
-	cd /home/ciprian/testtools/simpletracer && $(MAKE) -f offline.sanitizers/CMakeFiles/river.sanitizer.dir/build.make offline.sanitizers/CMakeFiles/river.sanitizer.dir/crc32.cpp.o
+	cd /home/boc/testtools/simpletracer && $(MAKE) -f offline.sanitizers/CMakeFiles/river.sanitizer.dir/build.make offline.sanitizers/CMakeFiles/river.sanitizer.dir/crc32.cpp.o
 .PHONY : crc32.cpp.o
 
 crc32.i: crc32.cpp.i
@@ -406,7 +406,7 @@ crc32.i: crc32.cpp.i
 
 # target to preprocess a source file
 crc32.cpp.i:
-	cd /home/ciprian/testtools/simpletracer && $(MAKE) -f offline.sanitizers/CMakeFiles/river.sanitizer.dir/build.make offline.sanitizers/CMakeFiles/river.sanitizer.dir/crc32.cpp.i
+	cd /home/boc/testtools/simpletracer && $(MAKE) -f offline.sanitizers/CMakeFiles/river.sanitizer.dir/build.make offline.sanitizers/CMakeFiles/river.sanitizer.dir/crc32.cpp.i
 .PHONY : crc32.cpp.i
 
 crc32.s: crc32.cpp.s
@@ -415,7 +415,7 @@ crc32.s: crc32.cpp.s
 
 # target to generate assembly for a file
 crc32.cpp.s:
-	cd /home/ciprian/testtools/simpletracer && $(MAKE) -f offline.sanitizers/CMakeFiles/river.sanitizer.dir/build.make offline.sanitizers/CMakeFiles/river.sanitizer.dir/crc32.cpp.s
+	cd /home/boc/testtools/simpletracer && $(MAKE) -f offline.sanitizers/CMakeFiles/river.sanitizer.dir/build.make offline.sanitizers/CMakeFiles/river.sanitizer.dir/crc32.cpp.s
 .PHONY : crc32.cpp.s
 
 # Help Target
@@ -468,6 +468,6 @@ help:
 # No rule that depends on this can have commands that come from listfiles
 # because they might be regenerated.
 cmake_check_build_system:
-	cd /home/ciprian/testtools/simpletracer && $(CMAKE_COMMAND) -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 0
+	cd /home/boc/testtools/simpletracer && $(CMAKE_COMMAND) -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 0
 .PHONY : cmake_check_build_system
 

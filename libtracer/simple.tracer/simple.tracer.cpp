@@ -57,7 +57,7 @@ unsigned int CustomObserver::ExecutionControl(void *ctx, void *address) {
 	if (logEsp) {
 		ClearExecutionRegisters(&regs);
 		st->ctrl->GetFirstEsp(ctx, regs.esp);
-		aFormat->WriteRegisters(regs);
+		// aFormat->WriteRegisters(regs);
 		logEsp = false;
 	}
 
@@ -85,6 +85,7 @@ unsigned int CustomObserver::ExecutionEnd(void *ctx) {
 	} else if (st->flowMode) {
 		st->globalLog.Log("On flow mode restart\n");
 
+		aFormat->OnExecutionEnd();
 		FlowOpCode nextOp = E_NEXTOP_TASK;
 		size_t res = fread(&nextOp, sizeof(char), 1, stdin);
 		if (res != 1) {

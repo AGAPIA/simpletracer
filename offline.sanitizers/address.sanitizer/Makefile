@@ -48,10 +48,10 @@ RM = /usr/bin/cmake -E remove -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/ciprian/testtools/simpletracer
+CMAKE_SOURCE_DIR = /home/boc/testtools/simpletracer
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/ciprian/testtools/simpletracer
+CMAKE_BINARY_DIR = /home/boc/testtools/simpletracer
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -124,14 +124,14 @@ edit_cache/fast: edit_cache
 
 # The main all target
 all: cmake_check_build_system
-	cd /home/ciprian/testtools/simpletracer && $(CMAKE_COMMAND) -E cmake_progress_start /home/ciprian/testtools/simpletracer/CMakeFiles /home/ciprian/testtools/simpletracer/offline.sanitizers/address.sanitizer/CMakeFiles/progress.marks
-	cd /home/ciprian/testtools/simpletracer && $(MAKE) -f CMakeFiles/Makefile2 offline.sanitizers/address.sanitizer/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/ciprian/testtools/simpletracer/CMakeFiles 0
+	cd /home/boc/testtools/simpletracer && $(CMAKE_COMMAND) -E cmake_progress_start /home/boc/testtools/simpletracer/CMakeFiles /home/boc/testtools/simpletracer/offline.sanitizers/address.sanitizer/CMakeFiles/progress.marks
+	cd /home/boc/testtools/simpletracer && $(MAKE) -f CMakeFiles/Makefile2 offline.sanitizers/address.sanitizer/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/boc/testtools/simpletracer/CMakeFiles 0
 .PHONY : all
 
 # The main clean target
 clean:
-	cd /home/ciprian/testtools/simpletracer && $(MAKE) -f CMakeFiles/Makefile2 offline.sanitizers/address.sanitizer/clean
+	cd /home/boc/testtools/simpletracer && $(MAKE) -f CMakeFiles/Makefile2 offline.sanitizers/address.sanitizer/clean
 .PHONY : clean
 
 # The main clean target
@@ -141,22 +141,22 @@ clean/fast: clean
 
 # Prepare targets for installation.
 preinstall: all
-	cd /home/ciprian/testtools/simpletracer && $(MAKE) -f CMakeFiles/Makefile2 offline.sanitizers/address.sanitizer/preinstall
+	cd /home/boc/testtools/simpletracer && $(MAKE) -f CMakeFiles/Makefile2 offline.sanitizers/address.sanitizer/preinstall
 .PHONY : preinstall
 
 # Prepare targets for installation.
 preinstall/fast:
-	cd /home/ciprian/testtools/simpletracer && $(MAKE) -f CMakeFiles/Makefile2 offline.sanitizers/address.sanitizer/preinstall
+	cd /home/boc/testtools/simpletracer && $(MAKE) -f CMakeFiles/Makefile2 offline.sanitizers/address.sanitizer/preinstall
 .PHONY : preinstall/fast
 
 # clear depends
 depend:
-	cd /home/ciprian/testtools/simpletracer && $(CMAKE_COMMAND) -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 1
+	cd /home/boc/testtools/simpletracer && $(CMAKE_COMMAND) -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 1
 .PHONY : depend
 
 # Convenience name for target.
 offline.sanitizers/address.sanitizer/CMakeFiles/asan.dir/rule:
-	cd /home/ciprian/testtools/simpletracer && $(MAKE) -f CMakeFiles/Makefile2 offline.sanitizers/address.sanitizer/CMakeFiles/asan.dir/rule
+	cd /home/boc/testtools/simpletracer && $(MAKE) -f CMakeFiles/Makefile2 offline.sanitizers/address.sanitizer/CMakeFiles/asan.dir/rule
 .PHONY : offline.sanitizers/address.sanitizer/CMakeFiles/asan.dir/rule
 
 # Convenience name for target.
@@ -166,7 +166,7 @@ asan: offline.sanitizers/address.sanitizer/CMakeFiles/asan.dir/rule
 
 # fast build rule for target.
 asan/fast:
-	cd /home/ciprian/testtools/simpletracer && $(MAKE) -f offline.sanitizers/address.sanitizer/CMakeFiles/asan.dir/build.make offline.sanitizers/address.sanitizer/CMakeFiles/asan.dir/build
+	cd /home/boc/testtools/simpletracer && $(MAKE) -f offline.sanitizers/address.sanitizer/CMakeFiles/asan.dir/build.make offline.sanitizers/address.sanitizer/CMakeFiles/asan.dir/build
 .PHONY : asan/fast
 
 AddressSanitizer.o: AddressSanitizer.cpp.o
@@ -175,7 +175,7 @@ AddressSanitizer.o: AddressSanitizer.cpp.o
 
 # target to build an object file
 AddressSanitizer.cpp.o:
-	cd /home/ciprian/testtools/simpletracer && $(MAKE) -f offline.sanitizers/address.sanitizer/CMakeFiles/asan.dir/build.make offline.sanitizers/address.sanitizer/CMakeFiles/asan.dir/AddressSanitizer.cpp.o
+	cd /home/boc/testtools/simpletracer && $(MAKE) -f offline.sanitizers/address.sanitizer/CMakeFiles/asan.dir/build.make offline.sanitizers/address.sanitizer/CMakeFiles/asan.dir/AddressSanitizer.cpp.o
 .PHONY : AddressSanitizer.cpp.o
 
 AddressSanitizer.i: AddressSanitizer.cpp.i
@@ -184,7 +184,7 @@ AddressSanitizer.i: AddressSanitizer.cpp.i
 
 # target to preprocess a source file
 AddressSanitizer.cpp.i:
-	cd /home/ciprian/testtools/simpletracer && $(MAKE) -f offline.sanitizers/address.sanitizer/CMakeFiles/asan.dir/build.make offline.sanitizers/address.sanitizer/CMakeFiles/asan.dir/AddressSanitizer.cpp.i
+	cd /home/boc/testtools/simpletracer && $(MAKE) -f offline.sanitizers/address.sanitizer/CMakeFiles/asan.dir/build.make offline.sanitizers/address.sanitizer/CMakeFiles/asan.dir/AddressSanitizer.cpp.i
 .PHONY : AddressSanitizer.cpp.i
 
 AddressSanitizer.s: AddressSanitizer.cpp.s
@@ -193,7 +193,7 @@ AddressSanitizer.s: AddressSanitizer.cpp.s
 
 # target to generate assembly for a file
 AddressSanitizer.cpp.s:
-	cd /home/ciprian/testtools/simpletracer && $(MAKE) -f offline.sanitizers/address.sanitizer/CMakeFiles/asan.dir/build.make offline.sanitizers/address.sanitizer/CMakeFiles/asan.dir/AddressSanitizer.cpp.s
+	cd /home/boc/testtools/simpletracer && $(MAKE) -f offline.sanitizers/address.sanitizer/CMakeFiles/asan.dir/build.make offline.sanitizers/address.sanitizer/CMakeFiles/asan.dir/AddressSanitizer.cpp.s
 .PHONY : AddressSanitizer.cpp.s
 
 # Help Target
@@ -223,6 +223,6 @@ help:
 # No rule that depends on this can have commands that come from listfiles
 # because they might be regenerated.
 cmake_check_build_system:
-	cd /home/ciprian/testtools/simpletracer && $(CMAKE_COMMAND) -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 0
+	cd /home/boc/testtools/simpletracer && $(CMAKE_COMMAND) -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 0
 .PHONY : cmake_check_build_system
 
