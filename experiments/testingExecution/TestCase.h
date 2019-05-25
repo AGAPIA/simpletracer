@@ -20,6 +20,6 @@ struct TestCase {
 };
 
 struct TestCasePair {
-	std::vector<TestCase> testCasePair;
+	std::vector<TestCase> testCaseVector;
 };
 

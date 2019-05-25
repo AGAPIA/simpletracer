@@ -115,6 +115,11 @@ std::vector <string> ConcolicExecutor::GenerateTestCases(const char *rootInput, 
 	// get some combinations of {0,1}
     std::vector <string> s = GenerateCombinations("",initialTestCases.size()); // s = all the combination of {0,1}, {00000, 000010...}
 
+	printf("Afisam testele peste care facem combinatii \n");
+	for(TestCase t : initialTestCases) {
+		testCase_to_String(t);
+	}
+
 	//for each combination of {0,1}
 	for (std::vector<string>::const_iterator i = s.begin(); i != s.end(); ++i) {
 
@@ -217,16 +222,42 @@ std::vector<TestCase> ConcolicExecutor::FindDiferencesWithParent(Vertex *child) 
 }
 
 
+std::vector<TestCase> ConcolicExecutor::GetOnlyLoopTestCases(std::vector<TestCase> testCases) {
+	set<unsigned long> mySet;
+	std::vector<unsigned long> orderOfInstructionAddress;
+	for( unsigned i = 0; i <  testCases.size(); ++i ) {
+		if(mySet.count(testCases[i].instructionAddress) == 0) {
+			// instructionAddress not in set
+			orderOfInstructionAddress.push_back(testCases[i].instructionAddress);
+		}
+		mySet.insert( testCases[i].instructionAddress);
+	}
 
-std::vector<TestCasePair> ConcolicExecutor::GetOnlyLoopTestCases(std::vector<TestCase> testCases) {
-	/*
-	This method will extract all the  TestCases pair that makes a loop
-	*/
+	for(unsigned long i : orderOfInstructionAddress) {
+		printf("Instruction set :  %08lx \n", i);
+	}
 
-	std::vector<TestCasePair> listTestCasePair;
-	// TO DO: de facut aceasta metoda
-	return listTestCasePair;
-	
+
+
+	// TO DO: momentan eu iau cu primele valori gasite, ideea este sa iau cu ultimile
+	// sau cu una de la mijloc
+
+	std::vector<TestCase> newTestCase;
+
+	int cnt = 0;
+	while(cnt < orderOfInstructionAddress.size()) {
+
+		for(TestCase j : testCases) {
+			if(cnt >= orderOfInstructionAddress.size()) break;
+			if(j.instructionAddress == orderOfInstructionAddress[cnt]) {
+				newTestCase.push_back(j);
+				cnt++;
+			}
+		}
+	}
+
+
+	return newTestCase;
 }
 
 /*
@@ -266,11 +297,12 @@ TestGraph* ConcolicExecutor::GenerateExecutionTree(string start_input) {
 	while(!Q.empty()) {
 		Vertex *x = Q.front();
 		std::vector<TestCase> newTestCases = CallSimpleTracer(child_pid, x->data.c_str());
-		graph->AddVertexTestCases(x->data, newTestCases); // add the TestCases after the call of simpleTracer, and add them to the vertex
+		graph->AddVertexTestCases(x->data, GetOnlyLoopTestCases(newTestCases)); // add the TestCases after the call of simpleTracer, and add them to the vertex
 		std::vector<TestCase> differentTestCases = FindDiferencesWithParent(x); // find the TestCases between this vertex and he's parent
 		cout << "DIFERENCES WITH THE PARENT " <<endl;
 		for(TestCase i : differentTestCases) {
-					printf("Z3_Code_Test : %s \n", i.Z3_code);
+				testCase_to_String(i); cout << endl;
+					//printf("Z3_Code_Test : %s \n", i.Z3_code);
 		}
 
 
