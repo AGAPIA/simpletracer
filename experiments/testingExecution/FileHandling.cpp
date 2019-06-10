@@ -19,7 +19,7 @@ char * FileHandling::readInputData(char *filePath) {
 
 
 
-void FileHandling::writeInputData(const char *input) {
+void FileHandling::writeInputData(unsigned char *input) {
 	// open a file in write mode.
    ofstream outfile;
    outfile.open(INPUT_FILE_PATH);

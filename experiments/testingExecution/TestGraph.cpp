@@ -1,20 +1,32 @@
 #include "TestGraph.h"
 
+int TestGraph::compare(unsigned char *a, unsigned char *b, int size) {
+	while(size-- > 0) {
+		if ( *a != *b ) { return (*a < *b ) ? -1 : 1; }
+		a++; b++;
+	}
+	return 0;
+}
 
+Vertex * TestGraph::FindVertex(char * x) {
 
-Vertex * TestGraph::FindVertex(string x) {
+	
 	for(Vertex * v : VertexList) {
-			if (v->data == x)
+			int cmp = compare((unsigned char *) v->data, (unsigned char *) x, strlen(v->data));
+			if (cmp == 0) {
 				return v;
+			}
 		}
 		return NULL;
 }
 
 
 
-Vertex * TestGraph::AddVertex (string vertexData) {
+Vertex * TestGraph::AddVertex (char * vertexData) {
     // first make sure that the string Vertex is unique
-	if(FindVertex(vertexData) != NULL) return NULL;
+	if(FindVertex(vertexData) != NULL) {
+		return NULL;
+	}
 
 	// if not, then add a new Vertex in the VertexList
     Vertex *newVertex = new Vertex(vertexData);
@@ -22,7 +34,7 @@ Vertex * TestGraph::AddVertex (string vertexData) {
     return newVertex;
 }
 
-void TestGraph::AddVertexTestCases(std::string vertexData, std::vector<TestCase> VertexTestCaseList) {
+void TestGraph::AddVertexTestCases(char * vertexData, std::vector<TestCase> VertexTestCaseList) {
 	Vertex *Vertex = FindVertex(vertexData);
 	if(Vertex == NULL) {
 		cout << "Vertex = " << vertexData << " don't exists" << endl;
@@ -33,7 +45,7 @@ void TestGraph::AddVertexTestCases(std::string vertexData, std::vector<TestCase>
 
 
 //add directed edge going from x to y
-void TestGraph::AddDirectedEdge(string parent, string child) {
+void TestGraph::AddDirectedEdge(char * parent, char * child) {
 	// cautam sa vedem daca le avem, daca nu ele sunt nULL, daca da luam pointerii catre nodul respectiv
 	Vertex * xVert = FindVertex(parent);
 	Vertex * yVert = FindVertex(child);
@@ -43,7 +55,7 @@ void TestGraph::AddDirectedEdge(string parent, string child) {
 	xVert->neighbors.push_back(yVert);
 }
 
-void TestGraph::AddEdge(string parent, string child) {
+void TestGraph::AddEdge(char * parent, char * child) {
 	AddDirectedEdge(parent, child);
 }
 
@@ -59,14 +71,14 @@ void TestGraph::TestDisplay() {
 }
 
 
-std::list<string> TestGraph::BreadthFirstSearch(string start_node) {
+std::list<char *> TestGraph::BreadthFirstSearch(char * start_node) {
 		return BreadthFirst(FindVertex(start_node));
 }
 
 
 
-std::list<string> TestGraph::BreadthFirst(Vertex *s)	{
-    std::list<string> bf_Result;
+std::list<char *> TestGraph::BreadthFirst(Vertex *s)	{
+    std::list<char *> bf_Result;
 	queue<Vertex*> Q;
     for(Vertex * v : VertexList) {
         v->visited = false;
@@ -88,37 +100,3 @@ std::list<string> TestGraph::BreadthFirst(Vertex *s)	{
     }
     return bf_Result;
 }
-
-
-
-/*
-
-
-
-int main() {
-	TestGraph graph;
-
-	graph.addVertex("a");
-	graph.addVertex("b");
-	graph.addVertex("c");
-	graph.addVertex("d");
-	graph.addVertex("e");
-	graph.addVertex("f");
-
-	graph.addEdge("a", "b");
-	graph.addEdge("a", "c");
-	graph.addEdge("b", "d");
-	graph.addEdge("c", "d");
-	graph.addEdge("c", "e");
-	graph.addEdge("e", "d");
-	graph.addEdge("e", "f");
-
-//	cout << "Predecessor" << endl;
-//	graph.displayPredecesors();
-	graph.breadthFirstSearch("a");
-
-	
-
-	return 0;
-}
-*/

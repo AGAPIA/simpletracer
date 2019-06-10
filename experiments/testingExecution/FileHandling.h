@@ -16,6 +16,6 @@ using namespace std;
 class FileHandling {
 	public :
 			char * readInputData(char *filePath);
-			void writeInputData(const char *input);
+			void writeInputData(unsigned char *input);
 			void writeInputDataTest(const char* filePath, std::list<string> inputs);
 };

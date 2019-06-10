@@ -1,7 +1,8 @@
 #include "ConcolicExecutor.h"
 #include "Z3Interpretation.h"
 
-
+#include <spawn.h>
+#include <sys/wait.h>
 
 // used for signals between process
 int ConcolicExecutor::msReceived = 0;
@@ -17,10 +18,12 @@ void ConcolicExecutor::SignalHandler(int sig) {
 std::vector<TestCase> ConcolicExecutor::readPipe() {
 	std::vector<TestCase> list;
 	int num, fileDescriptor;
-	printf("parent - waiting for writers...\n");
-		if ((fileDescriptor = open(myFifo, O_RDONLY)) < 0)
+	printf("\n parent - waiting for writers...\n");
+		if (fileDescriptor = open(myFifo, O_RDONLY)  < 0) {
 			perror("parent - open");
-		// reading the struct
+		}
+		printf("\n Parent is starting to read from the pipe");
+		// reading the struct 
 		int count = 0;
 		do {
 				TestCase x;
@@ -36,35 +39,68 @@ std::vector<TestCase> ConcolicExecutor::readPipe() {
 
 		// PROBLEM: se pare ca mai citeste ultimul element din pipe inca o data
 		list.pop_back();
+
 		close(fileDescriptor);
+		printf("Parent closed  the fileDescriptor \n");
+		unlink(myFifo);
+		printf("Parent unlinked fifo \n");
 
 		return list;
 }
 
-std::vector<TestCase> ConcolicExecutor::CallSimpleTracer(pid_t child_pid, const char *testInput) {
+extern char **environ;
+
+std::vector<TestCase> ConcolicExecutor::CallSimpleTracer(pid_t child_pid, unsigned char *testInput) {
 
 	/* How this function works:
 	- we know that child_pid, is a pid from a process that call simpleTracerAppliation with an testInput
 	- here we specify what input to use to call simpleTracer
 	- after that we signal this process to execute simpleTracer and write output in a pipe
 	- then we read the results from the pipe in the parent
-
-
 	*/
 
-	printf("now we call SimpleTracer with the Input : %s \n", testInput);
+	//printf("now we call SimpleTracer with the Input : %s \n", testInput);
+	printf("%s", testInput);
     std::vector<TestCase> list;
 	FileHandling communicator;
 	communicator.writeInputData(testInput);
 	kill(child_pid,SIGUSR1);// send signal to child process
+	
+	/*
+	pid_t pid;
+	pid = fork();
+	if(pid == 0) {
+		char *cmd = "python -c 'print \"xAXXX\"' | river.tracer -p libfmi.so --annotated --z3";
+		char *argv[] = {"sh", "-c", cmd, NULL};
+		int status;
+		printf("Run command: %s\n", cmd);
+		status = posix_spawn(&pid, "/bin/sh", NULL, NULL, argv, environ);
+	}
 	list = this->readPipe();
+	/*
+	  if (status == 0) {
+        printf("Child pid: %i\n", pid);
+        if (waitpid(pid, &status, 0) != -1) {
+            printf("Child exited with status %i\n", status);
+			list = this->readPipe();
+        } else {
+            perror("waitpid");
+        }
+    } else {
+        printf("posix_spawn: %s\n", strerror(status));
+    }
+	*/
+	
+	list = this->readPipe();
+	printf("Am executat readPipe");
+	
 
-
+/*
 	for(TestCase i : list) {
 		//printf("Z3_Code_Test : %s \n", i.Z3_code);
 		testCase_to_String(i);
 	}
-	
+*/	
 
 	return list;
 }
@@ -91,7 +127,7 @@ std::vector <string> ConcolicExecutor::GenerateCombinations(string k,int req) {
 // this method will take a vector of TestCases, let say s[0], s[1]
 // then using method GenerateCombinations, will generate all combinations of s[0]s[1], being true or false
 // as a result, a vector of new inputs to call simpleTracer
-std::vector <string> ConcolicExecutor::GenerateTestCases(const char *rootInput, std::vector<TestCase> initialTestCases) {
+std::vector <char *> ConcolicExecutor::GenerateTestCases(char *rootInput, std::vector<TestCase> initialTestCases) {
 	/*
 		How this method works: 
 		- first it will take some TestCases as inputs, for example s[0], s[1]
@@ -100,31 +136,29 @@ std::vector <string> ConcolicExecutor::GenerateTestCases(const char *rootInput, 
 		- if 0 then, s[0] will have jum_symbol = 0, then we get the model
 		- after we get the model, we get the new values for s[0]. s[1], and we modify the string rootInput
 		that generate the initialTestCases in the first place
-
 		- at the end of this method, we will get a vector of new inputs based of the combinations of s[0], s[1]...
-
-
-
 	*/
     if(initialTestCases.size() == 0) {
 			return {};
 	}
 	Z3Interpretation z3Interpretor;
-	std::vector <string> newListInputs;
+	std::vector <char *> newListInputs;
 
 	// get some combinations of {0,1}
     std::vector <string> s = GenerateCombinations("",initialTestCases.size()); // s = all the combination of {0,1}, {00000, 000010...}
-
+/*
 	printf("Afisam testele peste care facem combinatii \n");
 	for(TestCase t : initialTestCases) {
 		testCase_to_String(t);
 	}
-
+*/
 	//for each combination of {0,1}
 	for (std::vector<string>::const_iterator i = s.begin(); i != s.end(); ++i) {
 
 		// we crate a copy of the inputString
-		string newInput(rootInput);
+		//string newInput(rootInput);
+		char *newInput = (char*)malloc (strlen(rootInput) * sizeof (char));
+		strcpy(newInput, rootInput);
 
 		// position means, the position of element inside std::vector<TestCase>
 		int pozition = 0;
@@ -184,7 +218,6 @@ std::vector<TestCase> ConcolicExecutor::FindDiferencesWithParent(Vertex *child) 
 	- we know that each vertex has a list of TestCases
 	- we compare input vertex  TestCases with he's parent TestCases
 	- and return those TestCases that are different
-
 	*/
     	Vertex *parent = child->predecesor;
 		if(parent == NULL) {
@@ -221,8 +254,7 @@ std::vector<TestCase> ConcolicExecutor::FindDiferencesWithParent(Vertex *child) 
 
 }
 
-
-std::vector<TestCase> ConcolicExecutor::GetOnlyLoopTestCases(std::vector<TestCase> testCases) {
+std::vector<unsigned long> ConcolicExecutor::selectDistinctTestCasesByID(std::vector<TestCase> testCases) {
 	set<unsigned long> mySet;
 	std::vector<unsigned long> orderOfInstructionAddress;
 	for( unsigned i = 0; i <  testCases.size(); ++i ) {
@@ -232,45 +264,100 @@ std::vector<TestCase> ConcolicExecutor::GetOnlyLoopTestCases(std::vector<TestCas
 		}
 		mySet.insert( testCases[i].instructionAddress);
 	}
-
+/*
 	for(unsigned long i : orderOfInstructionAddress) {
 		printf("Instruction set :  %08lx \n", i);
 	}
+*/
+	return orderOfInstructionAddress;
+}
 
 
-
-	// TO DO: momentan eu iau cu primele valori gasite, ideea este sa iau cu ultimile
-	// sau cu una de la mijloc
-
+std::vector<TestCase>  ConcolicExecutor::selectLastTestCases(std::vector<unsigned long> orderOfInstructionAddress, std::vector<TestCase> testCases) {
 	std::vector<TestCase> newTestCase;
 
-	int cnt = 0;
-	while(cnt < orderOfInstructionAddress.size()) {
-
-		for(TestCase j : testCases) {
-			if(cnt >= orderOfInstructionAddress.size()) break;
-			if(j.instructionAddress == orderOfInstructionAddress[cnt]) {
-				newTestCase.push_back(j);
-				cnt++;
-			}
-		}
-	}
-
+	for(std::vector<unsigned long>::iterator it = orderOfInstructionAddress.begin(); it != orderOfInstructionAddress.end(); ++it) {
+        int count  = 0;
+        vector<TestCase>::reverse_iterator aux;
+        
+        for (vector<TestCase>::reverse_iterator i = testCases.rbegin(); i != testCases.rend(); ++i ) { 
+            if((*i).instructionAddress == (*it)) {
+                aux = i;
+                count++;
+            }
+            
+            if(count >=2) {
+                break;
+            }
+        }
+        
+        if(count == 2 || count == 1) {
+            newTestCase.push_back((*aux));
+        }
+    }
 
 	return newTestCase;
 }
 
+
+
+std::vector<TestCase>  ConcolicExecutor::selectFirstTestCases(std::vector<unsigned long> orderOfInstructionAddress, std::vector<TestCase> testCases) {
+	std::vector<TestCase> newTestCase;
+
+	for(std::vector<unsigned long>::iterator it = orderOfInstructionAddress.begin(); it != orderOfInstructionAddress.end(); ++it) {
+        int count  = 0;
+        vector<TestCase>::iterator aux;
+        
+        for (vector<TestCase>::iterator i = testCases.begin(); i != testCases.end(); ++i ) { 
+            if((*i).instructionAddress == (*it)) {
+                aux = i;
+                count++;
+            }
+            
+            if(count >=2) {
+                break;
+            }
+        }
+        
+        if(count == 2 || count == 1) {
+            newTestCase.push_back((*aux));
+        }
+    }
+
+	return newTestCase;
+}
+
+std::vector<TestCase> ConcolicExecutor::GetOnlyLoopTestCases(std::vector<TestCase> testCases) {
+
+	std::vector<unsigned long> orderOfInstructionAddress = selectDistinctTestCasesByID(testCases);
+	std::vector<TestCase> lastTestCases =  selectLastTestCases(orderOfInstructionAddress, testCases);
+	std::vector<TestCase> firstTestCases =  selectFirstTestCases(orderOfInstructionAddress, testCases);
+
+/*	
+	cout << "Selecting only the first Test Cases" << endl;
+	for(TestCase i : firstTestCases) {
+		testCase_to_String(i);
+	}
+	cout << "Selecting only the last Test Cases" << endl;
+	for(TestCase i : lastTestCases) {
+		testCase_to_String(i);
+	}
+*/
+	
+
+
+	return lastTestCases;
+}
+
 /*
 This method is the root of this application. It will generate the Graph in a Bf way
-
 */
-TestGraph* ConcolicExecutor::GenerateExecutionTree(string start_input) {
+TestGraph* ConcolicExecutor::GenerateExecutionTree(char * start_input) {
 
 	/* How this method works
 	- it works like a BF-algorithm
 	- it will have a child Process, that every time a signal will trigger, it will call simpleTracer
 	- at the end of this method, the child process will be killed
-
 	*/
 
     TestGraph *graph = new TestGraph();
@@ -281,43 +368,89 @@ TestGraph* ConcolicExecutor::GenerateExecutionTree(string start_input) {
 	Q.push(root);
 
 
+	mkfifo(myFifo, 0666); /* creating fifo for read write */
+
+
 	pid_t child_pid, wpid;
+	
 	signal(SIGUSR1,this->SignalHandler);
 	if((child_pid = fork()) == 0) {
 		int parent_pid = getppid();
 			while(1) {
 					while (!msReceived);
+					printf("System call to RIVER is starting \n");
 					int st = system("/home/ceachi/testtools/simpletracer/river.tracer/river.tracer -p libfmi.so --annotated --z3 < ~/testtools/river/benchmarking-payload/fmi/sampleinput.txt");
+					printf("System call to RIVER finished \n");
 					msReceived = 0;
 				}
 	}
 
 
+	std::map<unsigned long, int> instructionAddressMap;
+	#define MAX_CALL 3
+
 
 	while(!Q.empty()) {
 		Vertex *x = Q.front();
-		std::vector<TestCase> newTestCases = CallSimpleTracer(child_pid, x->data.c_str());
-		graph->AddVertexTestCases(x->data, GetOnlyLoopTestCases(newTestCases)); // add the TestCases after the call of simpleTracer, and add them to the vertex
-		std::vector<TestCase> differentTestCases = FindDiferencesWithParent(x); // find the TestCases between this vertex and he's parent
+		bool alreadyExecutedToManyTimes = false;
+		std::vector<TestCase> newTestCases = CallSimpleTracer(child_pid, (unsigned char *) x->data);
+		graph->AddVertexTestCases(x->data, GetOnlyLoopTestCases(newTestCases));
+
+		
+		std::vector<TestCase> differentTestCases = FindDiferencesWithParent(x);
+		
+		if(instructionAddressMap.size() == 0 && differentTestCases.size() == 0) {
+			for(TestCase i : newTestCases) {
+				instructionAddressMap.insert(std::pair<unsigned long, int>(i.instructionAddress, 0));	
+			}
+		}else {
+			for(TestCase i : differentTestCases) {
+				bool found = false;		
+				for(map<unsigned long,int>::iterator it = instructionAddressMap.begin(); it != instructionAddressMap.end(); ++it) {
+					if((*it).first == i.instructionAddress) {
+						found = true;
+						(*it).second++;
+						if((*it).second >= MAX_CALL) {
+							alreadyExecutedToManyTimes = true;
+						}
+					}
+				}
+
+				if(found == false) {
+					instructionAddressMap.insert(std::pair<unsigned long, int>(i.instructionAddress, 0));	
+				}
+			}
+		}
+
+		if(alreadyExecutedToManyTimes == true) {
+			Q.pop();
+			continue;
+		}
+
+		
+		//graph->AddVertexTestCases(x->data, GetOnlyLoopTestCases(newTestCases)); // add the TestCases after the call of simpleTracer, and add them to the vertex
+		//std::vector<TestCase> differentTestCases = FindDiferencesWithParent(x); // find the TestCases between this vertex and he's parent
+	/*
 		cout << "DIFERENCES WITH THE PARENT " <<endl;
 		for(TestCase i : differentTestCases) {
 				testCase_to_String(i); cout << endl;
 					//printf("Z3_Code_Test : %s \n", i.Z3_code);
 		}
-
-
-		std::vector <string> combinations = GenerateTestCases(x->data.c_str(), differentTestCases); // generate all the combinations with the new TestCases
-
-	 cout << "combinations with the string : " << x->data.c_str() << endl;
-		for(string i : combinations) {
+*/
+		std::vector <char *> combinations = GenerateTestCases(x->data, differentTestCases); // generate all the combinations with the new TestCases
+/*
+	 	cout << "combinations with the string : " << x->data << endl;
+		for(char * i : combinations) {
 			cout << i << " ";
 		} cout<<endl;
-
+*/
 		// for every combinations of strings, we create new vertex and add them ass childs for vertex x
-		for(string it : combinations) {
+		for(char * it : combinations) {
 			Vertex *child = graph->AddVertex(it);
 			if(child != nullptr) {
 				graph->AddEdge(x->data, child->data);
+			}else {
+				delete[] it;
 			}
 		}
 

@@ -1103,6 +1103,7 @@ void Z3SymbolicExecutor::Execute(RiverInstruction *instruction) {
 				hasDisplacement ? addressDisplacement.disp : 0,
 				opAddressInfo);
 
+/*
 		if (opAddressInfo.fields & OP_HAS_SYMBOLIC) {
 			SymbolicAddress sa = {
 				.symbolicBase = (unsigned int)baseOpInfo.symbolic,
@@ -1148,6 +1149,7 @@ void Z3SymbolicExecutor::Execute(RiverInstruction *instruction) {
 			PRINTF_SYM("address %p <= %d * %p + %p\n", opAddressInfo.symbolic,
 					scale, indexOpInfo.symbolic, baseOpInfo.symbolic);
 		}
+		*/
 	}
 
 	for (int i = 0; i < flagCount; ++i) {

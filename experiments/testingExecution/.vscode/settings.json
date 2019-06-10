@@ -46,6 +46,7 @@
         "bitset": "cpp",
         "complex": "cpp",
         "list": "cpp",
-        "memory": "cpp"
+        "memory": "cpp",
+        "string": "cpp"
     }
 }

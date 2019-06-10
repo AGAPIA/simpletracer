@@ -9,11 +9,14 @@ using namespace std;
 
 class Vertex{
 	public:
-		string data;
+		char *data;
 		Vertex *predecesor;
 		list<Vertex*> neighbors;
 		bool visited; 
-		Vertex(string x) { data = x; }
+		Vertex(char *x) { 
+			data = (char*) malloc(strlen(x) * sizeof(char));
+			strcpy(data, x);
+		}
 		std::vector<TestCase> testCaseList;
 };
 
@@ -23,26 +26,26 @@ class TestGraph {
 public:
 	list<Vertex*> VertexList;
 	
-
+	int compare(unsigned char *a, unsigned char *b, int size);
 	//locate Vertex containg value x
-	Vertex * FindVertex(string vertexData);
+	Vertex * FindVertex(char * vertexData);
 
 
-	Vertex *  AddVertex (string x);
-	void AddVertexTestCases(std::string vertexData, std::vector<TestCase> vertexTestCaseList);
+	Vertex *  AddVertex (char * x);
+	void AddVertexTestCases(char * vertexData, std::vector<TestCase> vertexTestCaseList);
 
 	//add directed edge going from x to y
-	void AddDirectedEdge(string parent, string child);
+	void AddDirectedEdge(char * parent, char * child);
 
-	void AddEdge(string parent, string child);
+	void AddEdge(char * parent, char * child);
 
 	//display all vertices and who they connect to
 	void TestDisplay();
 
 	// traverse the graph with a BreathFirst Algoritm
-	std::list<string> BreadthFirstSearch(string rootNode);
+	std::list<char *> BreadthFirstSearch(char * rootNode);
 
 private:
 
-	std::list<std::string> BreadthFirst(Vertex *s);
+	std::list<char *> BreadthFirst(Vertex *s);
 };
