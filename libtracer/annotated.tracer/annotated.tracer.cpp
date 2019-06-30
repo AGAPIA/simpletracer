@@ -146,10 +146,9 @@ unsigned int CustomObserver::ExecutionEnd(void *ctx) {
     int num, fileDescriptor;
 	#define  myfifo  "/tmp/fifochannel"  // FIFO file path 
 	mode_t fifo_mode = S_IRUSR | S_IWUSR;
-	#define MaxZs              250   /* max microseconds to sleep */
 
-/*
 // first we must check if fifo exists -> if yes we remove it
+/*
 	struct stat stats;
     if ( stat( myfifo, &stats ) < 0 )
     {
@@ -165,28 +164,40 @@ unsigned int CustomObserver::ExecutionEnd(void *ctx) {
         {
             perror( "unlink failed" );  // the most likely error is EBUSY, indicating that some other process is using the file
         }else {
-			printf("fifo file unlinked \n");
+			printf("fifo %s file unlinked by CHILD\n", myfifo);
 		}
     }
-*/
-/*
+
+
     if ( mkfifo( myfifo, fifo_mode ) < 0 ) // attempt to create a brand new FIFO {
         perror( "mkfifo failed" );
 */
+
 /*
 	if(mkfifo(myfifo, 0666) < 0) {
 		perror("mkfifo failed");
 	}
 	*/
+	
 	//sending the list of testCases through pipe
 
 
 /*
 	printf("Child (RIVER) will now open fifo and wait for a reader \n");
-	if ((fileDescriptor = open(myfifo, O_CREAT | O_WRONLY)) < 0)
+	if ((fileDescriptor = open(myfifo, O_WRONLY)) < 0)
            perror("child - open");
 	 printf("child(river) - got a reader \n");
-	 
+*/
+
+
+	FILE *outfile; 
+	printf("Child (RIVER) will now open folder  /tmp/sharedFile \n");
+	outfile = fopen ("/tmp/sharedFile", "w"); 
+	if (outfile == NULL)  { 
+		fprintf(stderr, "\nError when open the  file\n"); 
+        fprintf(stderr, "\nError opend file\n"); 
+    }
+	printf("Child (RIVER) open successfuly /tmp/sharedFile \n");
 
 	int numerber_Of_TestCases_Send_throw_pipe = 0;
 	 for (auto i = executor->list_TestCase.begin(); i != executor->list_TestCase.end(); i++) {
@@ -224,26 +235,51 @@ unsigned int CustomObserver::ExecutionEnd(void *ctx) {
 		char *z3_code = i->Z3_code;
 		strcpy(testcase2.Z3_code, z3_code);
 
+		/*
 		// send serialized testcase
 		if ((num = write(fileDescriptor, &testcase2, sizeof(TestCase2))) < 0) {
 
 			perror("child - write");
 		}else {
+			//fsync(fileDescriptor);
 			numerber_Of_TestCases_Send_throw_pipe++;
-			printf("CHILD(RIVER) have send an element into the pipe \n");
+			printf("CHILD(RIVER) have the following item into the PIPE :  \n");
+			printf("bbp -> [offset = {%#08x}  , modName = {%s}] cost ->[%d] , jumpType -> [%d] , jumpInstruction -> [%d], esp -> [%#08x] , nInstructions -> [%#08x], bbpNextSize -> [%#08x], nextBasicBlockPointer -> [offset = {%#08x}  , modname = {%s}], \n test - %08lx \n z3_code -> \n %s \n",testcase2.bbp.offset, testcase2.bbp.modName,
+			testcase2.cost, testcase2.jumpType, testcase2.jumpInstruction,
+			testcase2.esp, testcase2.nInstructions, testcase2.bbpNextSize,
+			testcase2.nextBasicBlockPointer.offset,testcase2.nextBasicBlockPointer.modName,
+			testcase2.instructionAddress,
+			testcase2.Z3_code);
 		}
-		usleep((rand() % MaxZs) + 1);  
+		*/
+		// send serialized testcase
+		
+		if ((fwrite (&testcase2, sizeof(struct TestCase2), 1, outfile)) < 0) {
 
+			perror("child - write");
+		}else {
+			//fsync(fileDescriptor);
+			numerber_Of_TestCases_Send_throw_pipe++;
+			printf("CHILD(RIVER) have the following item into the PIPE :  \n");
+			printf("bbp -> [offset = {%#08x}  , modName = {%s}] cost ->[%d] , jumpType -> [%d] , jumpInstruction -> [%d], esp -> [%#08x] , nInstructions -> [%#08x], bbpNextSize -> [%#08x], nextBasicBlockPointer -> [offset = {%#08x}  , modname = {%s}], \n test - %08lx \n z3_code -> \n %s \n",testcase2.bbp.offset, testcase2.bbp.modName,
+			testcase2.cost, testcase2.jumpType, testcase2.jumpInstruction,
+			testcase2.esp, testcase2.nInstructions, testcase2.bbpNextSize,
+			testcase2.nextBasicBlockPointer.offset,testcase2.nextBasicBlockPointer.modName,
+			testcase2.instructionAddress,
+			testcase2.Z3_code);
+		}
 
 	}
-
-	close(fileDescriptor);
-	printf("CHILD(RIVER) process closed pipe file descriptor \n");
-	unlink(myfifo);
-	printf("CHILD(RIVER) process unlinked the fifo \n");
-	printf("CHILD(RIVER) process sent throw pipe a number of %i elements \n", numerber_Of_TestCases_Send_throw_pipe);
+	fclose (outfile); 
+	printf("Child (RIVER)execution ends \n");
+	//close(fileDescriptor);
+	//printf("CHILD(RIVER) process NOT closed pipe file descriptor \n");
+	//unlink(myfifo);
+	//printf("CHILD(RIVER) process NOT unlinked the fifo \n");
+	//printf("CHILD(RIVER) process sent throw pipe a number of %i elements \n", numerber_Of_TestCases_Send_throw_pipe);
 	 
-	*/
+	
+	
 	return EXECUTION_TERMINATE;
 	}
 }

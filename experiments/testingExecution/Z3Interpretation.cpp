@@ -51,6 +51,10 @@ std::map<std::string, int> Z3Interpretation::getModelResultsInDecimals(std::stri
 	Z3_ast fs = Z3_parse_smtlib2_string(context, z3_string.c_str(), 0, 0, 0, 0, 0, 0);
 	Z3_solver_assert(context, solver, fs);
 	int result_solver = Z3_solver_check ((Z3_context) context, (Z3_solver) solver);
+	if(result_solver == -1) {
+		// this means that Z3_code return "unsat"
+		return resultMap; // return an empty Map
+	}
 	Z3_model model = Z3_solver_get_model ((Z3_context) context,  (Z3_solver) solver);
 	
 	int found_jumpSymbol = 0;

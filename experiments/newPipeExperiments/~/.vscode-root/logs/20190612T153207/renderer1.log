@@ -1,0 +1,95 @@
+[2019-06-12 16:09:18.239] [renderer1] [error] ioctl(2) failed.: Error: ioctl(2) failed.
+    at UnixTerminal.resize (/usr/share/code/resources/app/node_modules.asar/node-pty/lib/unixTerminal.js:216:13)
+    at d.resize (file:///usr/share/code/resources/app/out/vs/workbench/workbench.main.js:2754:427)
+    at y.setDimensions (file:///usr/share/code/resources/app/out/vs/workbench/workbench.main.js:3908:362)
+    at _processManager._processManager.ptyProcessReady.then (file:///usr/share/code/resources/app/out/vs/workbench/workbench.main.js:3740:90)
+[2019-06-12 16:10:39.125] [renderer1] [error] ioctl(2) failed.: Error: ioctl(2) failed.
+    at UnixTerminal.resize (/usr/share/code/resources/app/node_modules.asar/node-pty/lib/unixTerminal.js:216:13)
+    at d.resize (file:///usr/share/code/resources/app/out/vs/workbench/workbench.main.js:2754:427)
+    at y.setDimensions (file:///usr/share/code/resources/app/out/vs/workbench/workbench.main.js:3908:362)
+    at _processManager._processManager.ptyProcessReady.then (file:///usr/share/code/resources/app/out/vs/workbench/workbench.main.js:3740:90)
+[2019-06-12 16:11:11.592] [renderer1] [error] ioctl(2) failed.: Error: ioctl(2) failed.
+    at UnixTerminal.resize (/usr/share/code/resources/app/node_modules.asar/node-pty/lib/unixTerminal.js:216:13)
+    at d.resize (file:///usr/share/code/resources/app/out/vs/workbench/workbench.main.js:2754:427)
+    at y.setDimensions (file:///usr/share/code/resources/app/out/vs/workbench/workbench.main.js:3908:362)
+    at _processManager._processManager.ptyProcessReady.then (file:///usr/share/code/resources/app/out/vs/workbench/workbench.main.js:3740:90)
+[2019-06-12 16:12:51.355] [renderer1] [error] ioctl(2) failed.: Error: ioctl(2) failed.
+    at UnixTerminal.resize (/usr/share/code/resources/app/node_modules.asar/node-pty/lib/unixTerminal.js:216:13)
+    at d.resize (file:///usr/share/code/resources/app/out/vs/workbench/workbench.main.js:2754:427)
+    at y.setDimensions (file:///usr/share/code/resources/app/out/vs/workbench/workbench.main.js:3908:362)
+    at _processManager._processManager.ptyProcessReady.then (file:///usr/share/code/resources/app/out/vs/workbench/workbench.main.js:3740:90)
+[2019-06-12 16:37:29.245] [renderer1] [error] ioctl(2) failed.: Error: ioctl(2) failed.
+    at UnixTerminal.resize (/usr/share/code/resources/app/node_modules.asar/node-pty/lib/unixTerminal.js:216:13)
+    at d.resize (file:///usr/share/code/resources/app/out/vs/workbench/workbench.main.js:2754:427)
+    at y.setDimensions (file:///usr/share/code/resources/app/out/vs/workbench/workbench.main.js:3908:362)
+    at _processManager._processManager.ptyProcessReady.then (file:///usr/share/code/resources/app/out/vs/workbench/workbench.main.js:3740:90)
+[2019-06-12 16:43:38.158] [renderer1] [error] ioctl(2) failed.: Error: ioctl(2) failed.
+    at UnixTerminal.resize (/usr/share/code/resources/app/node_modules.asar/node-pty/lib/unixTerminal.js:216:13)
+    at d.resize (file:///usr/share/code/resources/app/out/vs/workbench/workbench.main.js:2754:427)
+    at y.setDimensions (file:///usr/share/code/resources/app/out/vs/workbench/workbench.main.js:3908:362)
+    at _processManager._processManager.ptyProcessReady.then (file:///usr/share/code/resources/app/out/vs/workbench/workbench.main.js:3740:90)
+[2019-06-12 16:44:54.994] [renderer1] [error] ioctl(2) failed.: Error: ioctl(2) failed.
+    at UnixTerminal.resize (/usr/share/code/resources/app/node_modules.asar/node-pty/lib/unixTerminal.js:216:13)
+    at d.resize (file:///usr/share/code/resources/app/out/vs/workbench/workbench.main.js:2754:427)
+    at y.setDimensions (file:///usr/share/code/resources/app/out/vs/workbench/workbench.main.js:3908:362)
+    at _processManager._processManager.ptyProcessReady.then (file:///usr/share/code/resources/app/out/vs/workbench/workbench.main.js:3740:90)
+[2019-06-12 16:47:51.047] [renderer1] [error] ioctl(2) failed.: Error: ioctl(2) failed.
+    at UnixTerminal.resize (/usr/share/code/resources/app/node_modules.asar/node-pty/lib/unixTerminal.js:216:13)
+    at d.resize (file:///usr/share/code/resources/app/out/vs/workbench/workbench.main.js:2754:427)
+    at y.setDimensions (file:///usr/share/code/resources/app/out/vs/workbench/workbench.main.js:3908:362)
+    at _processManager._processManager.ptyProcessReady.then (file:///usr/share/code/resources/app/out/vs/workbench/workbench.main.js:3740:90)
+[2019-06-12 16:48:03.842] [renderer1] [error] ioctl(2) failed.: Error: ioctl(2) failed.
+    at UnixTerminal.resize (/usr/share/code/resources/app/node_modules.asar/node-pty/lib/unixTerminal.js:216:13)
+    at d.resize (file:///usr/share/code/resources/app/out/vs/workbench/workbench.main.js:2754:427)
+    at y.setDimensions (file:///usr/share/code/resources/app/out/vs/workbench/workbench.main.js:3908:362)
+    at _processManager._processManager.ptyProcessReady.then (file:///usr/share/code/resources/app/out/vs/workbench/workbench.main.js:3740:90)
+[2019-06-12 17:02:22.570] [renderer1] [error] ioctl(2) failed.: Error: ioctl(2) failed.
+    at UnixTerminal.resize (/usr/share/code/resources/app/node_modules.asar/node-pty/lib/unixTerminal.js:216:13)
+    at d.resize (file:///usr/share/code/resources/app/out/vs/workbench/workbench.main.js:2754:427)
+    at y.setDimensions (file:///usr/share/code/resources/app/out/vs/workbench/workbench.main.js:3908:362)
+    at _processManager._processManager.ptyProcessReady.then (file:///usr/share/code/resources/app/out/vs/workbench/workbench.main.js:3740:90)
+[2019-06-12 17:07:17.411] [renderer1] [error] ioctl(2) failed.: Error: ioctl(2) failed.
+    at UnixTerminal.resize (/usr/share/code/resources/app/node_modules.asar/node-pty/lib/unixTerminal.js:216:13)
+    at d.resize (file:///usr/share/code/resources/app/out/vs/workbench/workbench.main.js:2754:427)
+    at y.setDimensions (file:///usr/share/code/resources/app/out/vs/workbench/workbench.main.js:3908:362)
+    at _processManager._processManager.ptyProcessReady.then (file:///usr/share/code/resources/app/out/vs/workbench/workbench.main.js:3740:90)
+[2019-06-12 17:07:29.843] [renderer1] [error] ioctl(2) failed.: Error: ioctl(2) failed.
+    at UnixTerminal.resize (/usr/share/code/resources/app/node_modules.asar/node-pty/lib/unixTerminal.js:216:13)
+    at d.resize (file:///usr/share/code/resources/app/out/vs/workbench/workbench.main.js:2754:427)
+    at y.setDimensions (file:///usr/share/code/resources/app/out/vs/workbench/workbench.main.js:3908:362)
+    at _processManager._processManager.ptyProcessReady.then (file:///usr/share/code/resources/app/out/vs/workbench/workbench.main.js:3740:90)
+[2019-06-12 17:46:04.442] [renderer1] [error] ioctl(2) failed.: Error: ioctl(2) failed.
+    at UnixTerminal.resize (/usr/share/code/resources/app/node_modules.asar/node-pty/lib/unixTerminal.js:216:13)
+    at d.resize (file:///usr/share/code/resources/app/out/vs/workbench/workbench.main.js:2754:427)
+    at y.setDimensions (file:///usr/share/code/resources/app/out/vs/workbench/workbench.main.js:3908:362)
+    at _processManager._processManager.ptyProcessReady.then (file:///usr/share/code/resources/app/out/vs/workbench/workbench.main.js:3740:90)
+[2019-06-12 17:53:00.442] [renderer1] [error] ioctl(2) failed.: Error: ioctl(2) failed.
+    at UnixTerminal.resize (/usr/share/code/resources/app/node_modules.asar/node-pty/lib/unixTerminal.js:216:13)
+    at d.resize (file:///usr/share/code/resources/app/out/vs/workbench/workbench.main.js:2754:427)
+    at y.setDimensions (file:///usr/share/code/resources/app/out/vs/workbench/workbench.main.js:3908:362)
+    at _processManager._processManager.ptyProcessReady.then (file:///usr/share/code/resources/app/out/vs/workbench/workbench.main.js:3740:90)
+[2019-06-12 17:53:50.475] [renderer1] [error] ioctl(2) failed.: Error: ioctl(2) failed.
+    at UnixTerminal.resize (/usr/share/code/resources/app/node_modules.asar/node-pty/lib/unixTerminal.js:216:13)
+    at d.resize (file:///usr/share/code/resources/app/out/vs/workbench/workbench.main.js:2754:427)
+    at y.setDimensions (file:///usr/share/code/resources/app/out/vs/workbench/workbench.main.js:3908:362)
+    at _processManager._processManager.ptyProcessReady.then (file:///usr/share/code/resources/app/out/vs/workbench/workbench.main.js:3740:90)
+[2019-06-12 17:54:26.983] [renderer1] [error] ioctl(2) failed.: Error: ioctl(2) failed.
+    at UnixTerminal.resize (/usr/share/code/resources/app/node_modules.asar/node-pty/lib/unixTerminal.js:216:13)
+    at d.resize (file:///usr/share/code/resources/app/out/vs/workbench/workbench.main.js:2754:427)
+    at y.setDimensions (file:///usr/share/code/resources/app/out/vs/workbench/workbench.main.js:3908:362)
+    at _processManager._processManager.ptyProcessReady.then (file:///usr/share/code/resources/app/out/vs/workbench/workbench.main.js:3740:90)
+[2019-06-12 17:55:19.056] [renderer1] [error] ioctl(2) failed.: Error: ioctl(2) failed.
+    at UnixTerminal.resize (/usr/share/code/resources/app/node_modules.asar/node-pty/lib/unixTerminal.js:216:13)
+    at d.resize (file:///usr/share/code/resources/app/out/vs/workbench/workbench.main.js:2754:427)
+    at y.setDimensions (file:///usr/share/code/resources/app/out/vs/workbench/workbench.main.js:3908:362)
+    at _processManager._processManager.ptyProcessReady.then (file:///usr/share/code/resources/app/out/vs/workbench/workbench.main.js:3740:90)
+[2019-06-12 17:55:54.978] [renderer1] [error] ioctl(2) failed.: Error: ioctl(2) failed.
+    at UnixTerminal.resize (/usr/share/code/resources/app/node_modules.asar/node-pty/lib/unixTerminal.js:216:13)
+    at d.resize (file:///usr/share/code/resources/app/out/vs/workbench/workbench.main.js:2754:427)
+    at y.setDimensions (file:///usr/share/code/resources/app/out/vs/workbench/workbench.main.js:3908:362)
+    at _processManager._processManager.ptyProcessReady.then (file:///usr/share/code/resources/app/out/vs/workbench/workbench.main.js:3740:90)
+[2019-06-12 17:56:20.269] [renderer1] [error] ioctl(2) failed.: Error: ioctl(2) failed.
+    at UnixTerminal.resize (/usr/share/code/resources/app/node_modules.asar/node-pty/lib/unixTerminal.js:216:13)
+    at d.resize (file:///usr/share/code/resources/app/out/vs/workbench/workbench.main.js:2754:427)
+    at y.setDimensions (file:///usr/share/code/resources/app/out/vs/workbench/workbench.main.js:3908:362)
+    at _processManager._processManager.ptyProcessReady.then (file:///usr/share/code/resources/app/out/vs/workbench/workbench.main.js:3740:90)

@@ -1,9 +1,9 @@
 #include "TestGraph.h"
-
+#include <bits/stdc++.h> 
 
 
 #define myFifo "/tmp/fifochannel"// FIFO file path 
-
+#define MAX_CALL_PER_TEST 3
 
 
 
@@ -56,6 +56,15 @@ class ConcolicExecutor {
         std::vector<TestCase>  selectLastTestCases(std::vector<unsigned long> orderOfInstructionAddress, std::vector<TestCase> testCases);
         std::vector<TestCase>  selectFirstTestCases(std::vector<unsigned long> orderOfInstructionAddress, std::vector<TestCase> testCases);
 
+
+        static void GetPermutationWithDuplicates(int n,  std::vector<int> output, std::size_t k,  std::vector<std::vector<int>> &rezult);
+        static bool compareByIndex(TestCase t1, TestCase t2);
+        void GetDuplicateDistinctTestCase(std::vector<TestCase> initialTestCases, std::vector<std::vector<TestCase>> &duplicateTestCases, std::vector<TestCase> &distinctTestCases);
+
+
         // this method will print out a full description of a testCase
         void testCase_to_String(TestCase &testCase);
+
+
+        std::vector <char *> GenerateZ3TestCases(char *rootInput, std::vector<TestCase> initialTestCases);
 };

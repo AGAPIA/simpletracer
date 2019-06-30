@@ -35,17 +35,12 @@ void FileHandling::writeInputData(unsigned char *input) {
 
 
 
-void FileHandling::writeInputDataTest(const char* pathToFile, std::list<string> inputs) {
-   ofstream outfile;
-   outfile.open(pathToFile, std::ofstream::out | std::ofstream::trunc); // open and clear previos data
-   if(outfile.is_open()) {
-	   printf("%s", "Writing to the file");
-
-	   for(string i : inputs) {
-      	 outfile << i <<endl;
-	   }
-   }else {
-	   printf("can't open file %s", pathToFile);
-   }
-   outfile.close();
+void FileHandling::writeInputDataTest(const char* pathToFile, std::list<char *> inputs) {
+  FILE *fout = fopen(pathToFile, "w");
+  if(fout != NULL) {
+	  for(auto i : inputs) {
+		  fprintf(fout, "%s\n", i);
+	  }
+  }
+  fclose(fout);
 }

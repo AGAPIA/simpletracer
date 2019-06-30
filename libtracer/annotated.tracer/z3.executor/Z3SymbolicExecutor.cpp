@@ -20,7 +20,7 @@
 #define MAX_BENCHMARK_NAME 256
 
 // static members
-vector<TestCase> sym::SymbolicExecutor::list_TestCase;
+std::vector<TestCase> sym::SymbolicExecutor::list_TestCase;
 
 const unsigned char Z3SymbolicExecutor::flagList[] = {
 	RIVER_SPEC_FLAG_CF,
@@ -1103,7 +1103,7 @@ void Z3SymbolicExecutor::Execute(RiverInstruction *instruction) {
 				hasDisplacement ? addressDisplacement.disp : 0,
 				opAddressInfo);
 
-/*
+
 		if (opAddressInfo.fields & OP_HAS_SYMBOLIC) {
 			SymbolicAddress sa = {
 				.symbolicBase = (unsigned int)baseOpInfo.symbolic,
@@ -1114,7 +1114,6 @@ void Z3SymbolicExecutor::Execute(RiverInstruction *instruction) {
 				.displacement = 0,
 				.inputOutput = 0
 			};
-
 			if ((RIVER_SPEC_MODIFIES_OP(i) | RIVER_SPEC_IGNORES_OP(i)) & instruction->specifiers) {
 				sa.inputOutput |= OUTPUT_ADDR;
 			} else if (RIVER_SPEC_MODIFIES_OP(i) & instruction->specifiers) {
@@ -1124,7 +1123,6 @@ void Z3SymbolicExecutor::Execute(RiverInstruction *instruction) {
 			} else {
 				sa.inputOutput |= INPUT_ADDR;
 			}
-
 			if (hasDisplacement) {
 				sa.displacement = addressDisplacement.disp;
 				if (addressDisplacement.type & RIVER_ADDR_DISP8) {
@@ -1135,21 +1133,18 @@ void Z3SymbolicExecutor::Execute(RiverInstruction *instruction) {
 					DEBUG_BREAK;
 				}
 			}
-
 			TranslateAddressToBasicBlockPointer(&sa.bbp,
 					instruction->instructionAddress,
 					mCount, mInfo);
-
 			SymbolicAst sast = {
 				.address = AstToBenchmarkString((Z3_ast)sa.composedSymbolicAddress, instruction, "address_symbol"),
 			};
 			sast.size = strlen(sast.address);
-
 			aFormat->WriteZ3SymbolicAddress(0, sa, sast);
 			PRINTF_SYM("address %p <= %d * %p + %p\n", opAddressInfo.symbolic,
 					scale, indexOpInfo.symbolic, baseOpInfo.symbolic);
 		}
-		*/
+		
 	}
 
 	for (int i = 0; i < flagCount; ++i) {

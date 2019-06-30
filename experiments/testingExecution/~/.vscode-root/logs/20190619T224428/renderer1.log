@@ -1,0 +1,17 @@
+[2019-06-19 22:56:33.514] [renderer1] [error] ioctl(2) failed.: Error: ioctl(2) failed.
+    at UnixTerminal.resize (/usr/share/code/resources/app/node_modules.asar/node-pty/lib/unixTerminal.js:216:13)
+    at d.resize (file:///usr/share/code/resources/app/out/vs/workbench/workbench.main.js:2754:427)
+    at y.setDimensions (file:///usr/share/code/resources/app/out/vs/workbench/workbench.main.js:3908:362)
+    at _processManager._processManager.ptyProcessReady.then (file:///usr/share/code/resources/app/out/vs/workbench/workbench.main.js:3740:90)
+[2019-06-19 23:07:07.204] [renderer1] [error] ioctl(2) failed.: Error: ioctl(2) failed.
+    at UnixTerminal.resize (/usr/share/code/resources/app/node_modules.asar/node-pty/lib/unixTerminal.js:216:13)
+    at d.resize (file:///usr/share/code/resources/app/out/vs/workbench/workbench.main.js:2754:427)
+    at y.setDimensions (file:///usr/share/code/resources/app/out/vs/workbench/workbench.main.js:3908:362)
+    at _processManager._processManager.ptyProcessReady.then (file:///usr/share/code/resources/app/out/vs/workbench/workbench.main.js:3740:90)
+[2019-06-19 23:10:08.006] [renderer1] [error] Data tree node not found: Locals: Error: Data tree node not found: Locals
+    at Y.getDataNode (file:///usr/share/code/resources/app/out/vs/workbench/workbench.main.js:955:302)
+    at Y.getNode (file:///usr/share/code/resources/app/out/vs/workbench/workbench.main.js:953:208)
+    at e.every.e (file:///usr/share/code/resources/app/out/vs/workbench/workbench.main.js:4682:465)
+    at Array.every (<anonymous>)
+    at e.getScopes.then.e (file:///usr/share/code/resources/app/out/vs/workbench/workbench.main.js:4682:446)
+    at process._tickCallback (internal/process/next_tick.js:68:7)

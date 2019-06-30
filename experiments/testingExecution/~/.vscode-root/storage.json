@@ -2,9 +2,9 @@
     "telemetry.machineId": "101469f2f65e235ea96d1e02d38b5b3259609b9ff837dddba407c8aad28e028b",
     "openedPathsList": {
         "workspaces3": [
-            "file:///home/ceachi/testtools/simpletracer/experiments/de_sters",
-            "file:///home/ceachi/testtools/simpletracer",
             "file:///home/ceachi/testtools/simpletracer/experiments/testingExecution",
+            "file:///home/ceachi/testtools/simpletracer",
+            "file:///home/ceachi/testtools/simpletracer/experiments/de_sters",
             "file:///home/ceachi/testtools/simpletracer/experiments/testingExecutionSimpleTracer"
         ],
         "files2": []
@@ -52,13 +52,13 @@
                                     "id": "openRecentFolder",
                                     "uri": {
                                         "$mid": 1,
-                                        "fsPath": "/home/ceachi/testtools/simpletracer/experiments/de_sters",
-                                        "external": "file:///home/ceachi/testtools/simpletracer/experiments/de_sters",
-                                        "path": "/home/ceachi/testtools/simpletracer/experiments/de_sters",
+                                        "fsPath": "/home/ceachi/testtools/simpletracer/experiments/testingExecution",
+                                        "external": "file:///home/ceachi/testtools/simpletracer/experiments/testingExecution",
+                                        "path": "/home/ceachi/testtools/simpletracer/experiments/testingExecution",
                                         "scheme": "file"
                                     },
                                     "enabled": true,
-                                    "label": "/home/ceachi/testtools/simpletracer/experiments/de_sters"
+                                    "label": "~/testtools/simpletracer/experiments/testingExecution"
                                 },
                                 {
                                     "id": "openRecentFolder",
@@ -69,18 +69,18 @@
                                         "scheme": "file"
                                     },
                                     "enabled": true,
-                                    "label": "/home/ceachi/testtools/simpletracer"
+                                    "label": "~/testtools/simpletracer"
                                 },
                                 {
                                     "id": "openRecentFolder",
                                     "uri": {
                                         "$mid": 1,
-                                        "external": "file:///home/ceachi/testtools/simpletracer/experiments/testingExecution",
-                                        "path": "/home/ceachi/testtools/simpletracer/experiments/testingExecution",
+                                        "external": "file:///home/ceachi/testtools/simpletracer/experiments/de_sters",
+                                        "path": "/home/ceachi/testtools/simpletracer/experiments/de_sters",
                                         "scheme": "file"
                                     },
                                     "enabled": true,
-                                    "label": "/home/ceachi/testtools/simpletracer/experiments/testingExecution"
+                                    "label": "~/testtools/simpletracer/experiments/de_sters"
                                 },
                                 {
                                     "id": "openRecentFolder",
@@ -91,7 +91,7 @@
                                         "scheme": "file"
                                     },
                                     "enabled": true,
-                                    "label": "/home/ceachi/testtools/simpletracer/experiments/testingExecutionSimpleTracer"
+                                    "label": "~/testtools/simpletracer/experiments/testingExecutionSimpleTracer"
                                 },
                                 {
                                     "id": "vscode.menubar.separator"
@@ -576,8 +576,7 @@
                     },
                     {
                         "id": "workbench.action.navigateToLastEditLocation",
-                        "label": "&&Last Edit Location",
-                        "enabled": false
+                        "label": "&&Last Edit Location"
                     },
                     {
                         "id": "vscode.menubar.separator"
@@ -849,8 +848,7 @@
                     },
                     {
                         "id": "workbench.action.terminal.split",
-                        "label": "&&Split Terminal",
-                        "enabled": false
+                        "label": "&&Split Terminal"
                     },
                     {
                         "id": "vscode.menubar.separator"

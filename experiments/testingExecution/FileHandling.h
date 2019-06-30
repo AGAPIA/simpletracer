@@ -17,5 +17,5 @@ class FileHandling {
 	public :
 			char * readInputData(char *filePath);
 			void writeInputData(unsigned char *input);
-			void writeInputDataTest(const char* filePath, std::list<string> inputs);
+			void writeInputDataTest(const char* filePath, std::list<char *> inputs);
 };
