@@ -1,187 +1,33 @@
-bbp -> [offset = {0x000f04}  , modName = {libfmi.so}] cost ->[6] , jumpType -> [0] , jumpInstruction -> [3], esp -> [0x2942f21c] , nInstructions -> [0x000006], bbpNextSize -> [0x000002], nextBasicBlockPointer -> [offset = {0x0008e0}  , modname = {libfmi.so}], 
- test - 299148ea 
+bbp -> [offset = {0x000ef4}  , modName = {libfmi.so}] cost ->[6] , jumpType -> [0] , jumpInstruction -> [3], esp -> [0x2942f21c] , nInstructions -> [0x000006], bbpNextSize -> [0x000002], nextBasicBlockPointer -> [offset = {0x000da0}  , modname = {libfmi.so}], 
+ test - 29914da9 
  z3_code -> 
    
 (set-info :status sat)
 (declare-fun jump_symbol () (_ BitVec 1))
 (declare-fun |s[0]| () (_ BitVec 8))
 (assert
- (= (ite (= |s[0]| (_ bv97 8)) (_ bv1 1) (_ bv0 1)) jump_symbol))
+ (= (ite (= |s[0]| (_ bv65 8)) (_ bv1 1) (_ bv0 1)) jump_symbol))
 (check-sat)
  
-bbp -> [offset = {0x0008e0}  , modName = {libfmi.so}] cost ->[4] , jumpType -> [0] , jumpInstruction -> [2], esp -> [0x2942f21c] , nInstructions -> [0x000004], bbpNextSize -> [0x000002], nextBasicBlockPointer -> [offset = {0x0008fb}  , modname = {libfmi.so}], 
- test - 299148ef 
+bbp -> [offset = {0x000da0}  , modName = {libfmi.so}] cost ->[4] , jumpType -> [0] , jumpInstruction -> [2], esp -> [0x2942f21c] , nInstructions -> [0x000004], bbpNextSize -> [0x000002], nextBasicBlockPointer -> [offset = {0x000dd0}  , modname = {libfmi.so}], 
+ test - 29914dad 
  z3_code -> 
    
 (set-info :status sat)
 (declare-fun jump_symbol () (_ BitVec 1))
 (declare-fun |s[0]| () (_ BitVec 8))
 (assert
- (= (ite (= |s[0]| (_ bv98 8)) (_ bv1 1) (_ bv0 1)) jump_symbol))
+ (= (ite (= |s[0]| (_ bv66 8)) (_ bv1 1) (_ bv0 1)) jump_symbol))
 (check-sat)
  
-bbp -> [offset = {0x0008ec}  , modName = {libfmi.so}] cost ->[2] , jumpType -> [0] , jumpInstruction -> [2], esp -> [0x2942f21c] , nInstructions -> [0x000002], bbpNextSize -> [0x000002], nextBasicBlockPointer -> [offset = {0x0008fb}  , modname = {libfmi.so}], 
- test - 299148f4 
- z3_code -> 
-   
-(set-info :status sat)
-(declare-fun jump_symbol () (_ BitVec 1))
-(declare-fun |s[0]| () (_ BitVec 8))
-(assert
- (= (ite (= |s[0]| (_ bv99 8)) (_ bv1 1) (_ bv0 1)) jump_symbol))
-(check-sat)
- 
-bbp -> [offset = {0x0008f1}  , modName = {libfmi.so}] cost ->[2] , jumpType -> [0] , jumpInstruction -> [2], esp -> [0x2942f21c] , nInstructions -> [0x000002], bbpNextSize -> [0x000002], nextBasicBlockPointer -> [offset = {0x0008fb}  , modname = {libfmi.so}], 
- test - 299148f9 
- z3_code -> 
-   
-(set-info :status sat)
-(declare-fun jump_symbol () (_ BitVec 1))
-(declare-fun |s[0]| () (_ BitVec 8))
-(assert
- (= (ite (= |s[0]| (_ bv100 8)) (_ bv1 1) (_ bv0 1)) jump_symbol))
-(check-sat)
- 
-bbp -> [offset = {0x0008f6}  , modName = {libfmi.so}] cost ->[2] , jumpType -> [0] , jumpInstruction -> [2], esp -> [0x2942f21c] , nInstructions -> [0x000002], bbpNextSize -> [0x000002], nextBasicBlockPointer -> [offset = {0x000973}  , modname = {libfmi.so}], 
- test - 29914902 
+bbp -> [offset = {0x000dab}  , modName = {libfmi.so}] cost ->[2] , jumpType -> [0] , jumpInstruction -> [2], esp -> [0x2942f21c] , nInstructions -> [0x000002], bbpNextSize -> [0x000002], nextBasicBlockPointer -> [offset = {0x000de1}  , modname = {libfmi.so}], 
+ test - 29914db3 
  z3_code -> 
    
 (set-info :status sat)
 (declare-fun jump_symbol () (_ BitVec 1))
 (declare-fun |s[1]| () (_ BitVec 8))
 (assert
- (= (ite (= |s[1]| (_ bv97 8)) (_ bv1 1) (_ bv0 1)) jump_symbol))
-(check-sat)
- 
-bbp -> [offset = {0x0008fb}  , modName = {libfmi.so}] cost ->[3] , jumpType -> [0] , jumpInstruction -> [2], esp -> [0x2942f21c] , nInstructions -> [0x000003], bbpNextSize -> [0x000002], nextBasicBlockPointer -> [offset = {0x000913}  , modname = {libfmi.so}], 
- test - 29914907 
- z3_code -> 
-   
-(set-info :status sat)
-(declare-fun jump_symbol () (_ BitVec 1))
-(declare-fun |s[1]| () (_ BitVec 8))
-(assert
- (= (ite (= |s[1]| (_ bv98 8)) (_ bv1 1) (_ bv0 1)) jump_symbol))
-(check-sat)
- 
-bbp -> [offset = {0x000904}  , modName = {libfmi.so}] cost ->[2] , jumpType -> [0] , jumpInstruction -> [2], esp -> [0x2942f21c] , nInstructions -> [0x000002], bbpNextSize -> [0x000002], nextBasicBlockPointer -> [offset = {0x000913}  , modname = {libfmi.so}], 
- test - 29914921 
- z3_code -> 
-   
-(set-info :status sat)
-(declare-fun jump_symbol () (_ BitVec 1))
-(declare-fun |s[2]| () (_ BitVec 8))
-(assert
- (= (ite (= |s[2]| (_ bv97 8)) (_ bv1 1) (_ bv0 1)) jump_symbol))
-(check-sat)
- 
-bbp -> [offset = {0x000913}  , modName = {libfmi.so}] cost ->[4] , jumpType -> [0] , jumpInstruction -> [2], esp -> [0x2942f21c] , nInstructions -> [0x000004], bbpNextSize -> [0x000002], nextBasicBlockPointer -> [offset = {0x000932}  , modname = {libfmi.so}], 
- test - 29914926 
- z3_code -> 
-   
-(set-info :status sat)
-(declare-fun jump_symbol () (_ BitVec 1))
-(declare-fun |s[2]| () (_ BitVec 8))
-(assert
- (= (ite (= |s[2]| (_ bv98 8)) (_ bv1 1) (_ bv0 1)) jump_symbol))
-(check-sat)
- 
-bbp -> [offset = {0x000923}  , modName = {libfmi.so}] cost ->[2] , jumpType -> [0] , jumpInstruction -> [2], esp -> [0x2942f21c] , nInstructions -> [0x000002], bbpNextSize -> [0x000002], nextBasicBlockPointer -> [offset = {0x000932}  , modname = {libfmi.so}], 
- test - 2991492b 
- z3_code -> 
-   
-(set-info :status sat)
-(declare-fun jump_symbol () (_ BitVec 1))
-(declare-fun |s[2]| () (_ BitVec 8))
-(assert
- (= (ite (= |s[2]| (_ bv99 8)) (_ bv1 1) (_ bv0 1)) jump_symbol))
-(check-sat)
- 
-bbp -> [offset = {0x000928}  , modName = {libfmi.so}] cost ->[2] , jumpType -> [0] , jumpInstruction -> [2], esp -> [0x2942f21c] , nInstructions -> [0x000002], bbpNextSize -> [0x000002], nextBasicBlockPointer -> [offset = {0x000932}  , modname = {libfmi.so}], 
- test - 29914940 
- z3_code -> 
-   
-(set-info :status sat)
-(declare-fun jump_symbol () (_ BitVec 1))
-(declare-fun |s[3]| () (_ BitVec 8))
-(assert
- (= (ite (= |s[3]| (_ bv97 8)) (_ bv1 1) (_ bv0 1)) jump_symbol))
-(check-sat)
- 
-bbp -> [offset = {0x000932}  , modName = {libfmi.so}] cost ->[4] , jumpType -> [0] , jumpInstruction -> [2], esp -> [0x2942f21c] , nInstructions -> [0x000004], bbpNextSize -> [0x000002], nextBasicBlockPointer -> [offset = {0x000951}  , modname = {libfmi.so}], 
- test - 29914945 
- z3_code -> 
-   
-(set-info :status sat)
-(declare-fun jump_symbol () (_ BitVec 1))
-(declare-fun |s[3]| () (_ BitVec 8))
-(assert
- (= (ite (= |s[3]| (_ bv98 8)) (_ bv1 1) (_ bv0 1)) jump_symbol))
-(check-sat)
- 
-bbp -> [offset = {0x000942}  , modName = {libfmi.so}] cost ->[2] , jumpType -> [0] , jumpInstruction -> [2], esp -> [0x2942f21c] , nInstructions -> [0x000002], bbpNextSize -> [0x000002], nextBasicBlockPointer -> [offset = {0x000951}  , modname = {libfmi.so}], 
- test - 2991494a 
- z3_code -> 
-   
-(set-info :status sat)
-(declare-fun jump_symbol () (_ BitVec 1))
-(declare-fun |s[3]| () (_ BitVec 8))
-(assert
- (= (ite (= |s[3]| (_ bv99 8)) (_ bv1 1) (_ bv0 1)) jump_symbol))
-(check-sat)
- 
-bbp -> [offset = {0x000947}  , modName = {libfmi.so}] cost ->[2] , jumpType -> [0] , jumpInstruction -> [2], esp -> [0x2942f21c] , nInstructions -> [0x000002], bbpNextSize -> [0x000002], nextBasicBlockPointer -> [offset = {0x000951}  , modname = {libfmi.so}], 
- test - 2991494f 
- z3_code -> 
-   
-(set-info :status sat)
-(declare-fun jump_symbol () (_ BitVec 1))
-(declare-fun |s[3]| () (_ BitVec 8))
-(assert
- (= (ite (= |s[3]| (_ bv100 8)) (_ bv1 1) (_ bv0 1)) jump_symbol))
-(check-sat)
- 
-bbp -> [offset = {0x00094c}  , modName = {libfmi.so}] cost ->[2] , jumpType -> [0] , jumpInstruction -> [2], esp -> [0x2942f21c] , nInstructions -> [0x000002], bbpNextSize -> [0x000002], nextBasicBlockPointer -> [offset = {0x000973}  , modname = {libfmi.so}], 
- test - 2991495e 
- z3_code -> 
-   
-(set-info :status sat)
-(declare-fun jump_symbol () (_ BitVec 1))
-(declare-fun |s[4]| () (_ BitVec 8))
-(assert
- (= (ite (= |s[4]| (_ bv97 8)) (_ bv1 1) (_ bv0 1)) jump_symbol))
-(check-sat)
- 
-bbp -> [offset = {0x000951}  , modName = {libfmi.so}] cost ->[4] , jumpType -> [0] , jumpInstruction -> [2], esp -> [0x2942f21c] , nInstructions -> [0x000004], bbpNextSize -> [0x000002], nextBasicBlockPointer -> [offset = {0x00096c}  , modname = {libfmi.so}], 
- test - 29914962 
- z3_code -> 
-   
-(set-info :status sat)
-(declare-fun jump_symbol () (_ BitVec 1))
-(declare-fun |s[4]| () (_ BitVec 8))
-(assert
- (= (ite (= |s[4]| (_ bv98 8)) (_ bv1 1) (_ bv0 1)) jump_symbol))
-(check-sat)
- 
-bbp -> [offset = {0x000960}  , modName = {libfmi.so}] cost ->[2] , jumpType -> [0] , jumpInstruction -> [2], esp -> [0x2942f21c] , nInstructions -> [0x000002], bbpNextSize -> [0x000002], nextBasicBlockPointer -> [offset = {0x00096c}  , modname = {libfmi.so}], 
- test - 29914966 
- z3_code -> 
-   
-(set-info :status sat)
-(declare-fun jump_symbol () (_ BitVec 1))
-(declare-fun |s[4]| () (_ BitVec 8))
-(assert
- (= (ite (= |s[4]| (_ bv99 8)) (_ bv1 1) (_ bv0 1)) jump_symbol))
-(check-sat)
- 
-bbp -> [offset = {0x000964}  , modName = {libfmi.so}] cost ->[2] , jumpType -> [0] , jumpInstruction -> [2], esp -> [0x2942f21c] , nInstructions -> [0x000002], bbpNextSize -> [0x000002], nextBasicBlockPointer -> [offset = {0x00096c}  , modname = {libfmi.so}], 
- test - 2991496a 
- z3_code -> 
-   
-(set-info :status sat)
-(declare-fun jump_symbol () (_ BitVec 1))
-(declare-fun |s[4]| () (_ BitVec 8))
-(assert
- (= (ite (= |s[4]| (_ bv100 8)) (_ bv1 1) (_ bv0 1)) jump_symbol))
+ (= (ite (= |s[1]| (_ bv67 8)) (_ bv1 1) (_ bv0 1)) jump_symbol))
 (check-sat)
  

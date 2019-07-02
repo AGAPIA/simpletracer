@@ -4,22 +4,17 @@
 #include <spawn.h>
 #include <sys/wait.h>
 
-// used for signals between process
-int ConcolicExecutor::msReceived = 0;
+std::vector<TestCase> ConcolicExecutor::getResultsFromSimpleTracer() {
+	/*
+		How it works:
+			- we get the results from execution of simpleTracer app inside the file SIMPLE_TRACER_EXECUTION_RESULTS_FILE
+			- we read them and return results as a TestCase struct
 
-// used for signals between process
-void ConcolicExecutor::SignalHandler(int sig) {
-    if (sig == SIGUSR1) {
-        msReceived = 1;
-    }
-}
-
-
-std::vector<TestCase> ConcolicExecutor::readPipe() {
+	*/
 		std::vector<TestCase> list;
 		FILE *infile; 
     	struct TestCase input; 
-		infile = fopen ("/tmp/sharedFile", "r"); 
+		infile = fopen (SIMPLE_TRACER_EXECUTION_RESULTS_FILE, "r"); 
 		if (infile == NULL)  { 
         	fprintf(stderr, "\nError opening file\n"); 
    		 }
@@ -27,61 +22,48 @@ std::vector<TestCase> ConcolicExecutor::readPipe() {
 		int count = 0;
 		while(fread(&input, sizeof(struct TestCase), 1, infile)) {
 			list.push_back(input);
-			list.at(count).Z3_code[0] = ' ';
+			list.at(count).Z3_code[0] = ' '; // there is an empty space, and we eliminate it
 			count++;
 		}
 		return list;
 }
 
-extern char **environ;
 
-std::vector<TestCase> ConcolicExecutor::CallSimpleTracer(pid_t child_pid, unsigned char *testInput) {
+std::vector<TestCase> ConcolicExecutor::CallSimpleTracer(unsigned char *testInput) {
 
 	/* How this function works:
-	- we know that child_pid, is a pid from a process that call simpleTracerAppliation with an testInput
-	- here we specify what input to use to call simpleTracer
-	- after that we signal this process to execute simpleTracer and write output in a pipe
-	- then we read the results from the pipe in the parent
+	- we call simple tracer with the testInput parameter
+	- then we obtain the results from simple tracer and return as TestCases
 	*/
 
 	printf("now we call SimpleTracer with the Input : %s \n", testInput);
-    std::vector<TestCase> list;
+    std::vector<TestCase> simpleTracerResultsList;
 	
 	printf("System call to RIVER is starting \n");
 	
+
+	// preparing the command with the testInput to execute simpleTracer app
 	std::string command("python -c 'print \"");
 	command.append((char *)testInput);
 	command.append("\"' | river.tracer -p libfmi.so --annotated --z3");
 
 
+	// here we execute simple-tracer with the command that we build
 	int st = system(command.c_str());
 
 	printf("System call to RIVER finished \n");	
-	list = this->readPipe();
-	printf("Am executat readPipe");
+	simpleTracerResultsList = this->getResultsFromSimpleTracer();
 	
 
-	FILE *fout = fopen("./trace.simple.txt", "w");
-		if(fout != NULL) {
-			for(auto i : list) {
-				fprintf(fout, "bbp -> [offset = {%#08x}  , modName = {%s}] cost ->[%d] , jumpType -> [%d] , jumpInstruction -> [%d], esp -> [%#08x] , nInstructions -> [%#08x], bbpNextSize -> [%#08x], nextBasicBlockPointer -> [offset = {%#08x}  , modname = {%s}], \n test - %08lx \n z3_code -> \n %s \n",i.bbp.offset, i.bbp.modName,
-					i.cost, i.jumpType, i.jumpInstruction,
-					i.esp, i.nInstructions, i.bbpNextSize,
-					i.nextBasicBlockPointer.offset,i.nextBasicBlockPointer.modName,
-					i.instructionAddress,
-					i.Z3_code);
-			}
-		}
-	fclose(fout);
-
+    WriteSimpleTracerResultsInsideFolder(simpleTracerResultsList, "./trace.simple.txt");
 	
 /*
-	for(TestCase i : list) {
+	for(TestCase i : simpleTracerResultsList) {
 		testCase_to_String(i);
 	}
 */
-	std::system("clear");
-	return list;
+	//std::system("clear"); // this is just for clearing the console
+	return simpleTracerResultsList;
 }
 
 /*
@@ -169,9 +151,6 @@ void ConcolicExecutor::GetDuplicateDistinctTestCase(std::vector<TestCase> initia
 	}
 }
 
-std::vector<TestCase> SelectDistinctTestCasesBySymbolicParameter(std::vector<TestCase> initialTestCases) {
-	
-}
 
 // this method will take a vector of TestCases, let say s[0], s[1]
 // then using method GenerateCombinations, will generate all combinations of s[0]s[1], being true or false
@@ -305,13 +284,14 @@ std::vector <char *> ConcolicExecutor::GenerateZ3TestCases(char *rootInput, std:
 			return {};
 	}
 
-	std::vector<std::vector<TestCase>> matrixDuplicateTestCases;
+	std::vector<std::vector<TestCase>> matrixDuplicateTestCases; // we hold a Matrix with DuplicateTestCases (not by Id, but for Z3_code string)
+	// matrixDuplicateTestCases will look like: matrixDuplicateTestCases[0] --> will have only s[0] s[0]
 	std::vector<TestCase> distinctTestCases;
-	GetDuplicateDistinctTestCase(initialTestCases, matrixDuplicateTestCases, distinctTestCases);
+	GetDuplicateDistinctTestCase(initialTestCases, matrixDuplicateTestCases, distinctTestCases); // from initialTestCases, we get the duplicates and the distinct ones
 
 	if(matrixDuplicateTestCases.size() == 1 && matrixDuplicateTestCases[0].size() == 0) {
 		// this means that we did not found any TestCases duplicate(not by id) inisde initialTestCases
-		return GenerateTestCases(rootInput, initialTestCases);
+		return GenerateTestCases(rootInput, initialTestCases); // so we generate new TestCases based on distinct ones
 	}
 
 
@@ -532,6 +512,14 @@ std::vector<TestCase>  ConcolicExecutor::selectFirstTestCases(std::vector<unsign
 
 std::vector<TestCase> ConcolicExecutor::GetOnlyLoopTestCases(std::vector<TestCase> testCases) {
 
+	/*
+		How this method works:
+		- first we select only the distinct TestCases ( remember that every TestCase has an unique ID)
+		- imagine the situation when you have a loop and get a lot of results
+		- now we select only the last results, and print them in the console
+
+	*/
+
 	std::vector<unsigned long> orderOfInstructionAddress = selectDistinctTestCasesByID(testCases);
 	std::vector<TestCase> lastTestCases =  selectLastTestCases(orderOfInstructionAddress, testCases);
 	std::vector<TestCase> firstTestCases =  selectFirstTestCases(orderOfInstructionAddress, testCases);
@@ -591,25 +579,23 @@ TestGraph* ConcolicExecutor::GenerateExecutionTree(char * start_input) {
 	- at the end of this method, the child process will be killed
 	*/
 
-    TestGraph *graph = new TestGraph();
-	Vertex *root = graph->AddVertex(start_input);
+    TestGraph *graph = new TestGraph(); // first we will create an empty graph
+	Vertex *root = graph->AddVertex(start_input); // we add as the root node, the first start_input, example : XXXX
 
-	queue<Vertex*> Q;
-	root->visited = true;
-	Q.push(root);
+	queue<Vertex*> Q; // queue like BF-Search
+	root->visited = true; // mark first node as visited
+	Q.push(root); // push root node in queue
 
 
-	
-	pid_t child_pid, wpid;
-	std::map<unsigned long, int> instructionAddressMap;
+	std::map<unsigned long, int> instructionAddressMap; // this is a map, that remembers how many times a TestCase with unique id, has been executed. Imagine the situation when you have a loop.
 
 
 
 
 	while(!Q.empty()) {
 		Vertex *x = Q.front();
-		std::vector<TestCase> newTestCases = CallSimpleTracer(child_pid, (unsigned char *) x->data);
-		graph->AddVertexTestCases(x->data, GetOnlyLoopTestCases(newTestCases));// add the TestCases after the call of simpleTracer, and add them to the vertex
+		std::vector<TestCase> newTestCases = CallSimpleTracer((unsigned char *) x->data); // call SimpleTracer with input and get results
+		graph->AddVertexTestCases(x->data, GetOnlyLoopTestCases(newTestCases));// add results to the root (x-data) node of the execution graph, but on results after calling SimpleTracer we implement some filters
 		std::vector<TestCase> differentTestCases = FindDiferencesWithParent(x);// find the TestCases between this vertex and he's parent
 		
 		cout << "DIFERENCES WITH THE PARENT " <<endl;
@@ -622,8 +608,6 @@ TestGraph* ConcolicExecutor::GenerateExecutionTree(char * start_input) {
 				Q.pop();
 				continue;
 		}
-
-	//	std::vector <char *> combinations = GenerateTestCases(x->data, differentTestCases); // generate all the combinations with the new TestCases
 
 		std::vector <char *> combinations = GenerateZ3TestCases(x->data, differentTestCases); // generate all the combinations with the new TestCases
 	 	cout << "combinations with the string : " << x->data << endl;
@@ -655,8 +639,6 @@ TestGraph* ConcolicExecutor::GenerateExecutionTree(char * start_input) {
 			
 	    }
 	}
-	//kill(child_pid, SIGKILL);
-
 
 	return graph;
 }
@@ -677,4 +659,20 @@ void ConcolicExecutor::testCase_to_String(TestCase &testCase) {
 	testCase.instructionAddress,
 	testCase.Z3_code);
 
-}	
+}
+
+
+void ConcolicExecutor::WriteSimpleTracerResultsInsideFolder(std::vector<TestCase> results, char * file_Path) {
+	FILE *fout = fopen(file_Path, "w");
+		if(fout != NULL) {
+			for(auto i : results) {
+				fprintf(fout, "bbp -> [offset = {%#08x}  , modName = {%s}] cost ->[%d] , jumpType -> [%d] , jumpInstruction -> [%d], esp -> [%#08x] , nInstructions -> [%#08x], bbpNextSize -> [%#08x], nextBasicBlockPointer -> [offset = {%#08x}  , modname = {%s}], \n test - %08lx \n z3_code -> \n %s \n",i.bbp.offset, i.bbp.modName,
+					i.cost, i.jumpType, i.jumpInstruction,
+					i.esp, i.nInstructions, i.bbpNextSize,
+					i.nextBasicBlockPointer.offset,i.nextBasicBlockPointer.modName,
+					i.instructionAddress,
+					i.Z3_code);
+			}
+		}
+	 fclose(fout);
+}

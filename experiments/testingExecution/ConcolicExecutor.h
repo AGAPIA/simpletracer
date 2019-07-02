@@ -3,6 +3,7 @@
 
 
 #define myFifo "/tmp/fifochannel"// FIFO file path 
+#define SIMPLE_TRACER_EXECUTION_RESULTS_FILE "/tmp/sharedFile"
 #define MAX_CALL_PER_TEST 3
 
 
@@ -25,8 +26,7 @@ class ConcolicExecutor {
         static void SignalHandler(int sig);
 
         // this method will call simpleTracer app with an initial input.
-        // first parameter is used to specify the process created that comunicate and start the call
-        std::vector<TestCase> CallSimpleTracer(pid_t child_pid, unsigned char *testInput);
+        std::vector<TestCase> CallSimpleTracer(unsigned char *testInput);
 
         // this method will generate all the combinations of 000, 001, 010, 011, 100, 101, 110, 111
         // first paramether will be an empty string ""
@@ -45,7 +45,7 @@ class ConcolicExecutor {
 
 
         // with this function we read from the pipe where the dat is send between this process and simpleTracer call
-        std::vector<TestCase> readPipe();
+        std::vector<TestCase> getResultsFromSimpleTracer();
 
         std::vector<TestCase> GetOnlyLoopTestCases(std::vector<TestCase> testCases);
 
@@ -67,4 +67,7 @@ class ConcolicExecutor {
 
 
         std::vector <char *> GenerateZ3TestCases(char *rootInput, std::vector<TestCase> initialTestCases);
+
+
+        void WriteSimpleTracerResultsInsideFolder(std::vector<TestCase> results, char * file_Path);
 };
