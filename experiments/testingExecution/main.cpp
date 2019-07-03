@@ -1,6 +1,6 @@
 #include "ConcolicExecutor.h"
 
-
+#define file_Results "./testOutput.txt"
 int main() {
 	char *startInput = "XXXXXXXXX";
 	ConcolicExecutor *executor = new ConcolicExecutor();
@@ -13,7 +13,7 @@ int main() {
 		  printf("printing : %s \n", i);
 	  }
 	FileHandling comm;
-	comm.writeInputDataTest("./testOutput.txt", vertices);
+	comm.writeInputDataTest(file_Results, vertices);
 	delete(graph);
 	delete(executor);
 	

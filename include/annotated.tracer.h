@@ -25,6 +25,7 @@ class CustomObserver : public BasicObserver {
 		sym::SymbolicEnvironment *regEnv;
 		sym::SymbolicEnvironment *revEnv;
 		sym::SymbolicExecutor *executor;
+		static std::vector<TestCase> list_TestCase;
 
 		virtual unsigned int ExecutionBegin(void *ctx, void *entryPoint);
 		virtual unsigned int ExecutionControl(void *ctx, void *address);

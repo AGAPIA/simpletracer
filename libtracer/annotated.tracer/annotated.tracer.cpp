@@ -200,7 +200,7 @@ unsigned int CustomObserver::ExecutionEnd(void *ctx) {
 	printf("Child (RIVER) open successfuly /tmp/sharedFile \n");
 
 	int numerber_Of_TestCases_Send_throw_pipe = 0;
-	 for (auto i = executor->list_TestCase.begin(); i != executor->list_TestCase.end(); i++) {
+	 for (auto i = at::CustomObserver::list_TestCase.begin(); i != at::CustomObserver::list_TestCase.end(); i++) {
 	// serialize your testcase
 		struct TestCaseBase {
 			unsigned int offset;

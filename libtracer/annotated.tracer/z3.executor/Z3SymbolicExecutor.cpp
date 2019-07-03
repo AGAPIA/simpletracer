@@ -5,6 +5,8 @@
 #include <string.h>
 
 #include "utils.h"
+#include "utils.h"
+
 
 #include <string.h> 
 
@@ -20,7 +22,7 @@
 #define MAX_BENCHMARK_NAME 256
 
 // static members
-std::vector<TestCase> sym::SymbolicExecutor::list_TestCase;
+std::vector<TestCase> at::CustomObserver::list_TestCase;
 
 const unsigned char Z3SymbolicExecutor::flagList[] = {
 	RIVER_SPEC_FLAG_CF,
@@ -397,7 +399,8 @@ const char *Z3SymbolicExecutor::AstToBenchmarkString(Z3_ast ast, RiverInstructio
 //	if(aFormat->testCase.Z3_code != nullptr) {
 	printf("%s \n\n", z3_code_to_send_in_pipe);
 	aFormat->setBasicZ3_astStringcode_to_TestCase(instruction->instructionAddress, z3_code_to_send_in_pipe);
-	this->list_TestCase.push_back(aFormat->testCase);
+	at::CustomObserver::list_TestCase.push_back(aFormat->testCase);
+	//this->list_TestCase.push_back(aFormat->testCase);
 
 
 	printf("WE ARE SENDING THROUGH PIPE THE Z3_CODE \n");

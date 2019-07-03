@@ -285,7 +285,7 @@ std::vector <char *> ConcolicExecutor::GenerateZ3TestCases(char *rootInput, std:
 	}
 
 	std::vector<std::vector<TestCase>> matrixDuplicateTestCases; // we hold a Matrix with DuplicateTestCases (not by Id, but for Z3_code string)
-	// matrixDuplicateTestCases will look like: matrixDuplicateTestCases[0] --> will have only s[0] s[0]
+	// matrixDuplicateTestCases will look like: matrixDuplicateTestCases[i] --> will have only the TestCases with index i, s[i] for example i = 0, s[0] s[0]
 	std::vector<TestCase> distinctTestCases;
 	GetDuplicateDistinctTestCase(initialTestCases, matrixDuplicateTestCases, distinctTestCases); // from initialTestCases, we get the duplicates and the distinct ones
 
@@ -296,9 +296,9 @@ std::vector <char *> ConcolicExecutor::GenerateZ3TestCases(char *rootInput, std:
 
 
 	// this is a particulare case:
-	if(matrixDuplicateTestCases.size() == 1) {
+	if(matrixDuplicateTestCases.size() == 1) { // for example, you have the situation with TestCases s[0] s[0] s[1], so there are only 1 pair of duplicates
 		std::vector <char *> newInputTests;
-			for(auto testCase : matrixDuplicateTestCases[0]) { // for each duplicate TestCases on Pair one in matrix
+			for(auto testCase : matrixDuplicateTestCases[0]) { // for each duplicate TestCases  ( matrix will have only 1 in this case. so it's [0])
 				std::vector<TestCase> newTestCases; // we create a new TestCase vector
 				newTestCases.push_back(testCase);//push the first one, then second one on next iteration
 				// combine each of them with the distinct TestCases

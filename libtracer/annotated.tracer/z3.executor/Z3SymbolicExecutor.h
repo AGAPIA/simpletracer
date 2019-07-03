@@ -5,6 +5,7 @@
 
 #include "SymbolicEnvironment/SymbolicEnvironment.h"
 #include "SymbolicEnvironment/LargeStack.h"
+#include "../include/annotated.tracer.h"
 
 #include "VariableTracker.h"
 #include "AbstractLog.h"
