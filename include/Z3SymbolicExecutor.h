@@ -9,6 +9,8 @@
 #include "VariableTracker.h"
 #include "AbstractLog.h"
 
+#include <vector>
+
 #define OPERAND_BITMASK(idx) (0x00010000 << (idx))
 
 struct SymbolicOperandsLazyFlags {
@@ -19,6 +21,9 @@ struct SymbolicOperandsLazyFlags {
 };
 
 class Z3SymbolicExecutor : public sym::SymbolicExecutor {
+public:
+	static std::vector<TestCase> list_TestCase;
+
 private:
 	stk::DWORD saveTop;
 	stk::DWORD saveStack[0x10000];

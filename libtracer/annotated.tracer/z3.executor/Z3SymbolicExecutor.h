@@ -5,7 +5,7 @@
 
 #include "SymbolicEnvironment/SymbolicEnvironment.h"
 #include "SymbolicEnvironment/LargeStack.h"
-#include "../include/annotated.tracer.h"
+//#include "../include/annotated.tracer.h"
 
 #include "VariableTracker.h"
 #include "AbstractLog.h"
@@ -22,7 +22,7 @@ struct SymbolicOperandsLazyFlags {
 
 class Z3SymbolicExecutor : public sym::SymbolicExecutor {
 public:
-	//static vector<TestCase> list_TestCase;
+	static vector<TestCase> list_TestCase;
 	//int writeOnPipe( int fileDescriptor, char*buf);
 
 private:
