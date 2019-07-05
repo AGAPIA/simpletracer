@@ -22,11 +22,8 @@ class ConcolicExecutor {
         TestGraph* GenerateExecutionTree(char * start_input);
     private:
 
-        // this method is used when sending signals between process
-        static void SignalHandler(int sig);
-
         // this method will call simpleTracer app with an initial input.
-        std::vector<TestCase> CallSimpleTracer(unsigned char *testInput);
+        std::vector<TestCase> CallSimpleTracer(char *testInput);
 
         // this method will generate all the combinations of 000, 001, 010, 011, 100, 101, 110, 111
         // first paramether will be an empty string ""

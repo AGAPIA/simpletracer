@@ -29,7 +29,7 @@ std::vector<TestCase> ConcolicExecutor::getResultsFromSimpleTracer() {
 }
 
 
-std::vector<TestCase> ConcolicExecutor::CallSimpleTracer(unsigned char *testInput) {
+std::vector<TestCase> ConcolicExecutor::CallSimpleTracer(char *testInput) {
 
 	/* How this function works:
 	- we call simple tracer with the testInput parameter
@@ -437,6 +437,13 @@ std::vector<TestCase> ConcolicExecutor::FindDiferencesWithParent(Vertex *child) 
 }
 
 std::vector<unsigned long> ConcolicExecutor::selectDistinctTestCasesByID(std::vector<TestCase> testCases) {
+
+	/*
+		How this method works:
+		1) we put only testCases with unique Id inside a set
+		2) we return a vector (of id-s) containing the order of how the elements are added inside the set
+
+	*/
 	set<unsigned long> mySet;
 	std::vector<unsigned long> orderOfInstructionAddress;
 	for( unsigned i = 0; i <  testCases.size(); ++i ) {
@@ -457,6 +464,14 @@ std::vector<unsigned long> ConcolicExecutor::selectDistinctTestCasesByID(std::ve
 
 
 std::vector<TestCase>  ConcolicExecutor::selectLastTestCases(std::vector<unsigned long> orderOfInstructionAddress, std::vector<TestCase> testCases) {
+
+	/*
+		How this method works:
+			- you get as input the order of distinct testCases id-s
+			- and the vector with all the testCases results from simpleTracer
+			- the method will traverse the testCases vector from the bottom, and return the TestCases by id that match orderOfInstructionAddress elements
+
+	*/
 	std::vector<TestCase> newTestCase;
 
 	for(std::vector<unsigned long>::iterator it = orderOfInstructionAddress.begin(); it != orderOfInstructionAddress.end(); ++it) {
@@ -485,6 +500,14 @@ std::vector<TestCase>  ConcolicExecutor::selectLastTestCases(std::vector<unsigne
 
 
 std::vector<TestCase>  ConcolicExecutor::selectFirstTestCases(std::vector<unsigned long> orderOfInstructionAddress, std::vector<TestCase> testCases) {
+	/*
+		How this method works:
+			- you get as input the order of distinct testCases id-s
+			- and the vector with all the testCases results from simpleTracer
+			- the method will traverse the testCases vector from the top, and return the TestCases by id that match orderOfInstructionAddress elements
+
+	*/
+	
 	std::vector<TestCase> newTestCase;
 
 	for(std::vector<unsigned long>::iterator it = orderOfInstructionAddress.begin(); it != orderOfInstructionAddress.end(); ++it) {
@@ -593,10 +616,10 @@ TestGraph* ConcolicExecutor::GenerateExecutionTree(char * start_input) {
 
 
 	while(!Q.empty()) {
-		Vertex *x = Q.front();
-		std::vector<TestCase> newTestCases = CallSimpleTracer((unsigned char *) x->data); // call SimpleTracer with input and get results
-		graph->AddVertexTestCases(x->data, GetOnlyLoopTestCases(newTestCases));// add results to the root (x-data) node of the execution graph, but on results after calling SimpleTracer we implement some filters
-		std::vector<TestCase> differentTestCases = FindDiferencesWithParent(x);// find the TestCases between this vertex and he's parent
+		Vertex *parentVertex = Q.front();
+		std::vector<TestCase> newTestCases = CallSimpleTracer((char *) parentVertex->data); // call SimpleTracer with input and get results
+		graph->AddVertexTestCases(parentVertex->data, GetOnlyLoopTestCases(newTestCases));// add results to the root (x-data) node of the execution graph, but on results after calling SimpleTracer we implement some filters
+		std::vector<TestCase> differentTestCases = FindDiferencesWithParent(parentVertex);// find the TestCases between this vertex and he's parent
 		
 		cout << "DIFERENCES WITH THE PARENT " <<endl;
 		for(TestCase i : differentTestCases) {
@@ -609,8 +632,8 @@ TestGraph* ConcolicExecutor::GenerateExecutionTree(char * start_input) {
 				continue;
 		}
 
-		std::vector <char *> combinations = GenerateZ3TestCases(x->data, differentTestCases); // generate all the combinations with the new TestCases
-	 	cout << "combinations with the string : " << x->data << endl;
+		std::vector <char *> combinations = GenerateZ3TestCases(parentVertex->data, differentTestCases); // generate all the combinations with the new TestCases
+	 	cout << "combinations with the string : " << parentVertex->data << endl;
 		for(char * i : combinations) {
 			cout << i << " ";
 		} cout<<endl;
@@ -619,19 +642,19 @@ TestGraph* ConcolicExecutor::GenerateExecutionTree(char * start_input) {
 		for(char * it : combinations) {
 			Vertex *child = graph->AddVertex(it);
 			if(child != nullptr) {
-				graph->AddEdge(x->data, child->data);
+				graph->AddEdge(parentVertex->data, child->data);
 			}else {
 				delete[] it;
 			}
 		}
 
 		cout <<endl;
-		cout << x-> data << endl;
+		cout << parentVertex-> data << endl;
 		Q.pop();
 
 
 		// here we mark the vertex that we already visited
-		for( Vertex *v : x->neighbors) {
+		for( Vertex *v : parentVertex->neighbors) {
 			if (v->visited == false) {
 				v->visited = true;
 				Q.push(v);
