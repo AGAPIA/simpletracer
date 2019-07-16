@@ -64,7 +64,7 @@ Z3_ast Z3Handler::toAst(char *smt, size_t size) {
 	Z3_set_ast_print_mode(context, (Z3_ast_print_mode)2);
 	Z3_ast res = Z3_parse_smtlib2_string(context, smt,
 	//		0, 0, 0, 0, 0, 0);
-			MAX_LEN, symbols, sorts, 0, 0, 0);
+			MAX_LEN, symbols, sorts, 0, nullptr, nullptr);
 
 	Z3_error_code e = Z3_get_error_code(context);
 	if (e != Z3_OK) {

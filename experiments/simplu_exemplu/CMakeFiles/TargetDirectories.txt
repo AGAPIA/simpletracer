@@ -1,6 +1,0 @@
-/home/sorina/testtools/river/benchmarking-payload/simplu_exemplu/CMakeFiles/install.dir
-/home/sorina/testtools/river/benchmarking-payload/simplu_exemplu/CMakeFiles/list_install_components.dir
-/home/sorina/testtools/river/benchmarking-payload/simplu_exemplu/CMakeFiles/simple-accumulator.dir
-/home/sorina/testtools/river/benchmarking-payload/simplu_exemplu/CMakeFiles/edit_cache.dir
-/home/sorina/testtools/river/benchmarking-payload/simplu_exemplu/CMakeFiles/install/local.dir
-/home/sorina/testtools/river/benchmarking-payload/simplu_exemplu/CMakeFiles/rebuild_cache.dir

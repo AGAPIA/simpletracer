@@ -6,15 +6,6 @@
 
 #include "utils.h"
 
-#define PRINT_DEBUG_SYMBOLIC
-//#define PRINT_AST
-
-#ifndef PRINT_DEBUG_SYMBOLIC
-#define PRINTF_SYM
-#else
-#define PRINTF_SYM(buffer, format, ...) {printf("<sym> "); printf((buffer), (format), ##__VA_ARGS__);}
-#endif
-
 #define MAX_BENCHMARK_NAME 256
 
 const unsigned char Z3SymbolicExecutor::flagList[] = {
@@ -966,7 +957,7 @@ void Z3SymbolicExecutor::ComposeScaleAndIndex(nodep::BYTE &scale,
 		Z3_sort opSort = Z3_get_sort(context, (Z3_ast)indexOp.symbolic);
 		Z3_ast res = Z3_mk_bvmul(context, (Z3_ast)indexOp.symbolic,
 				Z3_mk_int(context, scale, opSort));
-		printf("<sym> add %p <= %d + %p\n",
+		PRINTF_SYM("<sym> add %p <= %d + %p\n",
 				res, scale, indexOp.symbolic);
 		indexOp.symbolic = (void *)res;
 	} else {
@@ -1010,7 +1001,7 @@ void Z3SymbolicExecutor::AddOperands(struct OperandInfo &left,
 				left.fields |= OP_HAS_SYMBOLIC;
 			}
 
-			printf("<sym> mkint left %p <= %08lX\n", left.symbolic, left.concreteBefore + displacement);
+			PRINTF_SYM("<sym> mkint left %p <= %08lX\n", left.symbolic, left.concreteBefore + displacement);
 		}
 
 		if (0 == (right.fields & OP_HAS_SYMBOLIC)) {
@@ -1025,13 +1016,13 @@ void Z3SymbolicExecutor::AddOperands(struct OperandInfo &left,
 				right.fields |= OP_HAS_SYMBOLIC;
 			}
 
-			printf("<sym> mkint right %p <= %08lX + %d\n", right.symbolic, right.concreteBefore, displacement);
+			PRINTF_SYM("<sym> mkint right %p <= %08lX + %d\n", right.symbolic, right.concreteBefore, displacement);
 		}
 
 		// add two symbolic objects
 		result.symbolic = Z3_mk_bvadd(context, (Z3_ast)left.symbolic,
 			(Z3_ast)right.symbolic);
-		printf("<sym> add %p <= %p + %p\n", result.symbolic, left.symbolic,
+		PRINTF_SYM("<sym> add %p <= %p + %p\n", result.symbolic, left.symbolic,
 			right.symbolic);
 	}
 }
@@ -1156,11 +1147,11 @@ void Z3SymbolicExecutor::Execute(RiverInstruction *instruction) {
 			// This functionality must be moved into individual functions if the need arises
 			GetSymbolicValues(instruction, &ops, ops.av);
 
-			fprintf(stderr, "<info> Execute instruction: 0x%08lX\n", instruction->instructionAddress);
+			PRINTF_INFO(stderr, "<info> Execute instruction: 0x%08lX\n", instruction->instructionAddress);
 			(this->*executeFuncs[dwTable][instruction->opCode])(instruction, &ops);
 		}
 	} else {
-		fprintf(stderr, "<info> Instruction is not symbolic: 0x%08lX\n", instruction->instructionAddress);
+		PRINTF_INFO(stderr, "<info> Instruction is not symbolic: 0x%08lX\n", instruction->instructionAddress);
 		// unset all modified operands
 		for (int i = 0; i < opCount; ++i) {
 			if (RIVER_SPEC_MODIFIES_OP(i) & instruction->specifiers) {

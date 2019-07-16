@@ -1,10 +1,13 @@
 ## river.tracer CmakeLists.txt
 
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -g -m32 -std=c++11 -D__cdecl=\"\" -D__stdcall=\"\"")
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -m32 -std=c++11 -D__cdecl=\"\" -D__stdcall=\"\"")
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -m32 -std=c++11 -D__cdecl=\"\" -D__stdcall=\"\"")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -m32 -std=c++11 -D__cdecl=\"\" -D__stdcall=\"\"")
 
-link_directories(${Z3_ROOT}/bin ${Z3_ROOT}/lib)
-find_library (z3 libz3.so)
+set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS} -O3")
+set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS} -g -O0")
+set(CMAKE_C_FLAGS_RELEASE "${CMAKE_CXX_FLAGS} -O3")
+set(CMAKE_C_FLAGS_DEBUG "${CMAKE_CXX_FLAGS} -g -O0")
+
 
 link_directories (${CMAKE_BINARY_DIR}/lib $ENV{RIVER_SDK_DIR}/lib)
 find_library (execution libexecution.so)
@@ -16,7 +19,7 @@ target_link_libraries (river.tracer
   tracer
   taintedindex
   z3executor
-  z3
+  ${z3}
 # dependencies
   execution
   symbolicenvironment
@@ -28,3 +31,4 @@ target_link_libraries (river.tracer
   logger
   )
 install (TARGETS river.tracer DESTINATION ${CMAKE_INSTALL_PREFIX}/bin)
+

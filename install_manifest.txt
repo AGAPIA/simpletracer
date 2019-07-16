@@ -4,7 +4,3 @@
 /usr/local/lib/libtaintedindex.a
 /usr/local/lib/libz3executor.a
 /usr/local/bin/river.tracer
-/usr/local/bin/river.sanitizer
-/usr/local/bin/z3.handler.test
-/usr/local/bin/interval.tree.test
-/usr/local/lib/libasan.a

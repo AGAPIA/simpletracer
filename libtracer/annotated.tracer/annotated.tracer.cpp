@@ -189,6 +189,7 @@ int AnnotatedTracer::Run(ez::ezOptionParser &opt) {
 
 	std::string fModule;
 	opt.get("-p")->getString(fModule);
+
 	std::cout << "Using payload " << fModule.c_str() << std::endl;
 	if (executionType == EXECUTION_EXTERNAL)
 		std::cout << "Starting " << ((executionType == EXECUTION_EXTERNAL) ? "extern" : "internal") << " tracing on module " << fModule << "\n";
