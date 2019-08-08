@@ -16,8 +16,13 @@ if ("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
 endif()
 
 
+message("build type ${CMAKE_BUILD_TYPE}")
+message("Z3 ROOT env var is $ENV{Z3_ROOT}")
+
 if (NOT DEFINED ENV{Z3_ROOT})
-	message(FATAL_ERROR "Specify Z3_ROOT variable")
+      set(ENV{Z3_ROOT} "~/z3")
+	    # message(FATAL_ERROR "Specify Z3_ROOT variable")
+      message("Z3_ROOT seems to be not defined but maybe you are not using bash so it can't read from bashrc file. However i will default to ~/z3 and maybe you're lucky and we find it there")
 else()
     	set(Z3_ROOT ENV{Z3_ROOT})
 endif()
@@ -31,7 +36,6 @@ if ("${CMAKE_BUILD_TYPE}" STREQUAL "")
   set (CMAKE_BUILD_TYPE "Release")
 endif()
 
-message("build type ${CMAKE_BUILD_TYPE}")
 
 set(Z3_ROOT_INCLUDE "$ENV{Z3_ROOT}/${CMAKE_BUILD_TYPE}/include")
 set(Z3_ROOT_LIBS "$ENV{Z3_ROOT}/${CMAKE_BUILD_TYPE}/lib")
