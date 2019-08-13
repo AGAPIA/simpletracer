@@ -202,7 +202,7 @@ public:
 			revEnv = NewX86RevtracerEnvironment(ctx, ctrl); //new RevSymbolicEnvironment(ctx, ctrl);
 			regEnv = NewX86RegistersEnvironment(revEnv); //new OverlappedRegistersEnvironment();
 			regEnv->SetReferenceCounting(AddRef, DelRef);
-			executor = new Z3SymbolicExecutor(regEnv, nullptr);
+			executor = new Z3SymbolicExecutor(regEnv, nullptr, false);
 			regEnv->SetExecutor(executor);
 			regEnv->SetReferenceCounting(AddReference, DelReference);
 

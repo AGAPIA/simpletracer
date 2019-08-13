@@ -21,6 +21,7 @@ class BasicObserver : public ExecutionObserver {
 
 		bool ctxInit;
 		bool logEsp;
+		bool logBasicBlockTracking;
 
 		virtual void TerminationNotification(void *ctx);
 		unsigned int GetModuleOffset(const std::string &module) const;

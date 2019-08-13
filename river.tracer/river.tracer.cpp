@@ -19,6 +19,8 @@
 at::AnnotatedTracer *AT = nullptr;
 
 void __stdcall SymbolicHandler(void *ctx, void *offset, void *addr) {
+	//ExecutionEnvironment *pExecEnv = (ExecutionEnvironment *)ctx;
+	
 	RiverInstruction *instr = (RiverInstruction *)addr;
 
 	if (AT != nullptr) {
@@ -109,6 +111,15 @@ int main(int argc, const char *argv[]) {
 			0,
 			"Use Z3 for symbolic execution expressions.",
 			"--z3"
+		   );
+
+	opt.add(
+			"",
+			false,
+			0,
+			0,
+			"Activate this if you want to simplify z3 expressions in simple tracer rather than on server. Check doc for tradeoffs understanding.",
+			"--exprsimplify"
 		   );
 
 	opt.add(

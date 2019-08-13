@@ -9,7 +9,7 @@ project (SIMPLE_TRACER)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
 include_directories($ENV{RIVER_SDK_DIR}/include)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/river.format/include)
-
+ 
 if ("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
 	add_compile_definitions(IS_DEBUG_BUILD)
 	message("Added debug build definition!")

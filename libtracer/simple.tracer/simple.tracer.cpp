@@ -33,6 +33,7 @@ unsigned int CustomObserver::ExecutionBegin(void *ctx, void *entryPoint) {
 
 	aFormat->WriteTestName(fileName.c_str());
 	logEsp = true;
+	logBasicBlockTracking = true;
 
 	return EXECUTION_ADVANCE;
 }
@@ -42,7 +43,7 @@ unsigned int CustomObserver::ExecutionControl(void *ctx, void *address) {
 	rev::BasicBlockInfo bbInfo;
 	st->ctrl->GetLastBasicBlockInfo(ctx, &bbInfo);
 
-	unsigned int nextSize = 2;
+	const unsigned int nextSize = 2;
 	struct BasicBlockPointer bbp;
 	struct BasicBlockPointer bbpNext[nextSize];
 
@@ -61,11 +62,14 @@ unsigned int CustomObserver::ExecutionControl(void *ctx, void *address) {
 		logEsp = false;
 	}
 
-	st->ctrl->GetCurrentRegisters(ctx, &regs);
-	struct BasicBlockMeta bbm { bbp, bbInfo.cost, bbInfo.branchType,
-			bbInfo.branchInstruction, regs.esp, bbInfo.nInstructions, nextSize,
-			bbpNext };
-	aFormat->WriteBasicBlock(bbm);
+	if (logBasicBlockTracking)
+	{
+		st->ctrl->GetCurrentRegisters(ctx, &regs);
+		struct BasicBlockMeta bbm { bbp, bbInfo.cost, bbInfo.branchType,
+				bbInfo.branchInstruction, regs.esp, bbInfo.nInstructions, nextSize,
+				bbpNext };
+		aFormat->WriteBasicBlock(bbm);
+	}
 
 	return EXECUTION_ADVANCE;
 }
@@ -131,7 +135,8 @@ CustomObserver::CustomObserver(SimpleTracer *st) {
 
 CustomObserver::~CustomObserver() {}
 
-int SimpleTracer::Run( ez::ezOptionParser &opt) {
+int SimpleTracer::Run( ez::ezOptionParser &opt) 
+{
 	uint32_t executionType = EXECUTION_INPROCESS;
 
 	// Don't write logs before this check

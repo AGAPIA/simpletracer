@@ -37,6 +37,9 @@ private:
 		void *svf[7];
 	};
 
+	bool simplifyAllOutputZ3Expressions;
+	bool trackOnlyUsedSymbols;
+
 	static const unsigned char flagList[6];
 	static const int flagCount = sizeof(flagList) / sizeof(flagList[0]);
 
@@ -152,7 +155,8 @@ public:
 	static SymbolicExecute executeRotationOperations[8];
 	static SymbolicExecute executeAssignmentLogicalOperations[8];
 
-	Z3SymbolicExecutor(sym::SymbolicEnvironment *e, AbstractFormat *aFormat);
+	Z3SymbolicExecutor(sym::SymbolicEnvironment *e, AbstractFormat *aFormat, 
+						const bool _simplifyAllOutputZ3Expressions);
 	~Z3SymbolicExecutor();
 
 	void StepForward();

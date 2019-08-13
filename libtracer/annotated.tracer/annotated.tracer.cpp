@@ -61,7 +61,7 @@ unsigned int CustomObserver::ExecutionBegin(void *ctx, void *entryPoint) {
 		if (at->trackingMode == TAINTED_INDEX_TRACKING) {
 			executor = new TrackingExecutor(regEnv, at->varCount, aFormat);
 		} else {
-			executor = new Z3SymbolicExecutor(regEnv, aFormat);
+			executor = new Z3SymbolicExecutor(regEnv, aFormat, at->simplificationMode == SIMPLIFICATION_AT_ROOT);
 		}
 		executor->SetModuleData(mCount, mInfo);
 		regEnv->SetExecutor(executor);
@@ -79,8 +79,17 @@ unsigned int CustomObserver::ExecutionBegin(void *ctx, void *entryPoint) {
 		ctxInit = true;
 	}
 
-	aFormat->WriteTestName(fileName.c_str());
-	logEsp = true;
+	if (at->trackingMode != Z3_TRACKING)	
+	{
+		aFormat->WriteTestName(fileName.c_str());
+		logEsp = true;
+		logBasicBlockTracking = true;
+	}
+	else
+	{
+		logEsp = false;
+		logBasicBlockTracking = false;
+	}
 
 	return EXECUTION_ADVANCE;
 }
@@ -109,16 +118,20 @@ unsigned int CustomObserver::ExecutionControl(void *ctx, void *address) {
 		logEsp = false;
 	}
 
-	at->ctrl->GetCurrentRegisters(ctx, &regs);
-	struct BasicBlockMeta bbm { bbp, bbInfo.cost, bbInfo.branchType,
-			bbInfo.branchInstruction, regs.esp, bbInfo.nInstructions,
-			nextSize, bbpNext };
-	aFormat->WriteBasicBlock(bbm);
+	if (logBasicBlockTracking)
+	{
+		at->ctrl->GetCurrentRegisters(ctx, &regs);
+		struct BasicBlockMeta bbm { bbp, bbInfo.cost, bbInfo.branchType,
+				bbInfo.branchInstruction, regs.esp, bbInfo.nInstructions,
+				nextSize, bbpNext };
+		aFormat->WriteBasicBlock(bbm);
+	}
 
 	return EXECUTION_ADVANCE;
 }
 
-unsigned int CustomObserver::ExecutionEnd(void *ctx) {
+unsigned int CustomObserver::ExecutionEnd(void *ctx) 
+{
 	if (at->batched) {
 		CorpusItemHeader header;
 		if ((1 == fread(&header, sizeof(header), 1, stdin)) &&
@@ -144,6 +157,13 @@ unsigned int CustomObserver::TranslationError(void *ctx, void *address) {
 	printf("Translation error. Exiting ...\n");
 	exit(1);
 	return direction;
+}
+
+void CustomObserver::setCurrentExecutedBasicBlockDesc(const void* basicBlockInfo)
+{
+	rev::BasicBlockInfo* bbInfo = (rev::BasicBlockInfo*)basicBlockInfo;
+	if (executor)
+		executor->currentBasicBlockExecuted = *bbInfo;
 }
 
 CustomObserver::CustomObserver(AnnotatedTracer *at) {
@@ -178,7 +198,8 @@ AnnotatedTracer::AnnotatedTracer()
 AnnotatedTracer::~AnnotatedTracer()
 {}
 
-int AnnotatedTracer::Run(ez::ezOptionParser &opt) {
+int AnnotatedTracer::Run(ez::ezOptionParser &opt) 
+{
 	uint32_t executionType = EXECUTION_INPROCESS;
 
 	if (opt.isSet("--extern")) {
@@ -215,11 +236,22 @@ int AnnotatedTracer::Run(ez::ezOptionParser &opt) {
 		observer.binOut = true;
 	}
 
-	if (opt.isSet("--z3")) {
+	simplificationMode = SIMPLIFICATION_NONE;
+	if (opt.isSet("--z3")) 
+	{
 		trackingMode = Z3_TRACKING;
-	} else {
+		if (opt.isSet("--exprsimplify"))
+		{
+			simplificationMode = SIMPLIFICATION_AT_ROOT;
+		}
+	} 
+	else 
+	{
 		trackingMode = TAINTED_INDEX_TRACKING;
 	}
+
+	
+	
 
 	std::string fName;
 	opt.get("-o")->getString(fName);

@@ -1,5 +1,7 @@
+#include <unordered_set>
 #include "Z3SymbolicExecutor.h"
 #include "CommonCrossPlatform/Common.h"
+
 
 #include <assert.h>
 #include <string.h>
@@ -67,6 +69,7 @@ void *Z3SymbolicExecutor::CreateVariable(const char *name, nodep::DWORD size) {
 
 	Z3_ast ret = Z3_mk_const(context, s, srt);
 
+/*
 	Z3_ast l1[2] = {
 		Z3_mk_bvule(
 			context,
@@ -101,6 +104,7 @@ void *Z3SymbolicExecutor::CreateVariable(const char *name, nodep::DWORD size) {
 
 	Z3_solver_assert(context, solver, cond);
 	PRINTF_SYM("(assert %s)\n\n", Z3_ast_to_string(context, cond));
+	*/
 
 	symIndex++;
 
@@ -149,6 +153,12 @@ void *Z3SymbolicExecutor::ExtractBits(void *expr, nodep::DWORD lsb, nodep::DWORD
 		lsb,
 		(Z3_ast)expr
 	);
+
+	if (this->simplifyAllOutputZ3Expressions)
+	{
+		ret = Z3_simplify(context, ret);
+	}
+
 	PRINTF_SYM("extract %p <= %p, 0x%02lx, 0x%02lx\n", ret, expr, lsb+size-1, lsb);
 	PrintAST(ret);
 	return (void *)ret;
@@ -160,6 +170,10 @@ void *Z3SymbolicExecutor::ConcatBits(void *expr1, void *expr2) {
 		(Z3_ast)expr1,
 		(Z3_ast)expr2
 	);
+	if (simplifyAllOutputZ3Expressions)
+	{
+		ret = Z3_simplify(context, ret);
+	}
 
 	PRINTF_SYM("concat %p <= %p, %p\n", ret, expr1, expr2);
 	PrintAST(ret);
@@ -215,8 +229,11 @@ const unsigned int Z3SymbolicExecutor::Z3SymbolicCpuFlag::lazyMarker = 0xDEADBEE
 
 /*====================================================================================================*/
 
-Z3SymbolicExecutor::Z3SymbolicExecutor(sym::SymbolicEnvironment *e, AbstractFormat *aFormat) :
-		sym::SymbolicExecutor(e), aFormat(aFormat)
+Z3SymbolicExecutor::Z3SymbolicExecutor(sym::SymbolicEnvironment *e, AbstractFormat *aFormat,
+	const bool _simplifyAllOutputZ3Expressions) :
+		sym::SymbolicExecutor(e), 
+		aFormat(aFormat),
+		simplifyAllOutputZ3Expressions(_simplifyAllOutputZ3Expressions)
 {
 	symIndex = 1;
 
@@ -237,7 +254,7 @@ Z3SymbolicExecutor::Z3SymbolicExecutor(sym::SymbolicEnvironment *e, AbstractForm
 	config = Z3_mk_config();
 	context = Z3_mk_context(config);
 	Z3_set_ast_print_mode(context, Z3_PRINT_SMTLIB2_COMPLIANT);
-	Z3_open_log("Z3.log");
+	//Z3_open_log("Z3.log");
 
 	dwordSort = Z3_mk_bv_sort(context, 32);
 	tbSort = Z3_mk_bv_sort(context, 24);
@@ -317,7 +334,7 @@ template <unsigned int flag> Z3_ast Z3SymbolicExecutor::Flag(SymbolicOperands *o
 
 // returns BV[1]
 template <Z3SymbolicExecutor::BVFunc func> Z3_ast Z3SymbolicExecutor::Negate(SymbolicOperands *ops) {
-	return Z3_mk_bvneg(
+	return Z3_mk_bvnot(
 		context,
 		(this->*func)(ops)
 	);
@@ -348,61 +365,92 @@ template <Z3SymbolicExecutor::BVFunc func1, Z3SymbolicExecutor::BVFunc func2> Z3
  * in other system component TODO
  */
 
-const char *Z3SymbolicExecutor::AstToBenchmarkString(Z3_ast ast, RiverInstruction *instruction, const char *const_name) {
-	char name[MAX_BENCHMARK_NAME];
-	sprintf(name, "test-%08lx", instruction->instructionAddress);
-
-	char logic[] = "QF_IDL";
-
+const char *Z3SymbolicExecutor::AstToBenchmarkString(Z3_ast ast, RiverInstruction *instruction, const char *const_name) 
+{
 	Z3_ast formula = Z3_mk_true(context);
 	Z3_symbol const_symbol = Z3_mk_string_symbol(context, const_name);
-
-	//ast = Z3_simplify(context, ast);
 	Z3_ast assertion = Z3_mk_eq(context,
 			ast,
 			Z3_mk_const(context, const_symbol, Z3_get_sort(context, ast)));
 
-	assertion = Z3_simplify(context, assertion);
+	if (simplifyAllOutputZ3Expressions)
+	{
+		assertion = Z3_simplify(context, assertion);
+	}
 
-	const char* result = Z3_benchmark_to_smtlib_string(context,
-			name,
-			logic,
-			"sat",
-			"",
-			1,
-			&assertion,
-			formula);
+	//printf("assertion: \n");
+	Z3_string z3TestExpr = Z3_ast_to_string(context, assertion);
+	//printf("%s\n", z3TestExpr);
+	//PrintAST(assertion);
+	
+	return z3TestExpr;
+}
 
-	/*
-	printf("%s\n", result);
-	printf("Formula: \n");
-	printf("%s\n", Z3_ast_to_string(context, formula));
-	printf("assertion: \n");
-	printf("%s\n", Z3_ast_to_string(context, ast));
-	*/
-	return result;
+// TODO: Improve this with a faster parsing of the tree instead of parsing the string :)
+// asked on stackoverflow...
+void getUsedSymbolsFromASTString(const char* astString, std::unordered_set<unsigned int>& outSetOfInputsUsed)
+{
+	static const int MAX_BUFFER_SIZE = 1024;
+	static char symbolNumberStrBuffer[MAX_BUFFER_SIZE];
+
+	const char* iter = astString;
+	while (*iter)
+	{
+		const char* symbolBegin = strstr(iter, "|s[");
+		if (symbolBegin == nullptr)
+			break;
+
+		symbolBegin += 3;
+
+		const char* symbolEnd = strstr(symbolBegin, "]|");
+		if (symbolEnd == nullptr)
+			break;
+
+		// Check if the symbol number is ok and check the global usage array
+		const int size = symbolEnd - symbolBegin;
+		if (size > MAX_BUFFER_SIZE)
+		{
+			printf("ERROR: the buffer size is too small. I think someting is not right..\n");
+			DEBUG_BREAK;
+			continue;
+		}
+
+		memcpy(symbolNumberStrBuffer, symbolBegin, size);
+		symbolNumberStrBuffer[size] = '\0';
+
+		const int index = atoi(symbolNumberStrBuffer);
+		if (outSetOfInputsUsed.find(index) == outSetOfInputsUsed.end())
+		{
+			outSetOfInputsUsed.insert(index);
+		}
+
+		iter = symbolEnd + 2;
+	}
 }
 
 template <Z3SymbolicExecutor::BVFunc func> void Z3SymbolicExecutor::SymbolicJumpCC(RiverInstruction *instruction, SymbolicOperands *ops) {
+	
 	Z3_ast cond = (this->*func)(ops);
 
-	SymbolicFlag sf;
-	sf.testFlags = instruction->testFlags;
+	m_lastConcolicTest.flags.testFlags = instruction->testFlags;
 	for (int i = 0; i < flagCount; ++i) {
 		if (ops->trf[i]) {
-			sf.symbolicFlags[i] = (unsigned int)ops->svf[i];
+			m_lastConcolicTest.flags.symbolicFlags[i] = (unsigned int)ops->svf[i];
 		} else {
-			sf.symbolicFlags[i] = 0;
+			m_lastConcolicTest.flags.symbolicFlags[i] = 0;
 		}
 	}
-	sf.symbolicCond = (unsigned int)cond;
+	m_lastConcolicTest.flags.symbolicCond = (unsigned int)cond;
 
-	SymbolicAst sast = {
-		.address = AstToBenchmarkString((Z3_ast) sf.symbolicCond, instruction, "jump_symbol"),
-	};
-	sast.size = strlen(sast.address);
-
-	aFormat->WriteZ3SymbolicJumpCC(0, sf, sast);
+	char testSymbolName[32];
+	snprintf(testSymbolName, 32, "%p", (currentBasicBlockExecuted.address));
+	m_lastConcolicTest.ast.address = AstToBenchmarkString((Z3_ast) m_lastConcolicTest.flags.symbolicCond, instruction, testSymbolName);
+	m_lastConcolicTest.ast.size = strlen(m_lastConcolicTest.ast.address);
+	m_lastConcolicTest.blockOptionTaken = currentBasicBlockExecuted.branchNext[0].address;
+	m_lastConcolicTest.blockOptionNotTaken = currentBasicBlockExecuted.branchNext[1].address;
+	m_lastConcolicTest.parentBlock = (DWORD) currentBasicBlockExecuted.address;
+	getUsedSymbolsFromASTString(m_lastConcolicTest.ast.address, m_lastConcolicTest.indicesOfInputBytesUsed);
+	m_lastConcolicTest.setPending(true);
 }
 
 template <Z3SymbolicExecutor::BVFunc func> void Z3SymbolicExecutor::SymbolicSetCC(RiverInstruction *instruction, SymbolicOperands *ops) {
@@ -895,8 +943,8 @@ void Z3SymbolicExecutor::GetSymbolicValues(RiverInstruction *instruction, Symbol
 	for (int i = 0; i < opCount; ++i) {
 		if ((OPERAND_BITMASK(i) & opsFlagsMask) && !ops->tr[i]) {
 			ops->sv[i] = Z3_mk_int(context, ops->cvb[i], operandsSort);
-			PRINTF_SYM("mkint %lu size: %u\n", ops->cvb[i],
-					Z3_get_bv_sort_size(context, operandsSort));
+			PRINTF_SYM("mkint %lu size: %u. Z3 adrr %p\n", ops->cvb[i],
+					Z3_get_bv_sort_size(context, operandsSort), ops->sv[i]);
 		}
 	}
 
@@ -1030,6 +1078,14 @@ void Z3SymbolicExecutor::AddOperands(struct OperandInfo &left,
 void Z3SymbolicExecutor::Execute(RiverInstruction *instruction) {
 	SymbolicOperands ops;
 
+	// Check if there is any pending jump instruction waiting for result to be filled
+	if (m_lastConcolicTest.isPending())
+	{
+		m_lastConcolicTest.taken = (((DWORD) currentBasicBlockExecuted.address) == m_lastConcolicTest.blockOptionTaken);
+		aFormat->WriteZ3SymbolicJumpCC(m_lastConcolicTest);
+		m_lastConcolicTest.Reset();
+	}
+
 	ops.av = 0;
 	nodep::BOOL uo[4], uof[flagCount];
 	nodep::BOOL isSymb = false;
@@ -1076,6 +1132,7 @@ void Z3SymbolicExecutor::Execute(RiverInstruction *instruction) {
 				hasDisplacement ? addressDisplacement.disp : 0,
 				opAddressInfo);
 
+#if 0  // Symbolic address tracking are disabled for now - TODO
 		if (opAddressInfo.fields & OP_HAS_SYMBOLIC) {
 			SymbolicAddress sa = {
 				.symbolicBase = (unsigned int)baseOpInfo.symbolic,
@@ -1121,6 +1178,8 @@ void Z3SymbolicExecutor::Execute(RiverInstruction *instruction) {
 			PRINTF_SYM("address %p <= %d * %p + %p\n", opAddressInfo.symbolic,
 					scale, indexOpInfo.symbolic, baseOpInfo.symbolic);
 		}
+		
+#endif
 	}
 
 	for (int i = 0; i < flagCount; ++i) {
