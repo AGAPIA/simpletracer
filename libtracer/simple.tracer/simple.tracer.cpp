@@ -144,6 +144,7 @@ int SimpleTracer::Run( ez::ezOptionParser &opt)
 		globalLog.EnableLog();
 	}
 
+	// TODO: follow the pattern in annotated tracer and remove this with the new logfile option !
 	const bool writeLogOnFile = opt.isSet("--writeLogOnFile");
 	if (writeLogOnFile) {
 		globalLog.SetLoggingToFile("log.txt");
@@ -263,11 +264,11 @@ int SimpleTracer::Run( ez::ezOptionParser &opt)
 				globalLog.Log("NNext op code %d\n" , nextOp);
 			}
 
-			if (nextOp == 0) {
+			if (nextOp == E_NEXTOP_CLOSE) {
 				globalLog.Log("Stopping\n");
 				break;
 			}
-			else if (nextOp == 1){
+			else if (nextOp == E_NEXTOP_TASK){
 				globalLog.Log("### Executing a new task\n");
 
 				ReadFromFile(stdin, payloadBuff, payloadInputSizePerTask);

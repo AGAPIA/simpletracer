@@ -169,6 +169,16 @@ int main(int argc, const char *argv[]) {
 		   );
 
 	opt.add(
+			"payload" LIB_EXT,
+			0,
+			1,
+			0,
+			"Set the log file. Write stdout if you want to use it, else the name of the file to write the log on",
+			"-l",
+			"--logfile"
+		   );
+
+	opt.add(
 			"",
 			0,
 			1,

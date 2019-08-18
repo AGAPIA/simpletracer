@@ -26,6 +26,7 @@ add_library(${LIBRARY_NAME}
 	LargeStack.cpp
 	Z3SymbolicExecutor.cpp
 	Z3SymbolicFlags.cpp
+	Z3Utils.cpp
 	)
 
 target_link_libraries(${EXECUTABLE_NAME}

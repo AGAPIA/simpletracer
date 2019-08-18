@@ -8,6 +8,7 @@
 #include "revtracer/revtracer.h"
 
 #include "basic.observer.h"
+#include "Logger.h"
 
 #define Z3_TRACKING 0x1
 #define TAINTED_INDEX_TRACKING 0x0
@@ -17,14 +18,6 @@
  // This is better for data communication size BUT might be worser because it puts pressure on client (tracer app) to simplify every expression
  // You must test with both options to check which one is better
 #define SIMPLIFICATION_AT_ROOT 	0x1
-
-
-// If none, we export all symbols s[i]... given in the payload. 
-// If second option is used, only the symbols really used in the formulas are exported
-// The second option theoretically gets better results if SIMPLIFICATION_AT_ROOT is used since
-// it could output only the bytes that REALLY play an important (non-redudant) role in the branch expressions
-#define TRACKSYMBOLS_NONE 		0x0 
-#define TRACKSYMBOLS_ONLY_USED	0x1
 
 namespace at {
 
@@ -51,6 +44,12 @@ class CustomObserver : public BasicObserver {
 		~CustomObserver();
 };
 
+enum FlowOpCode
+{
+	E_NEXTOP_CLOSE,
+	E_NEXTOP_TASK
+};
+
 struct CorpusItemHeader {
 	char fName[60];
 	unsigned int size;
@@ -60,8 +59,9 @@ class AnnotatedTracer {
 	public:
 
 		bool batched;
-		uint8_t trackingMode;
+		bool flowMode = false;
 		uint8_t simplificationMode;
+		uint8_t trackingMode = Z3_TRACKING;
 		unsigned int varCount;
 
 		ExecutionController *ctrl;

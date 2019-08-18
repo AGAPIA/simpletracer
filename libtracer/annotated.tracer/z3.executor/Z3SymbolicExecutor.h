@@ -12,18 +12,6 @@
 #define OPERAND_BITMASK(idx) (0x00010000 << (idx))
 
 
-#ifdef IS_DEBUG_BUILD
-#define PRINT_DEBUG_SYMBOLIC
-#define PRINT_AST
-#endif
-
-#ifndef PRINT_DEBUG_SYMBOLIC
-#define PRINTF_SYM
-#define PRINTF_INFO
-#else
-#define PRINTF_SYM(buffer, format, ...) {printf("<sym> "); printf((buffer), (format), ##__VA_ARGS__);}
-#define PRINTF_INFO(file, format, ...) {fprintf(file, (format), ##__VA_ARGS__);}
-#endif
 
 struct SymbolicOperandsLazyFlags {
 	void *svBefore[4];
