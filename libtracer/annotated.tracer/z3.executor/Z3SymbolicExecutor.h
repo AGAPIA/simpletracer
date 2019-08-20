@@ -11,18 +11,7 @@
 
 #define OPERAND_BITMASK(idx) (0x00010000 << (idx))
 
-#ifdef IS_DEBUG_BUILD
-#define PRINT_DEBUG_SYMBOLIC
-//#define PRINT_AST
-#endif
 
-#ifndef PRINT_DEBUG_SYMBOLIC
-#define PRINTF_SYM
-#define PRINTF_INFO
-#else
-#define PRINTF_SYM(buffer, format, ...) {printf("<sym> "); printf((buffer), (format), ##__VA_ARGS__);}
-#define PRINTF_INFO(file, format, ...) {fprintf(file, (format), ##__VA_ARGS__);}
-#endif
 
 struct SymbolicOperandsLazyFlags {
 	void *svBefore[4];
@@ -31,6 +20,7 @@ struct SymbolicOperandsLazyFlags {
 	void *svfBefore[7];
 };
 
+
 class Z3SymbolicExecutor : public sym::SymbolicExecutor {
 private:
 	stk::DWORD saveTop;
@@ -38,6 +28,7 @@ private:
 	stk::LargeStack *ls;
 
 	AbstractFormat *aFormat;
+	SingleTestDetails m_lastConcolicTest;
 
 	struct SymbolicOperands {
 		nodep::DWORD av;
@@ -51,6 +42,9 @@ private:
 		nodep::BYTE cvfa[7];
 		void *svf[7];
 	};
+
+	bool simplifyAllOutputZ3Expressions;
+	bool trackOnlyUsedSymbols;
 
 	static const unsigned char flagList[7];
 	static const int flagCount = sizeof(flagList) / sizeof(flagList[0]);
@@ -169,7 +163,8 @@ public:
 	static SymbolicExecute executeRotationOperations[8];
 	static SymbolicExecute executeAssignmentLogicalOperations[8];
 
-	Z3SymbolicExecutor(sym::SymbolicEnvironment *e, AbstractFormat *aFormat);
+	Z3SymbolicExecutor(sym::SymbolicEnvironment *e, AbstractFormat *aFormat, 
+						const bool _simplifyAllOutputZ3Expressions);
 	~Z3SymbolicExecutor();
 
 	void StepForward();

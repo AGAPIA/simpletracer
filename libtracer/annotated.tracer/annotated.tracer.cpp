@@ -8,6 +8,7 @@
 #include "TrackingExecutor.h"
 #include "Z3SymbolicExecutor.h"
 #include "annotated.tracer.h"
+#include "z3.executor/Z3Utils.h"
 
 #include "CommonCrossPlatform/Common.h" //MAX_PAYLOAD_BUF; MAX_PATH
 
@@ -47,7 +48,7 @@ void DelReference(void *ref) {
 namespace at {
 
 unsigned int CustomObserver::ExecutionBegin(void *ctx, void *entryPoint) {
-	printf("Process starting\n");
+	PRINTF_INFO("Process starting. Entry point: %p\n", entryPoint);
 	at->ctrl->GetModules(mInfo, mCount);
 
 	if (HandlePatchLibrary() < 0) {
@@ -61,7 +62,7 @@ unsigned int CustomObserver::ExecutionBegin(void *ctx, void *entryPoint) {
 		if (at->trackingMode == TAINTED_INDEX_TRACKING) {
 			executor = new TrackingExecutor(regEnv, at->varCount, aFormat);
 		} else {
-			executor = new Z3SymbolicExecutor(regEnv, aFormat);
+			executor = new Z3SymbolicExecutor(regEnv, aFormat, at->simplificationMode == SIMPLIFICATION_AT_ROOT);
 		}
 		executor->SetModuleData(mCount, mInfo);
 		regEnv->SetExecutor(executor);
@@ -79,8 +80,17 @@ unsigned int CustomObserver::ExecutionBegin(void *ctx, void *entryPoint) {
 		ctxInit = true;
 	}
 
-	aFormat->WriteTestName(fileName.c_str());
-	logEsp = true;
+	if (at->trackingMode != Z3_TRACKING)	
+	{
+		aFormat->WriteTestName(fileName.c_str());
+		logEsp = true;
+		logBasicBlockTracking = true;
+	}
+	else
+	{
+		logEsp = false;
+		logBasicBlockTracking = false;
+	}
 
 	return EXECUTION_ADVANCE;
 }
@@ -109,41 +119,82 @@ unsigned int CustomObserver::ExecutionControl(void *ctx, void *address) {
 		logEsp = false;
 	}
 
-	at->ctrl->GetCurrentRegisters(ctx, &regs);
-	struct BasicBlockMeta bbm { bbp, bbInfo.cost, bbInfo.branchType,
-			bbInfo.branchInstruction, regs.esp, bbInfo.nInstructions,
-			nextSize, bbpNext };
-	aFormat->WriteBasicBlock(bbm);
+	if (logBasicBlockTracking)
+	{
+		at->ctrl->GetCurrentRegisters(ctx, &regs);
+		struct BasicBlockMeta bbm { bbp, bbInfo.cost, bbInfo.branchType,
+				bbInfo.branchInstruction, regs.esp, bbInfo.nInstructions,
+				nextSize, bbpNext };
+		aFormat->WriteBasicBlock(bbm);
+	}
 
 	return EXECUTION_ADVANCE;
 }
 
-unsigned int CustomObserver::ExecutionEnd(void *ctx) {
+unsigned int CustomObserver::ExecutionEnd(void *ctx) 
+{
 	if (at->batched) {
 		CorpusItemHeader header;
 		if ((1 == fread(&header, sizeof(header), 1, stdin)) &&
 				(header.size == fread(at->payloadBuff, 1, header.size, stdin))) {
-			std::cout << "Using " << header.fName << " as input file." << std::endl;
+			PRINTF_INFO("Using %s as input file\n", header.fName);
 
 			aFormat->WriteTestName(header.fName);
 			return EXECUTION_RESTART;
 		}
 
 		return EXECUTION_TERMINATE;
-	} else {
+	} 
+	else if (at->flowMode) {
+		PRINTF_INFO("On flow mode restart\n");
+
+		aFormat->OnExecutionEnd();
+		FlowOpCode nextOp = E_NEXTOP_TASK;
+		int payloadSize = 0;
+		size_t res = fread(&nextOp, sizeof(char), 1, stdin);
+		size_t res2 = fread(&payloadSize, sizeof(int), 1, stdin);
+		if (res != 1 || res2 != 1) {
+			PRINTF_INFO("WARN: Cannot read next opcode or payload size\n");
+		} else {
+			PRINTF_INFO("NNext op code %d. Payload size %d\n" , nextOp, payloadSize);
+		}
+
+		if (nextOp == 0) {
+			PRINTF_INFO("Stopping\n");
+			at->flowMode = false;
+			return EXECUTION_TERMINATE;
+		} else if (nextOp == 1){
+			PRINTF_INFO("### Executing a new task\n");
+			ReadFromFile(stdin, at->payloadBuff, payloadSize);
+			PRINTF_INFO("###Finished executing the task\n");
+			aFormat->OnExecutionBegin(nullptr);
+			return EXECUTION_RESTART;
+		}
+
+		PRINTF_INFO("invalid next op value !! probably the data stream is corrupted\n");
+		return EXECUTION_TERMINATE;
+	}
+	else {
 		return EXECUTION_TERMINATE;
 	}
 }
 
 unsigned int CustomObserver::TranslationError(void *ctx, void *address) {
-	printf("Error issued at address %p\n", address);
+	PRINTF_INFO("Error issued at address %p\n", address);
 	auto direction = ExecutionEnd(ctx);
 	if (direction == EXECUTION_RESTART) {
-		printf("Restarting after issue\n");
+		PRINTF_INFO("Restarting after issue\n");
 	}
-	printf("Translation error. Exiting ...\n");
+	PRINTF_INFO("Translation error. Exiting ...\n");
 	exit(1);
 	return direction;
+}
+
+void CustomObserver::setCurrentExecutedBasicBlockDesc(const void* basicBlockInfo)
+{
+	rev::BasicBlockInfo* bbInfo = (rev::BasicBlockInfo*)basicBlockInfo;
+	if (executor)
+		executor->currentBasicBlockExecuted = *bbInfo;
 }
 
 CustomObserver::CustomObserver(AnnotatedTracer *at) {
@@ -178,8 +229,31 @@ AnnotatedTracer::AnnotatedTracer()
 AnnotatedTracer::~AnnotatedTracer()
 {}
 
-int AnnotatedTracer::Run(ez::ezOptionParser &opt) {
+int AnnotatedTracer::Run(ez::ezOptionParser &opt) 
+{
 	uint32_t executionType = EXECUTION_INPROCESS;
+ 
+	// Init the log system
+	{
+		FILE *f = stdout;
+		if (opt.isSet("--logfile"))
+		{
+			std::string logFile;
+			opt.get("--logfile")->getString(logFile);
+
+			if (logFile != "stdout")
+			{
+				f = fopen(logFile.c_str(), "w");
+				if (f == nullptr)
+				{
+					fprintf(stderr, "ERROR: Can't open the requested log file %s\n", logFile.c_str());
+				}
+			}
+
+			// It is the utils responsability to close the file if needed.
+			Z3Utils::initLoggingSystem(f);
+		}
+	}
 
 	if (opt.isSet("--extern")) {
 		executionType = EXECUTION_EXTERNAL;
@@ -190,14 +264,14 @@ int AnnotatedTracer::Run(ez::ezOptionParser &opt) {
 	std::string fModule;
 	opt.get("-p")->getString(fModule);
 
-	std::cout << "Using payload " << fModule.c_str() << std::endl;
+	PRINTF_INFO("Using payload %s\n", fModule.c_str());
 	if (executionType == EXECUTION_EXTERNAL)
-		std::cout << "Starting " << ((executionType == EXECUTION_EXTERNAL) ? "extern" : "internal") << " tracing on module " << fModule << "\n";
+		PRINTF_INFO("Starting %s tracing on module %s\n" , ((executionType == EXECUTION_EXTERNAL) ? "extern" : "internal"), fModule);
 
 	if (executionType == EXECUTION_INPROCESS) {
 		LIB_T hModule = GET_LIB_HANDLER2(fModule.c_str());
 		if (nullptr == hModule) {
-			std::cout << "Payload not found" << std::endl;
+			PRINTF_INFO("Payload not found\n");
 			return 0;
 		}
 
@@ -205,7 +279,7 @@ int AnnotatedTracer::Run(ez::ezOptionParser &opt) {
 		PayloadHandler = (PayloadHandlerFunc)LOAD_PROC(hModule, "Payload");
 
 		if ((nullptr == payloadBuff) || (nullptr == PayloadHandler)) {
-			std::cout << "Payload imports not found" << std::endl;
+			PRINTF_INFO("Payload imports not found\n");
 			return 0;
 		}
 	}
@@ -215,24 +289,39 @@ int AnnotatedTracer::Run(ez::ezOptionParser &opt) {
 		observer.binOut = true;
 	}
 
-	if (opt.isSet("--z3")) {
+	simplificationMode = SIMPLIFICATION_NONE;
+	if (opt.isSet("--z3")) 
+	{
 		trackingMode = Z3_TRACKING;
-	} else {
+		if (opt.isSet("--exprsimplify"))
+		{
+			simplificationMode = SIMPLIFICATION_AT_ROOT;
+		}
+	} 
+	else 
+	{
 		trackingMode = TAINTED_INDEX_TRACKING;
 	}
 
-	std::string fName;
-	opt.get("-o")->getString(fName);
-	std::cout << "Writing " << (observer.binOut ? "binary" : "text") << " output to " << fName.c_str() << std::endl;
+	if (opt.isSet("--binlog")) {
+		observer.binOut = true;
+	}
 
-	FileLog *flog = new FileLog();
-	flog->SetLogFileName(fName.c_str());
-	observer.aLog = flog;
+	const bool isBinBuffered  = opt.isSet("--binbuffered");
 
-	if (observer.binOut) {
-		observer.aFormat = new BinFormat(observer.aLog);
-	} else {
-		observer.aFormat = new TextFormat(observer.aLog);
+	if (observer.binOut) 
+	{
+		//observer.aFormat = new BinFormat(observer.aLog, isBinBuffered);
+	} 
+	else 
+	{
+		std::string fName;
+		opt.get("-o")->getString(fName);
+		PRINTF_INFO("Writing %s output to %s\n", (observer.binOut ? "binary" : "text"), fName.c_str());
+
+		FileLog *flog = new FileLog();
+		flog->SetLogFileName(fName.c_str());
+		observer.aFormat = new TextFormat(flog);
 	}
 
 	if (opt.isSet("-m")) {
@@ -244,8 +333,7 @@ int AnnotatedTracer::Run(ez::ezOptionParser &opt) {
 	} else if (executionType == EXECUTION_EXTERNAL) {
 		wchar_t ws[MAX_PATH];
 		std::mbstowcs(ws, fModule.c_str(), fModule.size() + 1);
-		std::cout << "Converted module name [" << fModule << "] to wstring [";
-		std::wcout << std::wstring(ws) << "]\n";
+		PRINTF_INFO("Converted module name [ %s ] to wstring [ %s ]\n", std::wstring(ws));
 		ctrl->SetPath(std::wstring(ws));
 	}
 
@@ -258,14 +346,14 @@ int AnnotatedTracer::Run(ez::ezOptionParser &opt) {
 		batched = true;
 		FILE *f = freopen(NULL, "rb", stdin);
 		if (f == nullptr) {
-			std::cout << "stdin freopen failed" << std::endl;
+			PRINTF_INFO("stdin freopen failed\n");
 		}
 
 		while (!feof(stdin)) {
 			CorpusItemHeader header;
 			if ((1 == fread(&header, sizeof(header), 1, stdin)) &&
 					(header.size == fread(payloadBuff, 1, header.size, stdin))) {
-				std::cout << "Using " << header.fName << " as input file." << std::endl;
+				PRINTF_INFO("Using %s as input file\n", header.fName); 
 
 				observer.fileName = header.fName;
 				varCount = header.size;
@@ -275,7 +363,51 @@ int AnnotatedTracer::Run(ez::ezOptionParser &opt) {
 			}
 		}
 
-	} else {
+	} 
+	else if (opt.isSet("--flow")) 
+	{
+		flowMode = true;
+		// Input protocol [[task_op | payload size | payload- if taskOp == E_NEXT_OP_TASK]+ ]
+		// Expecting the size of each task first then the stream of tasks
+
+		// flowMode may be modified in ExecutionEnd
+		while (!feof(stdin) && flowMode) {
+			FlowOpCode nextOp = E_NEXTOP_TASK;
+			int payloadSize = 0;
+			size_t res = fread(&nextOp, sizeof(char), 1, stdin);
+			size_t res2 = fread(&payloadSize, sizeof(int), 1, stdin);
+			if (res != 1 || res2 != 1) 
+			{
+				PRINTF_INFO("WARN: Cannot read next opcode or payload size\n");
+			} 
+			else 
+			{
+				PRINTF_INFO("NNext op code %d. Payload size %d\n" , nextOp, payloadSize);
+			}
+
+			if (nextOp == E_NEXTOP_CLOSE) {
+				PRINTF_INFO("Stopping\n");
+				break;
+			}
+			else if (nextOp == E_NEXTOP_TASK){
+				PRINTF_INFO("### Executing a new task\n");
+
+				ReadFromFile(stdin, payloadBuff, payloadSize);
+
+				observer.fileName = "stdin";
+
+				ctrl->Execute();
+				ctrl->WaitForTermination();
+
+				PRINTF_INFO("###Finished executing the task\n");
+			}
+			else{
+				PRINTF_INFO("invalid next op value !! probably the data stream is corrupted\n");
+				break;
+			}
+		}
+	}
+	else {
 		varCount = ComputeVarCount();
 
 		observer.fileName = "stdin";

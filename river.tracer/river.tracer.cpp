@@ -19,6 +19,8 @@
 at::AnnotatedTracer *AT = nullptr;
 
 void __stdcall SymbolicHandler(void *ctx, void *offset, void *addr) {
+	//ExecutionEnvironment *pExecEnv = (ExecutionEnvironment *)ctx;
+	
 	RiverInstruction *instr = (RiverInstruction *)addr;
 
 	if (AT != nullptr) {
@@ -116,6 +118,15 @@ int main(int argc, const char *argv[]) {
 			false,
 			0,
 			0,
+			"Activate this if you want to simplify z3 expressions in simple tracer rather than on server. Check doc for tradeoffs understanding.",
+			"--exprsimplify"
+		   );
+
+	opt.add(
+			"",
+			false,
+			0,
+			0,
 			"When using binlog, buffer everything before writing the result",
 			"--binbuffered"
 		   );
@@ -155,6 +166,16 @@ int main(int argc, const char *argv[]) {
 			"Set the payload file. Only applicable for in-process tracing.",
 			"-p",
 			"--payload"
+		   );
+
+	opt.add(
+			"payload" LIB_EXT,
+			0,
+			1,
+			0,
+			"Set the log file. Write stdout if you want to use it, else the name of the file to write the log on",
+			"-l",
+			"--logfile"
 		   );
 
 	opt.add(

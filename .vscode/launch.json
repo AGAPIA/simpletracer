@@ -10,7 +10,7 @@
             "type": "cppdbg",
             "request": "launch",
             "program":"${command:cmake.launchTargetPath}", // "${workspaceRoot}/river.tracer/river.tracer", // 
-            "args": ["-p", "libfmi.so", "--annotated", "--z3", "<", "~/testtools/river/benchmarking-payload/fmi/sampleinput.txt"],
+            "args": ["-p", "libfmi.so", "--annotated", "--z3", "--exprsimplify",  "<", "~/testtools/river/benchmarking-payload/fmi/sampleinput.txt"],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",
             "environment": [/*

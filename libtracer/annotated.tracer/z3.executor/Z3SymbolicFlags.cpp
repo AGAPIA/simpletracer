@@ -1,4 +1,5 @@
 #include "Z3SymbolicExecutor.h"
+#include "Z3Utils.h"
 
 #include "CommonCrossPlatform/Common.h"
 

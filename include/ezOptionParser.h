@@ -30,12 +30,20 @@ Bruce Shankle added a crash fix in description printing.
 #include <limits>
 #include <sstream>
 #include <cstring>
+#include <unordered_set>
+
+
+#pragma GCC diagnostic push
+#pragma GCC system_header
+#define FOO(A, ...) foo(A, ##__VA_ARGS__)
 
 #ifdef __linux__
 #define SPRINTF(buffer, format, ...) sprintf((buffer), (format), ##__VA_ARGS__)
 #else
 #define SPRINTF(buffer, format, ...) sprintf_s((buffer), (format), ##__VA_ARGS__)
 #endif
+
+#pragma GCC diagnostic pop
 
 namespace ez {
 #define DEBUGLINE() printf("%s:%d\n", __FILE__, __LINE__);

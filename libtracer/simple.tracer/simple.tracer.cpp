@@ -33,6 +33,7 @@ unsigned int CustomObserver::ExecutionBegin(void *ctx, void *entryPoint) {
 
 	aFormat->WriteTestName(fileName.c_str());
 	logEsp = true;
+	logBasicBlockTracking = true;
 
 	return EXECUTION_ADVANCE;
 }
@@ -42,7 +43,7 @@ unsigned int CustomObserver::ExecutionControl(void *ctx, void *address) {
 	rev::BasicBlockInfo bbInfo;
 	st->ctrl->GetLastBasicBlockInfo(ctx, &bbInfo);
 
-	unsigned int nextSize = 2;
+	const unsigned int nextSize = 2;
 	struct BasicBlockPointer bbp;
 	struct BasicBlockPointer bbpNext[nextSize];
 
@@ -61,11 +62,14 @@ unsigned int CustomObserver::ExecutionControl(void *ctx, void *address) {
 		logEsp = false;
 	}
 
-	st->ctrl->GetCurrentRegisters(ctx, &regs);
-	struct BasicBlockMeta bbm { bbp, bbInfo.cost, bbInfo.branchType,
-			bbInfo.branchInstruction, regs.esp, bbInfo.nInstructions, nextSize,
-			bbpNext };
-	aFormat->WriteBasicBlock(bbm);
+	if (logBasicBlockTracking)
+	{
+		st->ctrl->GetCurrentRegisters(ctx, &regs);
+		struct BasicBlockMeta bbm { bbp, bbInfo.cost, bbInfo.branchType,
+				bbInfo.branchInstruction, regs.esp, bbInfo.nInstructions, nextSize,
+				bbpNext };
+		aFormat->WriteBasicBlock(bbm);
+	}
 
 	return EXECUTION_ADVANCE;
 }
@@ -131,7 +135,8 @@ CustomObserver::CustomObserver(SimpleTracer *st) {
 
 CustomObserver::~CustomObserver() {}
 
-int SimpleTracer::Run( ez::ezOptionParser &opt) {
+int SimpleTracer::Run( ez::ezOptionParser &opt) 
+{
 	uint32_t executionType = EXECUTION_INPROCESS;
 
 	// Don't write logs before this check
@@ -139,6 +144,7 @@ int SimpleTracer::Run( ez::ezOptionParser &opt) {
 		globalLog.EnableLog();
 	}
 
+	// TODO: follow the pattern in annotated tracer and remove this with the new logfile option !
 	const bool writeLogOnFile = opt.isSet("--writeLogOnFile");
 	if (writeLogOnFile) {
 		globalLog.SetLoggingToFile("log.txt");
@@ -258,11 +264,11 @@ int SimpleTracer::Run( ez::ezOptionParser &opt) {
 				globalLog.Log("NNext op code %d\n" , nextOp);
 			}
 
-			if (nextOp == 0) {
+			if (nextOp == E_NEXTOP_CLOSE) {
 				globalLog.Log("Stopping\n");
 				break;
 			}
-			else if (nextOp == 1){
+			else if (nextOp == E_NEXTOP_TASK){
 				globalLog.Log("### Executing a new task\n");
 
 				ReadFromFile(stdin, payloadBuff, payloadInputSizePerTask);
