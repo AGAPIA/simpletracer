@@ -67,3 +67,7 @@ trace.simple.out
 Z3.log
 ipch
 
+Makefile
+build/
+libtracer/Makefile
+
