@@ -348,6 +348,33 @@ Z3SymbolicFlags.cpp.s:
 	cd /home/ciprian/testtools/simpletracer && $(MAKE) -f libtracer/annotated.tracer/z3.executor/CMakeFiles/z3executor.dir/build.make libtracer/annotated.tracer/z3.executor/CMakeFiles/z3executor.dir/Z3SymbolicFlags.cpp.s
 .PHONY : Z3SymbolicFlags.cpp.s
 
+Z3Utils.o: Z3Utils.cpp.o
+
+.PHONY : Z3Utils.o
+
+# target to build an object file
+Z3Utils.cpp.o:
+	cd /home/ciprian/testtools/simpletracer && $(MAKE) -f libtracer/annotated.tracer/z3.executor/CMakeFiles/z3executor.dir/build.make libtracer/annotated.tracer/z3.executor/CMakeFiles/z3executor.dir/Z3Utils.cpp.o
+.PHONY : Z3Utils.cpp.o
+
+Z3Utils.i: Z3Utils.cpp.i
+
+.PHONY : Z3Utils.i
+
+# target to preprocess a source file
+Z3Utils.cpp.i:
+	cd /home/ciprian/testtools/simpletracer && $(MAKE) -f libtracer/annotated.tracer/z3.executor/CMakeFiles/z3executor.dir/build.make libtracer/annotated.tracer/z3.executor/CMakeFiles/z3executor.dir/Z3Utils.cpp.i
+.PHONY : Z3Utils.cpp.i
+
+Z3Utils.s: Z3Utils.cpp.s
+
+.PHONY : Z3Utils.s
+
+# target to generate assembly for a file
+Z3Utils.cpp.s:
+	cd /home/ciprian/testtools/simpletracer && $(MAKE) -f libtracer/annotated.tracer/z3.executor/CMakeFiles/z3executor.dir/build.make libtracer/annotated.tracer/z3.executor/CMakeFiles/z3executor.dir/Z3Utils.cpp.s
+.PHONY : Z3Utils.cpp.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -380,6 +407,9 @@ help:
 	@echo "... Z3SymbolicFlags.o"
 	@echo "... Z3SymbolicFlags.i"
 	@echo "... Z3SymbolicFlags.s"
+	@echo "... Z3Utils.o"
+	@echo "... Z3Utils.i"
+	@echo "... Z3Utils.s"
 .PHONY : help
 
 

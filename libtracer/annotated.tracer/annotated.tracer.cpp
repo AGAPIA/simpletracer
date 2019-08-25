@@ -284,11 +284,6 @@ int AnnotatedTracer::Run(ez::ezOptionParser &opt)
 		}
 	}
 
-
-	if (opt.isSet("--binlog")) {
-		observer.binOut = true;
-	}
-
 	simplificationMode = SIMPLIFICATION_NONE;
 	if (opt.isSet("--z3")) 
 	{
@@ -303,24 +298,32 @@ int AnnotatedTracer::Run(ez::ezOptionParser &opt)
 		trackingMode = TAINTED_INDEX_TRACKING;
 	}
 
-	if (opt.isSet("--binlog")) {
+	if (opt.isSet("--binlog")) 
+	{
 		observer.binOut = true;
 	}
 
-	const bool isBinBuffered  = opt.isSet("--binbuffered");
+	bool isBinBuffered  = opt.isSet("--binbuffered");
+
+	if (opt.isSet("--flow"))
+	{
+		observer.binOut = true;
+		isBinBuffered = true;
+	}
+
+	std::string fName;
+	opt.get("-o")->getString(fName);
+	PRINTF_INFO("Writing %s output to %s\n", (observer.binOut ? "binary" : "text"), fName.c_str());
+
+	FileLog *flog = new FileLog();
+	flog->SetLogFileName(fName.c_str());
 
 	if (observer.binOut) 
 	{
-		//observer.aFormat = new BinFormat(observer.aLog, isBinBuffered);
+		observer.aFormat = new BinFormat(flog, isBinBuffered);
 	} 
 	else 
 	{
-		std::string fName;
-		opt.get("-o")->getString(fName);
-		PRINTF_INFO("Writing %s output to %s\n", (observer.binOut ? "binary" : "text"), fName.c_str());
-
-		FileLog *flog = new FileLog();
-		flog->SetLogFileName(fName.c_str());
 		observer.aFormat = new TextFormat(flog);
 	}
 
