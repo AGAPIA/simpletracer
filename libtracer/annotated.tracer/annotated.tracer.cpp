@@ -1,4 +1,4 @@
-#include "BinFormat.h"
+#include "BinFormatConcolic.h"
 #include "TextFormat.h"
 
 #include "FileLog.h"
@@ -49,6 +49,7 @@ namespace at {
 
 unsigned int CustomObserver::ExecutionBegin(void *ctx, void *entryPoint) {
 	PRINTF_INFO("Process starting. Entry point: %p\n", entryPoint);
+	aFormat->OnExecutionBegin(nullptr);
 	at->ctrl->GetModules(mInfo, mCount);
 
 	if (HandlePatchLibrary() < 0) {
@@ -100,6 +101,7 @@ unsigned int CustomObserver::ExecutionControl(void *ctx, void *address) {
 	rev::BasicBlockInfo bbInfo;
 
 	at->ctrl->GetLastBasicBlockInfo(ctx, &bbInfo);
+	executor->OnExecutionControl(bbInfo);
 
 	unsigned int nextSize = 2;
 	struct BasicBlockPointer bbp;
@@ -175,6 +177,7 @@ unsigned int CustomObserver::ExecutionEnd(void *ctx)
 		return EXECUTION_TERMINATE;
 	}
 	else {
+		aFormat->OnExecutionEnd();
 		return EXECUTION_TERMINATE;
 	}
 }
@@ -320,7 +323,7 @@ int AnnotatedTracer::Run(ez::ezOptionParser &opt)
 
 	if (observer.binOut) 
 	{
-		observer.aFormat = new BinFormat(flog, isBinBuffered);
+		observer.aFormat = new BinFormatConcolic(flog, isBinBuffered);
 	} 
 	else 
 	{

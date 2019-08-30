@@ -40,7 +40,7 @@ endif()
 set(Z3_ROOT_INCLUDE "$ENV{Z3_ROOT}/${CMAKE_BUILD_TYPE}/include")
 set(Z3_ROOT_LIBS "$ENV{Z3_ROOT}/${CMAKE_BUILD_TYPE}/lib")
 
-include_directories(Z3_ROOT_INCLUDE)
+include_directories(${Z3_ROOT_INCLUDE})
 find_library (z3 
               NAMES libz3.so 
               HINTS ${Z3_ROOT_LIBS}

@@ -1069,6 +1069,11 @@ void Z3SymbolicExecutor::AddOperands(struct OperandInfo &left,
 	}
 }
 
+void Z3SymbolicExecutor::OnExecutionControl(const rev::BasicBlockInfo& bblock)
+{
+	m_lastConcolicTest.pathBBlocks.insert((DWORD)bblock.address);
+}
+
 void Z3SymbolicExecutor::Execute(RiverInstruction *instruction) {
 	SymbolicOperands ops;
 

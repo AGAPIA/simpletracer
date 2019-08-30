@@ -180,6 +180,8 @@ public:
 	virtual void *ExecuteResolveAddress(void *base, void *index, nodep::BYTE scale);
 	virtual void ComposeScaleAndIndex(nodep::BYTE &scale, struct OperandInfo &indexOp);
 	virtual void AddOperands(struct OperandInfo &left, struct OperandInfo &right, unsigned displacement, struct OperandInfo &result);
+
+	virtual void OnExecutionControl(const rev::BasicBlockInfo& bblock) override;
 };
 
 class Z3FlagZF : public Z3SymbolicExecutor::Z3SymbolicCpuFlag {
