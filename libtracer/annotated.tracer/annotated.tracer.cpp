@@ -97,37 +97,44 @@ unsigned int CustomObserver::ExecutionBegin(void *ctx, void *entryPoint) {
 }
 
 unsigned int CustomObserver::ExecutionControl(void *ctx, void *address) {
-	rev::ExecutionRegs regs;
 	rev::BasicBlockInfo bbInfo;
 
 	at->ctrl->GetLastBasicBlockInfo(ctx, &bbInfo);
 	executor->OnExecutionControl(bbInfo);
 
-	unsigned int nextSize = 2;
-	struct BasicBlockPointer bbp;
-	struct BasicBlockPointer bbpNext[nextSize];
-
-	TranslateAddressToBasicBlockPointer(&bbp, (DWORD)bbInfo.address, mCount, mInfo);
-
-	for (unsigned int i = 0; i < nextSize; ++i) {
-		TranslateAddressToBasicBlockPointer(bbpNext + i,
-				(DWORD)bbInfo.branchNext[i].address, mCount, mInfo);
-	}
-
-	if (logEsp) {
-		ClearExecutionRegisters(&regs);
-		at->ctrl->GetFirstEsp(ctx, regs.esp);
-		aFormat->WriteRegisters(regs);
-		logEsp = false;
-	}
-
-	if (logBasicBlockTracking)
+	if (logEsp || logBasicBlockTracking)
 	{
-		at->ctrl->GetCurrentRegisters(ctx, &regs);
+		rev::ExecutionRegs regs;
+		unsigned int nextSize = 2;
+		struct BasicBlockPointer bbp;
+		struct BasicBlockPointer bbpNext[nextSize];
+
+		TranslateAddressToBasicBlockPointer(&bbp, (DWORD)bbInfo.address, mCount, mInfo);
+
+		for (unsigned int i = 0; i < nextSize; ++i) {
+			TranslateAddressToBasicBlockPointer(bbpNext + i,
+					(DWORD)bbInfo.branchNext[i].address, mCount, mInfo);
+		}
+
 		struct BasicBlockMeta bbm { bbp, bbInfo.cost, bbInfo.branchType,
-				bbInfo.branchInstruction, regs.esp, bbInfo.nInstructions,
-				nextSize, bbpNext };
-		aFormat->WriteBasicBlock(bbm);
+					bbInfo.branchInstruction, (unsigned int)-1, bbInfo.nInstructions,
+					nextSize, bbpNext };
+
+
+		if (logEsp) {
+			ClearExecutionRegisters(&regs);
+			at->ctrl->GetFirstEsp(ctx, regs.esp);
+			aFormat->WriteRegisters(regs);
+			bbm.esp = regs.esp;
+			logEsp = false;
+		}
+
+		if (logBasicBlockTracking)
+		{
+			at->ctrl->GetCurrentRegisters(ctx, &regs);
+			bbm.esp = regs.esp;
+			aFormat->WriteBasicBlock(bbm);
+		}
 	}
 
 	return EXECUTION_ADVANCE;

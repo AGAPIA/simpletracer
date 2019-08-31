@@ -11,6 +11,7 @@ void TranslateAddressToBasicBlockPointer(
 
 	memset(bbp, 0, sizeof(struct BasicBlockPointer));
 
+	// TODO: use an interval tree
 	for (int i = 0; i < mCount; ++i) {
 		if ((mInfo[i].ModuleBase <= address) &&
 				(address < mInfo[i].ModuleBase + mInfo[i].Size)) {
@@ -23,8 +24,10 @@ void TranslateAddressToBasicBlockPointer(
 	bbp->offset = offset;
 	if (foundModule == -1) {
 		strncpy(bbp->modName, unkmod, MAX_PATH);
+		bbp->basicBlockIndex = -1;
 	} else {
 		strncpy(bbp->modName, mInfo[foundModule].Name, MAX_PATH);
+		bbp->basicBlockIndex = foundModule;
 	}
 }
 

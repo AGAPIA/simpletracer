@@ -1080,7 +1080,7 @@ void Z3SymbolicExecutor::Execute(RiverInstruction *instruction) {
 	// Check if there is any pending jump instruction waiting for result to be filled
 	if (m_lastConcolicTest.isPending())
 	{
-		m_lastConcolicTest.taken = (((DWORD) currentBasicBlockExecuted.address) == m_lastConcolicTest.blockOptionTaken);
+		m_lastConcolicTest.taken = ((DWORD)(currentBasicBlockExecuted.address) == m_lastConcolicTest.blockOptionTaken);
 		aFormat->WriteZ3SymbolicJumpCC(m_lastConcolicTest);
 		m_lastConcolicTest.Reset();
 	}
