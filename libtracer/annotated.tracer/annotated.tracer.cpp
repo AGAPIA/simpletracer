@@ -242,7 +242,7 @@ AnnotatedTracer::~AnnotatedTracer()
 int AnnotatedTracer::Run(ez::ezOptionParser &opt) 
 {
 	uint32_t executionType = EXECUTION_INPROCESS;
- 
+
 	// Init the log system
 	{
 		FILE *f = stdout;
@@ -250,6 +250,7 @@ int AnnotatedTracer::Run(ez::ezOptionParser &opt)
 		{
 			std::string logFile;
 			opt.get("--logfile")->getString(logFile);
+			//printf("log file is %s\n", logFile.c_str());
 
 			if (logFile != "stdout")
 			{
@@ -323,7 +324,7 @@ int AnnotatedTracer::Run(ez::ezOptionParser &opt)
 
 	std::string fName;
 	opt.get("-o")->getString(fName);
-	PRINTF_INFO("Writing %s output to %s\n", (observer.binOut ? "binary" : "text"), fName.c_str());
+	PRINTF_INFO("WRiting %s output to %s\n", (observer.binOut ? "binary" : "text"), fName.c_str());
 
 	FileLog *flog = new FileLog();
 	flog->SetLogFileName(fName.c_str());
