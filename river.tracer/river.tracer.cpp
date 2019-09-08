@@ -167,6 +167,17 @@ int main(int argc, const char *argv[]) {
 			"-p",
 			"--payload"
 		   );
+	
+	opt.add(
+			"/home/ciprian/socketriver",
+			0,
+			1,
+			0,
+			"Use this to create a flow of input payload- trace output. Input is fed from a different process",
+			"-aN",
+			"--addrName"
+		   );
+		   
 
 	opt.add(
 			"payload" LIB_EXT,

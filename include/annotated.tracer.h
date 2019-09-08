@@ -50,6 +50,8 @@ enum FlowOpCode
 	E_NEXTOP_TASK
 };
 
+#define TERMINATION_PAYLOAD_MARKER -1
+
 struct CorpusItemHeader {
 	char fName[60];
 	unsigned int size;

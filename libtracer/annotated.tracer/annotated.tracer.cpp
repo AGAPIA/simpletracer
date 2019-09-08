@@ -13,6 +13,14 @@
 #include "CommonCrossPlatform/Common.h" //MAX_PAYLOAD_BUF; MAX_PATH
 
 #include "utils.h" //common handlers
+#include <fcntl.h>   
+#include <sys/stat.h> 
+#include <sys/types.h>   
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <sys/un.h>
+
+#include <assert.h>
 
 #ifdef _WIN32
 #include <Windows.h>
@@ -154,34 +162,44 @@ unsigned int CustomObserver::ExecutionEnd(void *ctx)
 
 		return EXECUTION_TERMINATE;
 	} 
-	else if (at->flowMode) {
-		PRINTF_INFO("On flow mode restart\n");
+	else if (at->flowMode) 
+	{
+		// When we get here, an execution was finished so now let's send the buffered output to the server
+		aFormat->sendBufferedContentThroughSocket();
 
-		aFormat->OnExecutionEnd();
+		PRINTF_INFO("On flow mode restart\n");
 		FlowOpCode nextOp = E_NEXTOP_TASK;
 		int payloadSize = 0;
-		size_t res = fread(&nextOp, sizeof(char), 1, stdin);
-		size_t res2 = fread(&payloadSize, sizeof(int), 1, stdin);
-		if (res != 1 || res2 != 1) {
-			PRINTF_INFO("WARN: Cannot read next opcode or payload size\n");
-		} else {
-			PRINTF_INFO("NNext op code %d. Payload size %d\n" , nextOp, payloadSize);
-		}
+		size_t res1 = fread(&payloadSize, sizeof(int), 1, aFormat->inputSocketStream);
+		if (res1 != 1) 
+		{
+			perror("Cannot read next opcode or payload size\n");
+			exit(1);
+		} 
+		else 
+		{
+			if (payloadSize == TERMINATION_PAYLOAD_MARKER)
+			{
+				nextOp = E_NEXTOP_CLOSE;
+			}
 
-		if (nextOp == 0) {
-			PRINTF_INFO("Stopping\n");
-			at->flowMode = false;
-			return EXECUTION_TERMINATE;
-		} else if (nextOp == 1){
-			PRINTF_INFO("### Executing a new task\n");
-			ReadFromFile(stdin, at->payloadBuff, payloadSize);
-			PRINTF_INFO("###Finished executing the task\n");
-			aFormat->OnExecutionBegin(nullptr);
-			return EXECUTION_RESTART;
-		}
+				PRINTF_INFO("NNext op code %d. Payload size %d\n" , nextOp, payloadSize);
+			}
 
-		PRINTF_INFO("invalid next op value !! probably the data stream is corrupted\n");
-		return EXECUTION_TERMINATE;
+			if (nextOp == E_NEXTOP_TASK)
+			{
+				PRINTF_INFO("### Executing a new task\n");
+				ReadFromFile(aFormat->inputSocketStream, at->payloadBuff, payloadSize);
+				PRINTF_INFO("###Finished executing the task\n");
+				aFormat->OnExecutionBegin(nullptr);
+				return EXECUTION_RESTART;				
+			}	
+			else
+			{
+				PRINTF_INFO("Stopping\n");
+				at->flowMode = false;
+				return EXECUTION_TERMINATE;
+			}		
 	}
 	else {
 		aFormat->OnExecutionEnd();
@@ -315,23 +333,28 @@ int AnnotatedTracer::Run(ez::ezOptionParser &opt)
 	}
 
 	bool isBinBuffered  = opt.isSet("--binbuffered");
-
+	FileLog *flog = nullptr;
 	if (opt.isSet("--flow"))
 	{
 		observer.binOut = true;
 		isBinBuffered = true;
+
+		// No log file here, will write to server through socket
 	}
+	else
+	{
+		std::string fName;
+		opt.get("-o")->getString(fName);
+		PRINTF_INFO("WRiting %s output to %s\n", (observer.binOut ? "binary" : "text"), fName.c_str());
 
-	std::string fName;
-	opt.get("-o")->getString(fName);
-	PRINTF_INFO("WRiting %s output to %s\n", (observer.binOut ? "binary" : "text"), fName.c_str());
-
-	FileLog *flog = new FileLog();
-	flog->SetLogFileName(fName.c_str());
+		flog = new FileLog();
+		flog->SetLogFileName(fName.c_str());
+	}
+	
 
 	if (observer.binOut) 
 	{
-		observer.aFormat = new BinFormatConcolic(flog, isBinBuffered);
+		observer.aFormat = new BinFormatConcolic(flog);
 	} 
 	else 
 	{
@@ -380,45 +403,76 @@ int AnnotatedTracer::Run(ez::ezOptionParser &opt)
 	} 
 	else if (opt.isSet("--flow")) 
 	{
+		if (!opt.isSet("--addrName"))
+		{
+			perror("you must set the addrName with flow option !");
+			exit(1);
+		}
+
 		flowMode = true;
 		// Input protocol [[task_op | payload size | payload- if taskOp == E_NEXT_OP_TASK]+ ]
 		// Expecting the size of each task first then the stream of tasks
 
+    	
+		// Create a socket end for tracer and connect it to the server app
+		//--------
+		int tracerSocket = -1;
+   		if ((tracerSocket = socket(AF_UNIX, SOCK_STREAM, 0)) < 0) 
+		{
+        	perror("client: socket");
+        	exit(1);
+		}
+
+		struct sockaddr_un saun;
+		saun.sun_family = AF_UNIX;
+
+		std::string serverAddress;
+		opt.get("--addrName")->getString(serverAddress);
+		strcpy(saun.sun_path, serverAddress.c_str());
+		const int len = sizeof(saun.sun_family) + strlen(saun.sun_path);
+		if (connect(tracerSocket, (struct sockaddr *)&saun, len) < 0) {
+			perror("client: connect");
+			exit(1);
+		}
+		//-------------
+
+		// Open the socket as a read stream
+    	observer.aFormat->inputSocketStream = fdopen(tracerSocket, "rb");
+		observer.aFormat->outputSocket 		= tracerSocket;
+
 		// flowMode may be modified in ExecutionEnd
-		while (!feof(stdin) && flowMode) {
+		while (flowMode) 
+		{
 			FlowOpCode nextOp = E_NEXTOP_TASK;
 			int payloadSize = 0;
-			size_t res = fread(&nextOp, sizeof(char), 1, stdin);
-			size_t res2 = fread(&payloadSize, sizeof(int), 1, stdin);
-			if (res != 1 || res2 != 1) 
+			size_t res1 = fread(&payloadSize, sizeof(int), 1, observer.aFormat->inputSocketStream);
+			if (res1 != 1) 
 			{
-				PRINTF_INFO("WARN: Cannot read next opcode or payload size\n");
+				perror("Cannot read next opcode or payload size\n");
+				exit(1);
 			} 
 			else 
 			{
+				if (payloadSize == TERMINATION_PAYLOAD_MARKER)
+				{
+					nextOp = E_NEXTOP_CLOSE;
+				}
 				PRINTF_INFO("NNext op code %d. Payload size %d\n" , nextOp, payloadSize);
 			}
-
-			if (nextOp == E_NEXTOP_CLOSE) {
-				PRINTF_INFO("Stopping\n");
-				break;
-			}
-			else if (nextOp == E_NEXTOP_TASK){
+			
+			if (nextOp == E_NEXTOP_TASK)
+			{
 				PRINTF_INFO("### Executing a new task\n");
-
-				ReadFromFile(stdin, payloadBuff, payloadSize);
-
-				observer.fileName = "stdin";
-
+				ReadFromFile(observer.aFormat->inputSocketStream, payloadBuff, payloadSize);
 				ctrl->Execute();
 				ctrl->WaitForTermination();
-
 				PRINTF_INFO("###Finished executing the task\n");
 			}
-			else{
-				PRINTF_INFO("invalid next op value !! probably the data stream is corrupted\n");
+			else if (nextOp == E_NEXTOP_CLOSE) 
+			{
+				PRINTF_INFO("Stopping\n");
 				break;
-			}
+			}			
 		}
 	}
 	else {
