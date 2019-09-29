@@ -397,15 +397,26 @@ void getUsedSymbolsFromASTString(const char* astString, std::unordered_set<unsig
 	const char* iter = astString;
 	while (*iter)
 	{
-		const char* symbolBegin = strstr(iter, "|s[");
+		const char* symbolBegin = strstr(iter, "@");
 		if (symbolBegin == nullptr)
 			break;
 
-		symbolBegin += 3;
+		symbolBegin += 1;
 
-		const char* symbolEnd = strstr(symbolBegin, "]|");
-		if (symbolEnd == nullptr)
-			break;
+		const char* symbolEnd = symbolBegin;
+		const int maxSymbolLen = 32;
+		int symbolLen = 0;
+		while (symbolLen < maxSymbolLen)
+		{
+			char currChar = *symbolEnd;
+			if (!isdigit(currChar))
+				break;
+			//currChar == ' ' || currChar == '\t' || currChar == '\n' || currChar == '\0')
+			//	break;
+
+			symbolLen++;
+			symbolEnd++;
+		}
 
 		// Check if the symbol number is ok and check the global usage array
 		const int size = symbolEnd - symbolBegin;
@@ -444,7 +455,7 @@ template <Z3SymbolicExecutor::BVFunc func> void Z3SymbolicExecutor::SymbolicJump
 	m_lastConcolicTest.flags.symbolicCond = (unsigned int)cond;
 
 	char testSymbolName[32];
-	snprintf(testSymbolName, 32, "%p", (currentBasicBlockExecuted.address));
+	snprintf(testSymbolName, 32, "$%08lx", (DWORD)(currentBasicBlockExecuted.address));
 	m_lastConcolicTest.ast.address = AstToBenchmarkString((Z3_ast) m_lastConcolicTest.flags.symbolicCond, instruction, testSymbolName);
 	m_lastConcolicTest.ast.size = strlen(m_lastConcolicTest.ast.address);
 	m_lastConcolicTest.blockOptionTaken = currentBasicBlockExecuted.branchNext[0].address;

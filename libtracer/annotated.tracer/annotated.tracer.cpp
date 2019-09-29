@@ -80,7 +80,7 @@ unsigned int CustomObserver::ExecutionBegin(void *ctx, void *entryPoint) {
 		for (unsigned int i = 0; i < at->varCount; ++i) {
 			char vname[8];
 
-			sprintf(vname, "s[%d]", i);
+			sprintf(vname, "@%d", i);
 
 			revEnv->SetSymbolicVariable(vname,
 					(rev::ADDR_TYPE)(at->payloadBuff + i), 1);
