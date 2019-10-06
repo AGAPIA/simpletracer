@@ -165,6 +165,7 @@ unsigned int CustomObserver::ExecutionEnd(void *ctx)
 	else if (at->flowMode) 
 	{
 		// When we get here, an execution was finished so now let's send the buffered output to the server
+		aFormat->OnExecutionEnd();
 		aFormat->sendBufferedContentThroughSocket();
 
 		PRINTF_INFO("On flow mode restart\n");
