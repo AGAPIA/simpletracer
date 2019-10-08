@@ -61,21 +61,6 @@
 },
 {
   "directory": "/home/ciprian/testtools/simpletracer/build/libtracer/annotated.tracer/z3.executor",
-  "command": "/usr/bin/g++-5  -DIS_DEBUG_BUILD -I/home/ciprian/testtools/simpletracer/include -I/include -I/home/ciprian/testtools/simpletracer/river.format/include -I/home/ciprian/z3/Debug/include   -m32 -std=c++11 -D__cdecl=\"\" -D__stdcall=\"\" -m32 -std=c++11 -D__cdecl=\"\" -D__stdcall=\"\"  -m32 -std=c++11 -D__cdecl=\"\" -D__stdcall=\"\" -m32 -std=c++11 -D__cdecl=\"\" -D__stdcall=\"\" -g -O0   -o CMakeFiles/symbolic_demo.dir/SymbolicDemoMain.cpp.o -c /home/ciprian/testtools/simpletracer/libtracer/annotated.tracer/z3.executor/SymbolicDemoMain.cpp",
-  "file": "/home/ciprian/testtools/simpletracer/libtracer/annotated.tracer/z3.executor/SymbolicDemoMain.cpp"
-},
-{
-  "directory": "/home/ciprian/testtools/simpletracer/build/libtracer/annotated.tracer/z3.executor",
-  "command": "/usr/bin/g++-5  -DIS_DEBUG_BUILD -I/home/ciprian/testtools/simpletracer/include -I/include -I/home/ciprian/testtools/simpletracer/river.format/include -I/home/ciprian/z3/Debug/include   -m32 -std=c++11 -D__cdecl=\"\" -D__stdcall=\"\" -m32 -std=c++11 -D__cdecl=\"\" -D__stdcall=\"\"  -m32 -std=c++11 -D__cdecl=\"\" -D__stdcall=\"\" -m32 -std=c++11 -D__cdecl=\"\" -D__stdcall=\"\" -g -O0   -o CMakeFiles/symbolic_demo.dir/TrackingCookie.cpp.o -c /home/ciprian/testtools/simpletracer/libtracer/annotated.tracer/z3.executor/TrackingCookie.cpp",
-  "file": "/home/ciprian/testtools/simpletracer/libtracer/annotated.tracer/z3.executor/TrackingCookie.cpp"
-},
-{
-  "directory": "/home/ciprian/testtools/simpletracer/build/libtracer/annotated.tracer/z3.executor",
-  "command": "/usr/bin/g++-5  -DIS_DEBUG_BUILD -I/home/ciprian/testtools/simpletracer/include -I/include -I/home/ciprian/testtools/simpletracer/river.format/include -I/home/ciprian/z3/Debug/include   -m32 -std=c++11 -D__cdecl=\"\" -D__stdcall=\"\" -m32 -std=c++11 -D__cdecl=\"\" -D__stdcall=\"\"  -m32 -std=c++11 -D__cdecl=\"\" -D__stdcall=\"\" -m32 -std=c++11 -D__cdecl=\"\" -D__stdcall=\"\" -g -O0   -o CMakeFiles/symbolic_demo.dir/Payload.cpp.o -c /home/ciprian/testtools/simpletracer/libtracer/annotated.tracer/z3.executor/Payload.cpp",
-  "file": "/home/ciprian/testtools/simpletracer/libtracer/annotated.tracer/z3.executor/Payload.cpp"
-},
-{
-  "directory": "/home/ciprian/testtools/simpletracer/build/libtracer/annotated.tracer/z3.executor",
   "command": "/usr/bin/g++-5  -DIS_DEBUG_BUILD -I/home/ciprian/testtools/simpletracer/include -I/include -I/home/ciprian/testtools/simpletracer/river.format/include -I/home/ciprian/z3/Debug/include   -m32 -std=c++11 -D__cdecl=\"\" -D__stdcall=\"\" -m32 -std=c++11 -D__cdecl=\"\" -D__stdcall=\"\"  -m32 -std=c++11 -D__cdecl=\"\" -D__stdcall=\"\" -m32 -std=c++11 -D__cdecl=\"\" -D__stdcall=\"\" -g -O0   -o CMakeFiles/z3executor.dir/LargeStack.cpp.o -c /home/ciprian/testtools/simpletracer/libtracer/annotated.tracer/z3.executor/LargeStack.cpp",
   "file": "/home/ciprian/testtools/simpletracer/libtracer/annotated.tracer/z3.executor/LargeStack.cpp"
 },
@@ -93,6 +78,21 @@
   "directory": "/home/ciprian/testtools/simpletracer/build/libtracer/annotated.tracer/z3.executor",
   "command": "/usr/bin/g++-5  -DIS_DEBUG_BUILD -I/home/ciprian/testtools/simpletracer/include -I/include -I/home/ciprian/testtools/simpletracer/river.format/include -I/home/ciprian/z3/Debug/include   -m32 -std=c++11 -D__cdecl=\"\" -D__stdcall=\"\" -m32 -std=c++11 -D__cdecl=\"\" -D__stdcall=\"\"  -m32 -std=c++11 -D__cdecl=\"\" -D__stdcall=\"\" -m32 -std=c++11 -D__cdecl=\"\" -D__stdcall=\"\" -g -O0   -o CMakeFiles/z3executor.dir/Z3Utils.cpp.o -c /home/ciprian/testtools/simpletracer/libtracer/annotated.tracer/z3.executor/Z3Utils.cpp",
   "file": "/home/ciprian/testtools/simpletracer/libtracer/annotated.tracer/z3.executor/Z3Utils.cpp"
+},
+{
+  "directory": "/home/ciprian/testtools/simpletracer/build/libtracer/annotated.tracer/z3.executor",
+  "command": "/usr/bin/g++-5  -DIS_DEBUG_BUILD -I/home/ciprian/testtools/simpletracer/include -I/include -I/home/ciprian/testtools/simpletracer/river.format/include -I/home/ciprian/z3/Debug/include   -m32 -std=c++11 -D__cdecl=\"\" -D__stdcall=\"\" -m32 -std=c++11 -D__cdecl=\"\" -D__stdcall=\"\"  -m32 -std=c++11 -D__cdecl=\"\" -D__stdcall=\"\" -m32 -std=c++11 -D__cdecl=\"\" -D__stdcall=\"\" -g -O0   -o CMakeFiles/symbolic_demo.dir/SymbolicDemoMain.cpp.o -c /home/ciprian/testtools/simpletracer/libtracer/annotated.tracer/z3.executor/SymbolicDemoMain.cpp",
+  "file": "/home/ciprian/testtools/simpletracer/libtracer/annotated.tracer/z3.executor/SymbolicDemoMain.cpp"
+},
+{
+  "directory": "/home/ciprian/testtools/simpletracer/build/libtracer/annotated.tracer/z3.executor",
+  "command": "/usr/bin/g++-5  -DIS_DEBUG_BUILD -I/home/ciprian/testtools/simpletracer/include -I/include -I/home/ciprian/testtools/simpletracer/river.format/include -I/home/ciprian/z3/Debug/include   -m32 -std=c++11 -D__cdecl=\"\" -D__stdcall=\"\" -m32 -std=c++11 -D__cdecl=\"\" -D__stdcall=\"\"  -m32 -std=c++11 -D__cdecl=\"\" -D__stdcall=\"\" -m32 -std=c++11 -D__cdecl=\"\" -D__stdcall=\"\" -g -O0   -o CMakeFiles/symbolic_demo.dir/TrackingCookie.cpp.o -c /home/ciprian/testtools/simpletracer/libtracer/annotated.tracer/z3.executor/TrackingCookie.cpp",
+  "file": "/home/ciprian/testtools/simpletracer/libtracer/annotated.tracer/z3.executor/TrackingCookie.cpp"
+},
+{
+  "directory": "/home/ciprian/testtools/simpletracer/build/libtracer/annotated.tracer/z3.executor",
+  "command": "/usr/bin/g++-5  -DIS_DEBUG_BUILD -I/home/ciprian/testtools/simpletracer/include -I/include -I/home/ciprian/testtools/simpletracer/river.format/include -I/home/ciprian/z3/Debug/include   -m32 -std=c++11 -D__cdecl=\"\" -D__stdcall=\"\" -m32 -std=c++11 -D__cdecl=\"\" -D__stdcall=\"\"  -m32 -std=c++11 -D__cdecl=\"\" -D__stdcall=\"\" -m32 -std=c++11 -D__cdecl=\"\" -D__stdcall=\"\" -g -O0   -o CMakeFiles/symbolic_demo.dir/Payload.cpp.o -c /home/ciprian/testtools/simpletracer/libtracer/annotated.tracer/z3.executor/Payload.cpp",
+  "file": "/home/ciprian/testtools/simpletracer/libtracer/annotated.tracer/z3.executor/Payload.cpp"
 },
 {
   "directory": "/home/ciprian/testtools/simpletracer/build/river.tracer",
