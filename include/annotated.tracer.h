@@ -64,7 +64,7 @@ class AnnotatedTracer {
 		bool flowMode = false;
 		uint8_t simplificationMode;
 		uint8_t trackingMode = Z3_TRACKING;
-		unsigned int varCount;
+		unsigned int NumSymbolicVariables;
 
 		ExecutionController *ctrl;
 
@@ -74,7 +74,7 @@ class AnnotatedTracer {
 		rev::SymbolicHandlerFunc symb;
 		CustomObserver observer;
 
-		unsigned int ComputeVarCount();
+		unsigned int ComputeNumSymbolicVariables();
 		int Run(ez::ezOptionParser &opt);
 		void SetSymbolicHandler(rev::SymbolicHandlerFunc symb);
 

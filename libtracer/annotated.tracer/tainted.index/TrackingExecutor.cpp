@@ -12,15 +12,15 @@
 #define MAX_DEPS 20
 
 TrackingExecutor::TrackingExecutor(sym::SymbolicEnvironment *e,
-		unsigned int varCount, AbstractFormat *aFormat)
-	: SymbolicExecutor(e), varCount(varCount), aFormat(aFormat) {
+		unsigned int NumSymbolicVariables, AbstractFormat *aFormat)
+	: SymbolicExecutor(e), NumSymbolicVariables(NumSymbolicVariables), aFormat(aFormat) {
 	ti = new TaintedIndex();
 }
 
 void *TrackingExecutor::CreateVariable(const char *name, DWORD size) {
 	unsigned int source = atoi(name + 2);
 	DWORD sizeInBits = size << 3;
-	if (source < varCount) {
+	if (source < NumSymbolicVariables) {
 		aFormat->WriteTaintedIndexPayload(ti->GetIndex(), source, sizeInBits);
 	} else {
 		fprintf(stderr, "Error: Wrong index: I[%lu]\n", ti->GetIndex());

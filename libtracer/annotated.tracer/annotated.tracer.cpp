@@ -12,7 +12,7 @@
 
 #include "CommonCrossPlatform/Common.h" //MAX_PAYLOAD_BUF; MAX_PATH
 
-#include "utils.h" //common handlers
+#include "utils.h" //common handlersgg
 #include <fcntl.h>   
 #include <sys/stat.h> 
 #include <sys/types.h>   
@@ -69,7 +69,7 @@ unsigned int CustomObserver::ExecutionBegin(void *ctx, void *entryPoint) {
 		regEnv = NewX86RegistersEnvironment(revEnv);
 
 		if (at->trackingMode == TAINTED_INDEX_TRACKING) {
-			executor = new TrackingExecutor(regEnv, at->varCount, aFormat);
+			executor = new TrackingExecutor(regEnv, at->NumSymbolicVariables, aFormat);
 		} else {
 			executor = new Z3SymbolicExecutor(regEnv, aFormat, at->simplificationMode == SIMPLIFICATION_AT_ROOT);
 		}
@@ -77,7 +77,7 @@ unsigned int CustomObserver::ExecutionBegin(void *ctx, void *entryPoint) {
 		regEnv->SetExecutor(executor);
 		regEnv->SetReferenceCounting(AddReference, DelReference);
 
-		for (unsigned int i = 0; i < at->varCount; ++i) {
+		for (unsigned int i = 0; i < at->NumSymbolicVariables; ++i) {
 			char vname[8];
 
 			sprintf(vname, "@%d", i);
@@ -174,7 +174,7 @@ unsigned int CustomObserver::ExecutionEnd(void *ctx)
 		size_t res1 = fread(&payloadSize, sizeof(int), 1, aFormat->inputSocketStream);
 		if (res1 != 1) 
 		{
-			perror("Cannot read next opcode or payload size\n");
+			//printf("Cannot read next opcode or payload size\n");
 			exit(1);
 		} 
 		else 
@@ -190,7 +190,9 @@ unsigned int CustomObserver::ExecutionEnd(void *ctx)
 			if (nextOp == E_NEXTOP_TASK)
 			{
 				PRINTF_INFO("### Executing a new task\n");
-				ReadFromFile(aFormat->inputSocketStream, at->payloadBuff, payloadSize);
+				const int inputStreamSize = ReadFromFile(aFormat->inputSocketStream, at->payloadBuff, payloadSize);
+				assert(inputStreamSize == payloadSize); // TODO: what if input is too large to be sent in a chunk ? :) Fix this
+				at->NumSymbolicVariables = inputStreamSize;
 				PRINTF_INFO("###Finished executing the task\n");
 				aFormat->OnExecutionBegin(nullptr);
 				return EXECUTION_RESTART;				
@@ -239,7 +241,7 @@ CustomObserver::CustomObserver(AnnotatedTracer *at) {
 CustomObserver::~CustomObserver() {
 }
 
-unsigned int AnnotatedTracer::ComputeVarCount() {
+unsigned int AnnotatedTracer::ComputeNumSymbolicVariables() {
 	if (payloadBuff == nullptr)
 		return 1;
 
@@ -251,7 +253,7 @@ void AnnotatedTracer::SetSymbolicHandler(rev::SymbolicHandlerFunc symb) {
 }
 
 AnnotatedTracer::AnnotatedTracer()
-	: batched(false), varCount(1), ctrl(nullptr), payloadBuff(nullptr),
+	: batched(false), NumSymbolicVariables(1), ctrl(nullptr), payloadBuff(nullptr),
 	PayloadHandler(nullptr), observer(this)
 { }
 
@@ -394,7 +396,7 @@ int AnnotatedTracer::Run(ez::ezOptionParser &opt)
 				PRINTF_INFO("Using %s as input file\n", header.fName); 
 
 				observer.fileName = header.fName;
-				varCount = header.size;
+				NumSymbolicVariables = header.size;
 
 				ctrl->Execute();
 				ctrl->WaitForTermination();
@@ -449,7 +451,7 @@ int AnnotatedTracer::Run(ez::ezOptionParser &opt)
 			size_t res1 = fread(&payloadSize, sizeof(int), 1, observer.aFormat->inputSocketStream);
 			if (res1 != 1) 
 			{
-				perror("Cannot read next opcode or payload size\n");
+				//printf("Cannot read next opcode or payload size\n");
 				exit(1);
 			} 
 			else 
@@ -464,7 +466,9 @@ int AnnotatedTracer::Run(ez::ezOptionParser &opt)
 			if (nextOp == E_NEXTOP_TASK)
 			{
 				PRINTF_INFO("### Executing a new task\n");
-				ReadFromFile(observer.aFormat->inputSocketStream, payloadBuff, payloadSize);
+				const int inputStreamSize = ReadFromFile(observer.aFormat->inputSocketStream, payloadBuff, payloadSize);
+				assert(inputStreamSize == payloadSize); // TODO: what if input is too large to be sent in a chunk ? :) Fix this
+				NumSymbolicVariables = inputStreamSize;
 				ctrl->Execute();
 				ctrl->WaitForTermination();
 				PRINTF_INFO("###Finished executing the task\n");
@@ -477,7 +481,7 @@ int AnnotatedTracer::Run(ez::ezOptionParser &opt)
 		}
 	}
 	else {
-		varCount = ComputeVarCount();
+		NumSymbolicVariables = ComputeNumSymbolicVariables();
 
 		observer.fileName = "stdin";
 

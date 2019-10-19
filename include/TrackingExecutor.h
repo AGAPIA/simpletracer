@@ -8,10 +8,10 @@
 class TrackingExecutor : public sym::SymbolicExecutor {
 public :
 	TaintedIndex *ti;
-	unsigned int varCount;
+	unsigned int NumSymbolicVariables;
 	AbstractFormat *aFormat;
 
-	TrackingExecutor(sym::SymbolicEnvironment *e, unsigned int varCount,
+	TrackingExecutor(sym::SymbolicEnvironment *e, unsigned int NumSymbolicVariables,
 			AbstractFormat *aFormat);
 
 	virtual void *CreateVariable(const char *name, DWORD size);

@@ -9,7 +9,7 @@ void Z3Utils::PrintAST(Z3_context context, Z3_ast ast)
 {
 	// Z3_set_ast_print_mode(context, (Z3_ast_print_mode)2);
 	// Z3_set_ast_print_mode(context, Z3_PRINT_SMTLIB2_COMPLIANT);
-	s_globalLogger.Log("AST in text format\n:%s\n", Z3_ast_to_string(context, ast));
+	s_globalLogger.Log("AST in text format:%s\n", Z3_ast_to_string(context, ast));
 }
 
 void Z3Utils::PrintInfo(const bool fromSymEngine, const char* format, ...)
