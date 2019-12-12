@@ -11,9 +11,10 @@ class Z3Utils
         //fromSymEngine must be true if this is a symbolic engine expression, otherwise it can be false (e.g. general info)
         static void PrintInfo(const bool fromSymEngine, const char* format, ...);
 
-        static void initLoggingSystem(FILE* fileToOutputLog);
+        static void initLoggingSystem(FILE* fileToOutputLog, bool symOption=false);
     public:
         static Logger s_globalLogger;
+        static bool m_symOption; // Whether to print the costly ASTs or not
 };
 
 #ifdef IS_DEBUG_BUILD

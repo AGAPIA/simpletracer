@@ -211,7 +211,7 @@ unsigned int CustomObserver::ExecutionEnd(void *ctx)
 }
 
 unsigned int CustomObserver::TranslationError(void *ctx, void *address) {
-	PRINTF_INFO("Error issued at address %p\n", address);
+	PRINTF_INFO("Translation Error issued at address %p\n", address);
 	auto direction = ExecutionEnd(ctx);
 	if (direction == EXECUTION_RESTART) {
 		PRINTF_INFO("Restarting after issue\n");

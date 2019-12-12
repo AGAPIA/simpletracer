@@ -119,7 +119,7 @@ unsigned int CustomObserver::ExecutionEnd(void *ctx) {
 }
 
 unsigned int CustomObserver::TranslationError(void *ctx, void *address) {
-	st->globalLog.Log("Error issued at address %p\n", address);
+	st->globalLog.Log("Translation Error issued at address %p\n", address);
 	auto direction = ExecutionEnd(ctx);
 	if (direction == EXECUTION_RESTART) {
 		st->globalLog.Log("Restarting after issue\n");
